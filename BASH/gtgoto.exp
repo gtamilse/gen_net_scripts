@@ -1,0 +1,49 @@
+#!/usr/bin/expect --
+
+global Node_List_Fh
+global node_list
+global node_name
+set ipaddrs ""
+
+proc Get_IPAddrs { node_list node_name } {
+       global ipaddrs
+
+       set Node_List_Fh [ open $node_list "r" ]
+       while {[gets $Node_List_Fh line] != -1} {
+              regsub -all {[ \r\t\n]+} $line " " line
+              regsub -all {^[ ]} $line "" line
+              if {$node_name == [lindex [split $line " "] 0]} {
+                set ipaddrs [lindex [split $line " "] 3]
+                break
+              }
+        }
+        close $Node_List_Fh
+        return
+}
+
+if {[llength $argv] == 0} {
+         puts "usage : $argv0  <node> <dns-list>\n"
+         exit
+}
+
+ set node_name [lindex $argv 0]
+ set node_list [lindex $argv 1]
+
+#Insert IP address to spawn
+ spawn ssh ciscotac@<insert IP address>
+ expect "password"
+ send "IOX3.8.4\r"
+ expect "ThinkPad-T43"
+
+Get_IPAddrs $node_list $node_name
+puts "ipaddrs: $ipaddrs\n"
+
+ send "telnet $ipaddrs\r"
+ expect "BRIDGETON NOC:"
+ send "<insert username>\r"
+ expect "word"
+ send "<insert password>\r"
+ expect "#"
+ interact
+
+

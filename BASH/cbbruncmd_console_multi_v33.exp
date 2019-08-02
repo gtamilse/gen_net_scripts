@@ -1,0 +1,160 @@
+#!/usr/bin/expect
+proc login_crs {ipaddr user_name user_passwd node_name} {
+	set eof_retries 3
+	set retries     3
+   	set timeout 160
+	set trying  1 		;# SET UP LOOP FOR RETRIES
+
+	after 1000
+	send "telnet $ipaddr\r"
+	while { $trying } {
+		set trying 0
+		expect {
+			eof { 
+				send_user -- $expect_out(buffer);
+				send_user "Received eof\n"
+				if { $eof_retries } {
+					incr eof_retries -1
+					send_user "Will wait 5 seconds and retry connection. Number of retires remaing is $eof_retries \n"
+					after 5000
+					send "telnet $ipaddr\n"
+					set trying 1
+					continue	
+				}
+				return 1; # Fail, exit out
+			}
+			timeout {
+				send_user "$node_name : telnet timed out \n"
+				send "\x03"
+				incr retries -1
+				if { $retries >= 0 } {
+					send_user "Waiting some more (retry #[ expr 3 - $retries] of 3)\n"
+					after 2000
+					set timeout 30
+					send "telnet $ipaddr\n"
+					exp_continue
+				}
+				return 1 ;# Failed timeout, exit
+			}
+			"closed by foreign host" {
+				append data $expect_out(buffer)
+				send_user "Connection was closed, spawing telnet again ... \n"
+				send "telnet $ipaddr\n"
+				set trying 1
+				continue
+			}
+			"Press RETURN to get started!" {
+				send "enable\r"
+				exp_continue
+			}
+			"not known" {
+				send_user "ERROR: Unknown host. CHeck hostname $node_name \n"
+				return 1
+			}
+			">" {
+				send "enable\r"
+				exp_continue
+			}
+			"Username:" {
+				send "$user_name\r"
+				exp_continue
+			}
+			"NOC:" {
+				send "$user_name\r"
+				exp_continue
+			}
+			"Password :" {
+				send "$user_passwd\r"
+				exp_continue
+			}
+			-re "Password\ *:" {
+				send "$user_passwd\r"
+				append data $expect_out(buffer)
+				exp_continue
+			}
+			-re "\n(\[-/:a-zA-Z_.0-9)(]+)#" {
+				set crs $expect_out(1,string)
+				append data $expect_out(buffer)
+				send "\r"
+			}
+			
+		} 
+
+	} 
+	#change terminal characteristics - make sure command is echoed before doing next command!!!!
+	#
+   	expect -timeout 6 "#" 
+   	send \r
+   	expect -timeout 6 "#" 
+   	send       "term length 0\r"
+   	expect -re "term length 0\[^\#]*#"
+   	send        "term width 512\r"
+   	expect -re "term width 512\[^\#]*#"
+   	send       "term mon disable\r"
+   	expect -re "term mon disable\[^\#]*#"
+	send "term exec prompt timestamp\r"
+	
+  	set timeout 10 
+	
+   	log_user 1
+	
+   	return 0
+
+
+}
+
+
+if {[llength $argv] < 2} {
+	send_user "usage : runcmds.exp  <nodelist_filename> <command_list_filename> <credentials_filename>  \r" 
+	exit
+} 
+set node_list [lindex $argv 0]
+set cmd_list [lindex $argv 1]
+set Node_List_Fh [open $node_list]
+set Cred_List [lindex $argv 2]
+set Cred_List_Fh [open $Cred_List] 
+if { [gets $Cred_List_Fh line] == -1 } {
+	send_user "Credential File $Cred_List is empty !!. Exiting. \r"
+	exit
+}
+set user_name [lindex $line 0]
+set user_password [lindex $line 1]
+send_user "Your username is $user_name \r"
+send_user "Your password is $user_password \r"
+
+# Inster IP address below!!
+spawn ssh ciscotac@<insert ip address>
+expect "word: "
+
+# Insert IP address below!!
+send "Cisco@<insert ip address>\r"
+
+expect "sedf-EW-ProB"
+while {[gets $Node_List_Fh  line] != -1} {
+	set node_name [lindex $line 0]
+	set ipaddrs [lindex $line 3]
+	set retval [login_crs $ipaddrs $user_name $user_password $node_name]
+	if { $retval == 0 } {
+		set cmd_Fh [open $cmd_list]
+        	while {[gets $cmd_Fh cmd_line] != -1} {
+			if {$cmd_line == "show diag"} { 
+				set timeout 240 
+			}
+			send  "$cmd_line\r"
+			expect { 
+					"\r" {
+						exp_continue
+					}
+					"${node_name}(admin)#" { }
+					"${node_name}#" { }
+					
+			}
+		}
+		send " exit\r"
+		expect "aedf-EW-ProB"
+		close $cmd_Fh
+	}
+}
+close $Node_List_Fh
+exit
+
