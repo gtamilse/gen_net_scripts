@@ -1,0 +1,40 @@
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+vrf definition cust1-eid
+ rd 991:101
+ !
+ address-family ipv4
+  route-target export 2:100
+  route-target import 2:100
+  inter-as-hybrid next-hop 10.10.11.1
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+vrf definition cust1-eid-orange
+ rd 991:201
+ !
+ address-family ipv4
+  route-target export 2:200
+  route-target import 2:200
+ exit-address-family
+!
+vrf definition cust1-rloc
+ rd 991:1
+ !
+ address-family ipv4
+ exit-address-family
+!
+vrf definition cust1-rloc-orange
+ rd 991:2
+ !
+ address-family ipv4
+ exit-address-family
+end

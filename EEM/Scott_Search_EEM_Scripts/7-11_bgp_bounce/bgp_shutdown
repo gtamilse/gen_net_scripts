@@ -1,0 +1,36 @@
+RP/0/7/CPU0:engco102me1#conf
+Mon Sep 10 21:44:08.077 GMT
+RP/0/7/CPU0:engco102me1(config)#router bgp 13979
+RP/0/7/CPU0:engco102me1(config-bgp)#vrf 13979:21111
+RP/0/7/CPU0:engco102me1(config-bgp-vrf)#neigh 12.0.3.2
+RP/0/7/CPU0:engco102me1(config-bgp-vrf-nbr)#shutdown 
+RP/0/7/CPU0:engco102me1(config-bgp-vrf-nbr)#commit
+Mon Sep 10 21:45:22.644 GMT
+RP/0/7/CPU0:engco102me1(config-bgp-vrf-nbr)#no shut
+RP/0/7/CPU0:engco102me1(config-bgp-vrf-nbr)#commit
+Mon Sep 10 21:48:29.376 GMT
+RP/0/7/CPU0:engco102me1(config-bgp-vrf-nbr)#end
+RP/0/7/CPU0:engco102me1#exit
+
+
+
+router bgp 13979
+vrf 13979:32545
+ rd 13979:159119
+ default-information originate
+ address-family ipv4 unicast
+  redistribute connected
+  redistribute static
+  maximum-paths eibgp 6
+ !
+ neighbor 10.242.94.6
+  remote-as 46017
+  description customer 7-ELEVEN
+  use neighbor-group REST_ROUTE
+  address-family ipv4 unicast
+ !
+ neighbor 10.242.93.202
+  remote-as 46002
+  description customer 7-ELEVEN
+  use neighbor-group REST_ROUTE
+  address-family ipv4 unicast

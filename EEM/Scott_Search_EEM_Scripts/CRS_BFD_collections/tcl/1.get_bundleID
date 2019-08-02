@@ -1,0 +1,29 @@
+#!/usr/bin/tclsh
+
+puts ""
+
+set loc ""
+set locations ""
+
+set syslogs "RP/0/RP1/CPU0:lbatx401cts#show run inter TenGigE0/2/0/3
+interface TenGigE0/2/0/3
+ description 10GE_BL1296_SANTX21CRS_TE2/13/0/16_IXEC991607_CMT31693_\[CBB\]
+ bundle id 1296 mode active
+ lacp period short
+ carrier-delay up 10000 down 10
+ load-interval 30
+ dampening
+!"
+
+
+foreach line [split $syslogs "\n"] {
+  regsub -all {[ \r\t\n]+} $line " " line
+  regsub -all {^[ ]} $line "" line
+  regsub -all {[ ]$} $line "" line
+
+  if {[regexp {^bundle id} $line]} {
+    regexp {^bundle id (\d+) .*} $line - ID
+    puts "ID: $ID"
+  } 
+}
+puts ""

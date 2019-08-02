@@ -1,0 +1,18 @@
+#!/usr/bin/tclsh
+
+set node_name "0/2/1"
+
+puts ""
+puts "BEFORE node_name: $node_name"
+
+regsub -all {\/} $node_name "_" updated_NodeName
+
+puts "AFTER node_name: $node_name"
+puts "AFTER updated_NodeName: $updated_NodeName"
+
+set updated_NodeName "node$updated_NodeName"
+
+puts "updated_NodeName: $updated_NodeName"
+puts ""
+
+

@@ -1,0 +1,35 @@
+# This tool is an EEM policy to detect the syslog pattern above in the
+# event a CRS node experiences S2/Fabric problems.  This script will
+# eventually cost-out the node.
+#
+# EEM Script is dependent on the following event manager environment variables:
+#   _s2FailDetect_ospf_id <xxx>               -User must provide routers router ospf process id *
+#   _s2FailDetect_second_diff 30              -Defined seconds diff for syslog msg matching
+#   _s2FailDetect_unique_locations 3          -Defined number of unique locations
+#   _s2FailDetect_output_log <logfile name>   -User must provide the output log file name "s2FailDetect.log"
+#   _s2FailDetect_storage_location <storage>  -Disk/hardisk storage location "harddisk:/eem"
+#
+# NOTES:
+#   * _s2FailDetect_ospf_id -Can be set to 0 and the EEM script will NOT COST OUT router
+#
+# Syslog Message Generation:
+#   _s2FailDetect_msg_repeat <x>       -Msg generation repeated x number of times (default 1)
+#   _s2FailDetect_msg_CostOut          -Msg sent via syslog/email generation when router is COSTED OUT
+#   _s2FailDetect_msg_NoCostOut        -Msg sent via syslog/email generation when router is NOT COSTED OUT
+#   _s2FailDetect_msg_NoCostOut_NotMet -Msg sent via syslog/email generation when router is NOT COSTED OUT
+#                                       due to all requirments not met.
+#
+# Email Option
+# To activate the email option the following event manager environment variables must be set:
+#   _email_server    _email_from
+#   _email_to        _domainname
+#
+#
+# EEM Script Logic:
+#
+# The script is triggered by the syslog pattern above.  If the pattern occurs 3 times and within
+# a 10 second period this EEM policy will be started.  The script checks the syslogs via the
+# sys_reqinfo_syslog_history for matching events within the _s2FailDetect_second_diff from the
+# triggering syslog event pattern.  If there are at minimum _s2FailDetect_unique_locations the
+# script proceeds with the costing out of the router.
+

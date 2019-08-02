@@ -1,0 +1,18 @@
+configure
+!
+router static
+address-family ipv4 unicast
+  no 12.83.49.81/32 12.83.67.106 tag 333
+!
+address-family ipv6 unicast
+  no 2602:300::/28 2001:506:2001:fff:c534:369:0:2
+  no 2602:300:c533:1510::/128 2001:506:2001:fff:c534:369:0:2
+  no 2602:300:c533:1510::27/128 2001:506:2001:fff:c534:369:0:2
+!
+commit
+
+
+
+
+
+

@@ -1,0 +1,463 @@
+ALPSGAGDMZ02# show interface transceiver details | inc "ther|Tx Power"
+Ethernet1/1
+  Tx Power      -1.54 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -1.18 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -1.35 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.21 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+Ethernet1/2
+  Tx Power      -2.37 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -1.75 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -1.91 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -1.93 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+Ethernet1/3
+  Tx Power      -2.24 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -1.71 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.41 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.40 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+Ethernet1/4
+  Tx Power      -2.50 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.23 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -1.65 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.36 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+Ethernet1/5
+  Tx Power      -2.38 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.49 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.40 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -1.70 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+Ethernet1/6
+  Tx Power      -2.35 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.60 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.38 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.70 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+Ethernet1/7
+  Tx Power       0.03 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power       0.90 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power       0.95 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -0.70 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+Ethernet1/8
+  Tx Power       0.30 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power       0.42 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power       0.32 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power       0.35 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+Ethernet1/9
+Ethernet1/10
+Ethernet1/11
+Ethernet1/12
+Ethernet2/1
+  Tx Power       0.39 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -1.14 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -0.88 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -1.09 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+Ethernet2/2
+  Tx Power      -1.32 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -1.40 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -1.82 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -0.99 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+Ethernet2/3
+  Tx Power      -1.17 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -1.31 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.40 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.40 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+Ethernet2/4
+  Tx Power       0.04 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power       0.07 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power       0.12 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power       0.01 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+Ethernet2/5
+  Tx Power      -1.82 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.26 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.41 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.84 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+Ethernet2/6
+  Tx Power      -1.87 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -1.26 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.01 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.41 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+Ethernet2/7
+  Tx Power      -0.02 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power       0.25 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power       0.15 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power       0.20 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+Ethernet2/8
+  Tx Power       1.18 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power       1.38 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power       1.42 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power       0.72 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+Ethernet2/9
+Ethernet2/10
+Ethernet2/11
+Ethernet2/12
+Ethernet3/1
+  Tx Power      -2.36 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.41 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.41 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.41 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+Ethernet3/2
+  Tx Power      -1.56 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.41 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.66 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -3.41 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+Ethernet3/3
+  Tx Power      -1.17 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.26 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.19 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.12 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+Ethernet3/4
+  Tx Power      -2.37 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -1.85 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.37 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.40 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+Ethernet3/5
+  Tx Power      -0.94 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -1.18 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -1.42 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.40 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+Ethernet3/6
+  Tx Power      -1.66 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -0.36 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -0.77 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -2.35 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+Ethernet3/7
+  Tx Power       1.65 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power       1.51 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power       0.22 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power       1.44 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+Ethernet3/8
+  Tx Power      -2.36 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -1.46 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -1.89 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+  Tx Power      -1.86 dBm       5.29 dBm  -11.00 dBm    2.29 dBm     -7.00 dBm
+Ethernet3/9
+Ethernet3/10
+Ethernet3/11
+Ethernet3/12
+Ethernet4/1
+  Tx Power      -1.68 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet4/2
+  Tx Power      -2.07 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet4/3
+  Tx Power      -2.32 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet4/4
+  Tx Power      -2.50 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet4/5
+  Tx Power      -2.29 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet4/6
+  Tx Power      -2.56 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet4/7
+  Tx Power      -2.15 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet4/8
+  Tx Power      -2.22 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet4/9
+  Tx Power      -2.53 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet4/10
+  Tx Power      -2.20 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet4/11
+  Tx Power      -2.15 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet4/12
+  Tx Power      -2.39 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet4/13
+  Tx Power      -2.21 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet4/14
+  Tx Power      -2.24 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet4/15
+  Tx Power      -2.46 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet4/16
+  Tx Power      -2.15 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet4/17
+  Tx Power      -2.14 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet4/18
+  Tx Power      -2.47 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet4/19
+  Tx Power      -2.54 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet4/20
+  Tx Power      -2.50 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet4/21
+  Tx Power      -2.53 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet4/22
+  Tx Power      -2.12 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet4/23
+  Tx Power      -1.97 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet4/24
+  Tx Power      -2.30 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet4/25
+Ethernet4/26
+Ethernet4/27
+Ethernet4/28
+Ethernet4/29
+Ethernet4/30
+Ethernet4/31
+Ethernet4/32
+Ethernet4/33
+Ethernet4/34
+Ethernet4/35
+Ethernet4/36
+Ethernet4/37
+Ethernet4/38
+Ethernet4/39
+Ethernet4/40
+Ethernet4/41
+Ethernet4/42
+Ethernet4/43
+Ethernet4/44
+Ethernet4/45
+Ethernet4/46
+Ethernet4/47
+Ethernet4/48
+Ethernet7/1
+  Tx Power      -2.46 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet7/2
+  Tx Power      -2.39 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet7/3
+  Tx Power      -2.55 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet7/4
+  Tx Power      -2.26 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet7/5
+  Tx Power      -2.45 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet7/6
+  Tx Power      -2.54 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet7/7
+Ethernet7/8
+Ethernet7/9
+Ethernet7/10
+Ethernet7/11
+Ethernet7/12
+Ethernet7/13
+Ethernet7/14
+Ethernet7/15
+Ethernet7/16
+Ethernet7/17
+Ethernet7/18
+Ethernet7/19
+  Tx Power      -2.47 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet7/20
+  Tx Power      -4.28 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet7/21
+  Tx Power      -2.37 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet7/22
+  Tx Power      -2.22 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet7/23
+  Tx Power      -2.50 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet7/24
+  Tx Power      -2.37 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet7/25
+Ethernet7/26
+Ethernet7/27
+Ethernet7/28
+Ethernet7/29
+Ethernet7/30
+Ethernet7/31
+Ethernet7/32
+Ethernet7/33
+Ethernet7/34
+Ethernet7/35
+  Tx Power      3.47 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet7/36
+Ethernet7/37
+Ethernet7/38
+Ethernet7/39
+Ethernet7/40
+Ethernet7/41
+Ethernet7/42
+Ethernet7/43
+Ethernet7/44
+Ethernet7/45
+Ethernet7/46
+Ethernet7/47
+Ethernet7/48
+Ethernet8/1
+  Tx Power      -3.18 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet8/2
+  Tx Power      -2.32 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet8/3
+  Tx Power      -3.09 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet8/4
+  Tx Power      -2.63 dBm       0.00 dBm   -5.99 dBm   -1.00 dBm     -5.00 dBm
+Ethernet8/5
+  Tx Power      -3.01 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet8/6
+  Tx Power      -2.53 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet8/7
+  Tx Power      -2.75 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet8/8
+  Tx Power      -2.78 dBm       0.00 dBm   -5.99 dBm   -1.00 dBm     -5.00 dBm
+Ethernet8/9
+Ethernet8/10
+Ethernet8/11
+Ethernet8/12
+Ethernet8/13
+Ethernet8/14
+Ethernet8/15
+Ethernet8/16
+Ethernet8/17
+Ethernet8/18
+Ethernet8/19
+  Tx Power      -2.41 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet8/20
+  Tx Power      -2.08 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet8/21
+  Tx Power      -2.42 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet8/22
+  Tx Power      -2.36 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet8/23
+  Tx Power      -2.52 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet8/24
+  Tx Power      -2.58 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet8/25
+Ethernet8/26
+Ethernet8/27
+Ethernet8/28
+Ethernet8/29
+Ethernet8/30
+Ethernet8/31
+Ethernet8/32
+Ethernet8/33
+Ethernet8/34
+Ethernet8/35
+Ethernet8/36
+Ethernet8/37
+Ethernet8/38
+Ethernet8/39
+Ethernet8/40
+Ethernet8/41
+Ethernet8/42
+Ethernet8/43
+Ethernet8/44
+Ethernet8/45
+Ethernet8/46
+Ethernet8/47
+Ethernet8/48
+Ethernet9/1
+  Tx Power      -2.47 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet9/2
+  Tx Power      -2.51 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet9/3
+  Tx Power      -2.19 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet9/4
+  Tx Power      -2.53 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet9/5
+  Tx Power      -3.28 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet9/6
+  Tx Power      -2.38 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet9/7
+  Tx Power      -2.32 dBm       0.00 dBm   -5.99 dBm   -1.00 dBm     -5.00 dBm
+Ethernet9/8
+  Tx Power      -3.28 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet9/9
+  Tx Power      -3.21 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet9/10
+Ethernet9/11
+  Tx Power      -2.50 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet9/12
+  Tx Power      -2.52 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet9/13
+  Tx Power      -2.34 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet9/14
+  Tx Power      -1.89 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet9/15
+Ethernet9/16
+Ethernet9/17
+Ethernet9/18
+Ethernet9/19
+  Tx Power      -2.45 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet9/20
+  Tx Power      -2.32 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet9/21
+  Tx Power      -2.21 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet9/22
+  Tx Power      -2.44 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet9/23
+  Tx Power      -2.45 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet9/24
+  Tx Power      -3.85 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet9/25
+Ethernet9/26
+Ethernet9/27
+Ethernet9/28
+Ethernet9/29
+Ethernet9/30
+Ethernet9/31
+Ethernet9/32
+Ethernet9/33
+Ethernet9/34
+Ethernet9/35
+Ethernet9/36
+Ethernet9/37
+Ethernet9/38
+Ethernet9/39
+Ethernet9/40
+Ethernet9/41
+Ethernet9/42
+Ethernet9/43
+Ethernet9/44
+Ethernet9/45
+Ethernet9/46
+Ethernet9/47
+Ethernet9/48
+Ethernet10/1
+  Tx Power      -2.41 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet10/2
+  Tx Power      -2.45 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet10/3
+  Tx Power      -2.27 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet10/4
+  Tx Power      -2.10 dBm       0.00 dBm   -5.99 dBm   -1.00 dBm     -5.00 dBm
+Ethernet10/5
+  Tx Power      -2.48 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet10/6
+  Tx Power      -2.27 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet10/7
+  Tx Power      -2.60 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet10/8
+  Tx Power      -2.21 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet10/9
+  Tx Power      -2.38 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet10/10
+  Tx Power      -3.43 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet10/11
+  Tx Power      -2.38 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet10/12
+  Tx Power      -2.41 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet10/13
+  Tx Power      -2.43 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet10/14
+  Tx Power      -2.38 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet10/15
+Ethernet10/16
+Ethernet10/17
+Ethernet10/18
+Ethernet10/19
+  Tx Power      -2.06 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet10/20
+  Tx Power      -2.91 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet10/21
+  Tx Power      -2.55 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet10/22
+  Tx Power      -2.50 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet10/23
+  Tx Power      -2.41 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet10/24
+  Tx Power      -2.49 dBm       1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+Ethernet10/25
+Ethernet10/26
+Ethernet10/27
+Ethernet10/28
+Ethernet10/29
+Ethernet10/30
+Ethernet10/31
+Ethernet10/32
+Ethernet10/33
+Ethernet10/34
+Ethernet10/35
+Ethernet10/36
+Ethernet10/37
+Ethernet10/38
+Ethernet10/39
+Ethernet10/40
+Ethernet10/41
+Ethernet10/42
+Ethernet10/43
+Ethernet10/44
+Ethernet10/45
+Ethernet10/46
+Ethernet10/47
+Ethernet10/48

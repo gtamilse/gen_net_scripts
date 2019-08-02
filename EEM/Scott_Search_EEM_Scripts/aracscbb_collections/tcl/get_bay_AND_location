@@ -1,0 +1,40 @@
+#!/usr/bin/tclsh
+
+#set line "LC/0/10/CPU0::Dec 1 09:36:22.019 UTC: g_spa_3\[159\]: %L2-SPA-3-PLIM_HEARTBEAT_ERR : SPA-4XT3/E3: bay 88 heartbeat missed, expected seq# 4981185 received seq# 4981184, Time since last message 38s"
+
+set line "LC/0/10/CPU0::Dec 1 09:36:22.019 UTC: g_spa_3\[159\]: %L2-SPA-3-PLIM_HEARTBEAT_ERR : SPA-4XT3/E3: bay 3 heartbeat missed, expected seq# 4981185 received seq# 4981184, Time since last message 38s"
+
+
+puts ""
+
+regsub -all {[ \r\t\n]+} $line " " line
+regsub -all {^[ ]} $line "" line
+regsub -all {[ ]$} $line "" line
+
+if {[regexp {^time_sec} $line]} {
+  regexp "\{(.*): .*" $line - msg
+  set location [ lindex [split $msg ":"] 0 ]
+  regsub -all {^LC\/} $location "" location
+} else {
+  set location [ lindex [split $line ":"] 0 ]
+  regsub -all {^LC\/} $location "" location
+}
+
+puts "location: $location"
+
+
+regexp {^\d+\/(\d+)\/CPU0} $location - slot
+puts "slot: $slot"
+
+if {[regexp { bay \d+ heartbeat} $line]} {
+  regexp { bay (\d+) heartbeat} $line - bay_id
+  puts "bay_id: $bay_id"
+
+  set node_name "0/$slot/$bay_id"
+  puts "node_name: $node_name"
+}
+
+
+puts ""
+
+

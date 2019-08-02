@@ -1,0 +1,120 @@
+::cisco::eem::event_register_syslog pattern "MGBL-CONFIG-6-DB_COMMIT.*Configuration committed.*show configuration commit changes" maxrun 300
+
+###############################################################################################################
+# NAME: ConfigCommitArchive.tcl
+# AUTH: Scott Search (ssearch@cisco.com)
+# DATE: 2/13/13
+# VERS: v0.5
+#
+#
+# Need to set the following EEM example environment variables:
+# -------------------------------------------------------------
+# set _CommitArchive_storage_location "disk0:/CommitArchive"
+#
+#
+# Example pattern:
+# ----------------
+#
+# MGBL-CONFIG-6-DB_COMMIT : Configuration committed by user 'cisco'. Use 'show configuration commit changes 
+#    1000000827' to view the changes
+#
+###############################################################################################################
+
+# Import namespace libraries:
+namespace import ::cisco::eem::*
+namespace import ::cisco::lib::*
+
+# Verify the environment vars:
+if {![info exists _CommitArchive_storage_location]} {
+  set result "**ERROR: EEM policy error environment var _CommitArchive_storage_location not set"
+  action_syslog msg $result
+  exit 1
+}
+
+
+proc get_username {output} {
+  set UserID ""
+
+  foreach line [split $output "\n"] {
+    regsub -all {[ \r\t\n]+} $line " " line
+
+    if {[regexp "User: " $line]} {
+      regexp {User: (.*) Line} $line - UserID
+      if {$UserID != ""} {
+        break
+      } else {
+        set UserID "unknown"
+        break
+      }
+    }
+  }
+  return $UserID
+}
+
+
+#############
+# MAIN/main #
+#############
+set msg ""
+set node [info hostname]
+
+set date [clock format [clock sec] -format "%T %Z %a %b %d %Y"]
+set stamp [clock format [clock sec] -format "%T_%b_%d_%Y"]
+regsub -all {:} $stamp "." stamp
+
+# Set the array arr_einfo to the eem event_reqinfo
+array set arr_einfo [event_reqinfo]
+# Extract the syslog message the finally kicked off the EEM script:
+set syslog_msg $arr_einfo(msg)
+
+regsub -all {[ \r\t\n]+} $syslog_msg " " syslog_msg
+regsub -all {^[ ]} $syslog_msg "" syslog_msg
+regsub -all {[ ]$} $syslog_msg "" syslog_msg
+
+# Extract the user id:
+regexp {Configuration committed by user \'(.*)\'\..*} $syslog_msg - UserID
+# Extract the configuration id:
+regexp {show configuration commit changes (\d+).*} $syslog_msg - ChangeID
+
+action_syslog msg "(ssearch) EEM UserID: $UserID --- ChangeID: $ChangeID"
+
+if {[info exists ChangeID]} {
+  set LogFile "$node.CommitID_$ChangeID.$stamp"
+
+  if {[info exists UserID]} {
+    set output_file "$_CommitArchive_storage_location/$LogFile.$UserID"
+  } else {
+    set UserID "unknown"
+  }
+  regsub -all "\[ \t\n\]" $output_file {} output_file
+
+action_syslog msg "(ssearch) LogFile: $LogFile"
+action_syslog msg "(ssearch) output_file: $output_file"
+
+#  # Open router (vty) connection
+#  if [catch {cli_open} result] {
+#    error $result $errorInfo
+#  } else {
+#    array set cli $result
+#  }
+#
+#  if {$UserID == "unknown"} {
+#    if [catch {cli_exec $cli(fd) "show configuration history commit detail | beg $ChangeID"} result] {
+#      error $result $errorInfo
+#    }
+#    # Remove trailing router prompt
+#    regexp {\n*(.*\n)([^\n]*)$} $result junk cmd_output
+#    set UserID [get_username $cmd_output]
+#    set output_file "$_CommitArchive_storage_location/$LogFile.$UserID"
+#    regsub -all "\[ \t\n\]" $output_file {} output_file
+#  }
+#
+#  if [catch {cli_exec $cli(fd) "show configuration commit changes $ChangeID | file $output_file"} result] {
+#    error $result $errorInfo
+#  }
+#
+#  # Close CLI
+#  cli_close $cli(fd) $cli(tty_id)
+} else {
+  action_syslog msg "**EEM ERROR: ConfigCommitArchive was unable to determine the configuration commit ID"
+}

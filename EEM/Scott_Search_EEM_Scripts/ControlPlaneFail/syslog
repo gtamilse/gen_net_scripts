@@ -1,0 +1,9 @@
+
+
+%ROUTING-OSPF-5-ADJCHG : Process 50, Nbr 165.87.242.176 on ATM0/12/0/0.210 in area 0.0.0.54 from FULL to DOWN, Neighbor Down: interface down or detached,vrf default vrfid 0x60000000
+
+
+
+%ROUTING-IPV4_PIM-5-NBRCHG : PIM neighbor 32.119.247.161 DOWN on AT0/12/0/0.210 - interface state changed
+
+

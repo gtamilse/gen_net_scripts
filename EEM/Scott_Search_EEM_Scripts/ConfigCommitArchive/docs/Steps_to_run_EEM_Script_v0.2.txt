@@ -1,0 +1,93 @@
+Step #1: Create directories eem and CommitArchive in disk0: on PRP3 in slot 7 and slot 8.
+
+RP/0/7/CPU0:OSSXRPE1#mkdir disk0:/eem
+RP/0/7/CPU0:OSSXRPE1#mkdir disk0:/CommitArchive
+RP/0/7/CPU0:OSSXRPE1#
+RP/0/7/CPU0:OSSXRPE1#mkdir disk0:/eem location 0/8/CPU0
+RP/0/7/CPU0:OSSXRPE1#mkdir disk0:/CommitArchive location 0/8/CPU0
+RP/0/7/CPU0:OSSXRPE1#
+RP/0/7/CPU0:OSSXRPE1#dir disk0: | i eem
+Sun Feb 17 19:04:14.973 EST
+32605       drwx  4096        Sun Feb 17 19:03:46 2013  eem
+RP/0/7/CPU0:OSSXRPE1#
+RP/0/7/CPU0:OSSXRPE1#
+RP/0/7/CPU0:OSSXRPE1#dir disk0: | i Commit
+Sun Feb 17 19:04:20.278 EST
+32606       drwx  4096        Sun Feb 17 19:04:00 2013  CommitArchive
+RP/0/7/CPU0:OSSXRPE1#
+RP/0/7/CPU0:OSSXRPE1#
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Step #2: Copy ConifgCommitArchive.tcl script into eem directory.
+(i had the ConfigCommitArchive.tcl file stored in ATS server)
+
+RP/0/7/CPU0:OSSXRPE1#copy ftp://sb0220@135.16.32.148/ConfigCommitArchive.tcl disk0:/eem
+Sun Feb 17 19:06:07.417 EST
+Source password: 
+Destination filename [/disk0:/eem/ConfigCommitArchive.tcl]?
+Accessing ftp://sb0220:*@135.16.32.148/ConfigCommitArchive.tcl
+C
+2592 bytes copied in     10 sec (      249)bytes/sec
+RP/0/7/CPU0:OSSXRPE1#
+RP/0/7/CPU0:OSSXRPE1#dir disk0:/eem
+Sun Feb 17 19:06:31.856 EST
+
+Directory of disk0:/eem
+
+2136801408  -rwx  2592        Sun Feb 17 19:06:24 2013  ConfigCommitArchive.tcl
+
+4182478848 bytes total (4048924672 bytes free)
+RP/0/7/CPU0:OSSXRPE1#
+RP/0/7/CPU0:OSSXRPE1#
+RP/0/7/CPU0:OSSXRPE1#copy disk0:/eem/ConfigCommitArchive.tcl location 0/7/CPU0 disk0:/eem location 0/8/CPU0
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Step #3: Configure the necessary configuration need for the EEM script to work and commit.
+
+event manager environment _CommitArchive_storage_location disk0:/CommitArchive
+event manager directory user policy disk0:/eem
+!
+aaa authorization exec eem-user local
+aaa authorization commands eem-user none
+aaa authorization eventmanager default local
+aaa authorization eventmanager eem-user local
+aaa authentication login eem-user local
+!
+line template EEM
+ authorization exec eem-user
+ authorization commands eem-user
+!
+vty-pool eem 100 120 line-template EEM
+!
+username eem-user
+ group root-system
+ group cisco-support
+ no password
+!
+!
+commit
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Step #4: Register the EEM script using the following command and commit.
+
+event manager policy ConfigCommitArchive.tcl username eem-user type user
+!
+!
+commit
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Step #5: Verify the script is working by looking if there are any files in CommitArchive directory.
+
+RP/0/7/CPU0:OSSXRPE1#dir disk0:CommitArchive
+Mon Feb 18 11:27:04.180 EST
+
+Directory of disk0:/CommitArchive
+
+2136867008  -rwx  184         Sun Feb 17 19:10:42 2013  CommitChanges_19.10.39_Feb_17_2013.ms3158
+2136867168  -rwx  112         Sun Feb 17 19:11:54 2013  CommitChanges_19.11.52_Feb_17_2013.ms3158
+
+4182478848 bytes total (4048916480 bytes free)
+RP/0/7/CPU0:OSSXRPE1#

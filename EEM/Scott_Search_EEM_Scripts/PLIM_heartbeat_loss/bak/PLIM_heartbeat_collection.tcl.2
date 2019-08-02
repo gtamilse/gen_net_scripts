@@ -1,0 +1,563 @@
+::cisco::eem::event_register_syslog pattern "L2-SPA-3-PLIM_HEARTBEAT_ERR.*bay.*heartbeat missed.*expected seq" maxrun 600
+
+#------------------------------------------------------------------
+# PLIM_heartbeat_collection EEM Script
+#
+# September 2014 - Scott Search (ssearch@cisco.com)
+#
+# EEM script/policy to detect the syslog pattern above in the event a xr12k node experiences 
+# an engine 5 SPA PLIM ERROR.  This script will capture a number of commands for later analysis.
+#
+# EEM Script is dependent on the following event manager environment variable(s):
+#   _PLIM_heartbeat_collection_storage_location <storage>  -Disk/hardisk storage location "disk0:/eem"
+#
+# Email Option
+# To activate the email option the following event manager environment variables must be set:
+#   _email_server    _email_from
+#   _email_to        _domainname
+#
+# EEM Script Logic:
+#
+# This script is triggered by the syslog pattern above.  
+# The script captures numerous show command outputs from EXEC, ADMIN and the SHELL.
+#
+# If the above email environment variables are set the script will then generate an email to the 
+# users listed within the _email_to.
+#
+# Copyright (c) 2014 by cisco Systems, Inc.
+# All rights reserved.
+#------------------------------------------------------------------
+
+
+############################################################################################################
+# Syslog Message:
+#
+# g_spa_3[159]: %L2-SPA-3-PLIM_HEARTBEAT_ERR : SPA-4XT3/E3: bay 3 heartbeat missed, expected seq# 4981185 received seq# 4981184, 
+#    Time since last message 38s
+############################################################################################################
+
+# Define the namespace
+namespace import ::cisco::eem::*
+namespace import ::cisco::lib::*
+ 
+##################################
+# Verify the environment vars:
+##################################
+# Storage location:
+if {![info exists _PLIM_heartbeat_collection_storage_location]} {
+  set result "EEM policy error: environment var _PLIM_heartbeat_collection_storage_location not set"
+  error $result $errInfo
+}
+
+##################################
+# Default syslog/email messages
+##################################
+set msg_repeat 1
+
+##################################
+# PROCs:
+##################################
+proc sleep {wait_time} {
+  after [expr {int($wait_time * 1000)}]
+}
+
+proc extract_location {line} {
+  global FH
+  set location ""
+
+  # Trim up the line remove extra space/tabs etc:
+  regsub -all {[ \r\t\n]+} $line " " line
+  # Remove any leading white space:
+  regsub -all {^[ ]} $line "" line
+  # Remove any ending white space:
+  regsub -all {[ ]$} $line "" line
+
+  if {[regexp {^time_sec} $line]} {
+    regexp "\{(.*): .*" $line - msg
+    set location [ lindex [split $msg ":"] 0 ]
+    regsub -all {^LC\/} $location "" location
+    puts $FH "Location Extracted: $location\n"
+  } else {
+    set location [ lindex [split $line ":"] 0 ]
+    regsub -all {^LC\/} $location "" location
+    puts $FH "Location Extracted: $location\n"
+  }
+  return $location
+}
+
+proc send_syslog {msg repeat} {
+  set kont 0
+
+  while {$kont < $repeat} {
+    action_syslog msg $msg
+    incr kont
+  }
+}
+
+proc send_email {node syslog_msg msg} {
+  global FH
+  global _email_to _email_from
+  global _email_server _domainname
+  global email_subject
+
+  action_syslog msg "Sending PLIM_heartbeat_collection Detection to $_email_to"
+
+  foreach recipient [split $_email_to " "] {
+    set email [format "Mailservername: %s" "$_email_server"]
+    set email [format "%s\nFrom: %s" "$email" "$_email_from"]
+    set email [format "%s\nTo: %s" "$email" "$recipient"]
+    set email [format "%s\nCc: %s" "$email" ""]
+    set email [format "%s\nSubject: %s\n" "$email" $email_subject]
+
+    # Email BODY:
+    set email [format "%s\n%s" "$email" "The $node node experienced the following syslog:"]
+    set email [format "%s\n%s\n\n" "$email" "$syslog_msg"]
+    set email [format "%s\n%s" "$email" "$msg"]
+   
+    # Send email message:
+    if [catch {smtp_send_email $email} result] {
+      puts "smtp_send_email: $result"
+    }
+ 
+    puts $FH "EMAIL DATA BELOW SENT TO: $_email_to\n"
+    puts $FH $email
+  }
+}
+
+proc get_interfaces {cmd_output} {
+  global subinterfaces main_interfaces
+
+  foreach line [split $cmd_output "\n"] {
+    # Trim up the line remove extra space/tabs etc:
+    regsub -all {[ \r\t\n]+} $line " " line
+    # Remove any leading white space:
+    regsub -all {^[ ]} $line "" line
+    # Remove any ending white space:
+    regsub -all {[ ]$} $line "" line
+
+    if {[regexp {^ATM} $line]} {
+      set iface [ lindex [split $line " "] 0 ]
+      if {[regexp {\.} $iface]} {
+        lappend subinterfaces $iface
+      } else {
+        lappend main_interfaces $iface
+      }
+    }
+  }
+}
+
+proc get_SPAs {cmd_output} {
+  global node_names SPAs
+
+  foreach line [split $cmd_output "\n"] {
+    regsub -all {[ \r\t\n]+} $line " " line
+    regsub -all {^[ ]} $line "" line
+    regsub -all {[ ]$} $line "" line
+
+    set first_column [lindex $line 0]
+
+    if {![regexp {CPU0$} $first_column] && ![regexp {CPU0} $line]} {
+      lappend node_names $first_column
+      regexp {^\d+\/\d+\/(\d+)} $first_column - spa
+      lappend SPAs $spa
+    }
+  }
+}
+
+proc get_process_blocked_pids {output} {
+  global pids jids
+
+  foreach line [split $output "\n"] {
+    regsub -all {[ \r\t\n]+} $line " " line
+    regsub -all {^[ ]} $line "" line
+    regsub -all {[ ]$} $line "" line
+
+    if {[regexp {^\d+ \d+ \d+ .*} $line] && [regexp {g_spa_|spa_192_jacket_v2} $line]} {
+      set jid [lindex $line 0]
+      set pid [lindex $line 1]
+      lappend jids $jid
+      lappend pids $pid
+
+    }
+  }
+}
+
+
+##################################
+# main/MAIN
+##################################
+global FH
+global msg_repeat syslog_msg
+global _email_to _email_from
+global _email_server _domainname
+global email_subject
+global node_names SPAs
+global pids jids
+
+
+if {[info exists _PLIM_heartbeat_collection_msg_repeat]} {
+  set repeat $_PLIM_heartbeat_collection_msg_repeat
+} else {
+  set repeat $msg_repeat
+}
+
+# Capture the scripts start time:
+set time_now [clock seconds]
+
+set date_time [clock format $time_now -format "%m-%d-%Y_%H.%M.%S"]
+set filename "PLIM_heartbeat_collection.$date_time"
+# Open the output file (for write):
+if [catch {open $_PLIM_heartbeat_collection_storage_location/$filename w} result] {
+    error $result
+}
+set FH $result
+
+# Timestamp the script start time to the output log file:
+set date [clock format $time_now -format "%T %Z %a %b %d %Y"]
+puts $FH "Timestamp: $date"
+
+# Log the nodes hostname to the output log file:
+set node [info hostname]
+puts $FH "Node: $node"
+
+set syslog_msg "Node: $node - EEM PLIM_heartbeat_collection POLICY DETECTED A POSSIBLE Heartbeat loss FAILURE"
+
+set email_subject "**Node $node - EEM PLIM_heartbeat_collection POLICY DETECTED A POSSIBLE Heartbeat loss FAILURE"
+if {[info exists _PLIM_heartbeat_collection_email_subject]} {
+  set email_subject "$node $_PLIM_heartbeat_collection_email_subject"
+}
+
+# Set the array arr_einfo to the eem event_reqinfo
+array set arr_einfo [event_reqinfo]
+# Extract the syslog message the finally kicked off the EEM script:
+set kickoff_msg $arr_einfo(msg)
+
+# Determine the location from the kickoff_msg:
+set location [extract_location $kickoff_msg]
+
+if {$location = ""} {
+    error "Exiting EEM script - No location detected"
+}
+
+# location without the CPU0
+regsub -all {CPU0$} $location "" location_partial
+
+
+############################################################
+# Set the show commands to capture from the router:
+############################################################
+set show_cmds "show platform
+               show log
+               show processes cpu location $location
+               show controllers sonet 0/1/*"
+
+#set admin_show_cmds "show install"
+###################################################
+# End of show commands
+###################################################
+
+puts $FH "\nFinal Syslog Trigger:\n"
+puts $FH "$kickoff_msg\n"
+
+puts $FH "\n"
+set msg "EEM Script (PLIM_heartbeat_collection) detected possible Heartbeat failure. EEM Script will capture a number of outputs"
+puts $FH $msg
+action_syslog msg $msg
+
+
+#######################
+# Open Node Connection
+#######################
+if [catch {cli_open} result] {
+  error $result $errorInfo
+} else {
+  array set cli $result
+}
+
+set cmd "show platform | inc $location_partial"
+if [catch {cli_exec $cli(fd) $cmd} result] {
+  error $result $errorInfo
+}
+# Remove trailing router prompt
+regexp {\n*(.*\n)([^\n]*)$} $result junk cmd_output
+puts $FH $cmd_output
+
+get_SPAs $cmd_output
+
+
+if {$SPAs != ""} {
+  foreach spa [split $SPAs " "] {
+    set cmd "debug spa disable-heartbeat process g_spa_$spa location $location"
+    if [catch {cli_exec $cli(fd) $cmd} result] {
+      error $result $errorInfo
+    }
+    # Remove trailing router prompt
+    regexp {\n*(.*\n)([^\n]*)$} $result junk cmd_output
+    puts $FH $cmd_output
+  }
+}
+
+
+if {$node_name != ""} {
+  foreach line [split $node_name " "] {
+    lappend show_cmds "show hw-module subslot $line counters fpga"
+    lappend show_cmds "show hw-module subslot $line counters spi4"
+    lappend show_cmds "show hw-mod subslot $line errors fpga"
+    lappend show_cmds "show hw-mod subslot $line plim-subblock"
+    lappend show_cmds "show hw-mod subslot $line errors fpga"
+    lappend show_cmds "show hw-mod subslot $line plim-subblock"
+    lappend show_cmds "show hw-module subslot $line counters fpga"
+    lappend show_cmds "show hw-module subslot $line counters spi4"
+    lappend show_cmds "show hw-mod subslot $line errors fpga"
+    lappend show_cmds "show hw-mod subslot $line plim-subblock"
+    lappend show_cmds "show hw-mod subslot $line errors fpga"
+    lappend show_cmds "show hw-mod subslot $line plim-subblock"
+    lappend show_cmds "show hw-mod subslot $line errors fpga"
+    lappend show_cmds "show hw-mod subslot $line plim-subblock"
+    lappend show_cmds "show hw-mod subslot $line errors fpga"
+    lappend show_cmds "show hw-module subslot $line counters fpga"
+    lappend show_cmds "show hw-module subslot $line counters spi4"
+  }
+}
+
+
+set run 0
+while {$run <= 2} { 
+  set cmd "show processes blocked location $location"   ;# Run 3 times get the PIDs for g_spa_ and spa_192_jacket_v2
+  if [catch {cli_exec $cli(fd) $cmd} result] {
+    error $result $errorInfo
+  }
+  # Remove trailing router prompt
+  regexp {\n*(.*\n)([^\n]*)$} $result junk cmd_output
+  puts $FH $cmd_output
+
+  get_process_blocked_pids $cmd_output
+  incr run
+}
+
+if {$pids != ""} {
+  foreach pid [split $pids " "] {
+    set cmd "follow process $pid stackonly iteration 3 location $location"
+    if [catch {cli_exec $cli(fd) $cmd} result] {
+      error $result $errorInfo
+    }
+    # Remove trailing router prompt
+    regexp {\n*(.*\n)([^\n]*)$} $result junk cmd_output
+    puts $FH $cmd_output
+  }
+}
+
+if {$jids != ""} {
+  foreach jid [split $jids " "] {
+    set cmd "dumpcore running $jid location $location"
+    if [catch {cli_exec $cli(fd) $cmd} result] {
+      error $result $errorInfo
+    }
+    # Remove trailing router prompt
+    regexp {\n*(.*\n)([^\n]*)$} $result junk cmd_output
+    puts $FH $cmd_output
+  }
+}
+
+
+
+# ssearch
+
+
+
+
+
+
+while {$run <= 2} { 
+  if {$run == 1} { 
+    sleep 8
+  }
+  puts $FH "\nSHOW OUTPUT CAPTURE RUN: $run"
+  puts $FH "------------------------------------\n"
+  
+  #################################
+  # Capture the EXEC show commands:
+  #################################
+  foreach cmd [split $show_cmds "\n"] {
+    # Trim up the cmd remove extra space/tabs etc:
+    regsub -all {[ \r\t\n]+} $cmd " " cmd
+    # Remove any leading white space:
+    regsub -all {^[ ]} $cmd "" cmd
+    puts $FH "command output (EXEC): $cmd"
+ 
+    if [catch {cli_exec $cli(fd) "$cmd"} result] {
+      error $result $errorInfo
+    }
+    # Remove trailing router prompt
+    regexp {\n*(.*\n)([^\n]*)$} $result junk cmd_output
+    puts $FH $cmd_output
+    puts $FH ""
+  }
+
+  if {$run == 0} {
+    # Enter Admin mode:
+    if [catch {cli_exec $cli(fd) "admin"} result] {
+      error $result $errorInfo
+    }
+
+    ###################################
+    # Capture the ADMIN show commands:
+    ###################################
+    foreach cmd [split $admin_show_cmds "\n"] {
+      # Trim up the cmd remove extra space/tabs etc:
+      regsub -all {[ \r\t\n]+} $cmd " " cmd
+      # Remove any leading white space:
+      regsub -all {^[ ]} $cmd "" cmd
+      puts $FH "command output (ADMIN): $cmd"
+ 
+      if [catch {cli_exec $cli(fd) "$cmd"} result] {
+        error $result $errorInfo
+      }
+      # Remove trailing router prompt
+      regexp {\n*(.*\n)([^\n]*)$} $result junk cmd_output
+      puts $FH $cmd_output
+      puts $FH ""
+    }
+
+    # Exit Admin mode:
+    if [catch {cli_exec $cli(fd) "exit"} result] {
+      error $result $errorInfo
+    }
+  }
+
+  ###########################################
+  # Attach to LC and run some show commands:
+  ###########################################
+  if [catch {cli_write $cli(fd) "run attach $location"} result] {
+    error $result $errorInfo
+  }
+  if [catch {cli_read_pattern $cli(fd) "ksh-LC"} result] {
+    error $result $errorInfo
+  }
+
+  if [catch {cli_write $cli(fd) "hfa_show -c"} result] {
+    error $result $errorInfo
+  }
+  if [catch {cli_read_pattern $cli(fd) "ksh-LC"} result] {
+    error $result $errorInfo
+  }
+  puts $FH "OUTPUT for (hfa_show -c):\n$result"
+
+
+  if [catch {cli_write $cli(fd) "more /tmp/plim_dump.txt"} result] {
+    error $result $errorInfo
+  }
+  if [catch {cli_read_pattern $cli(fd) "ksh-LC"} result] {
+    error $result $errorInfo
+  }
+  puts $FH "OUTPUT for (more /tmp/plim_dump.txt):\n$result"
+
+
+  if [catch {cli_write $cli(fd) "dip_atm"} result] {
+    error $result $errorInfo
+  }
+  if [catch {cli_read_pattern $cli(fd) "DIP"} result] {
+    error $result $errorInfo
+  }
+
+
+  if [catch {cli_write $cli(fd) "gatm0 dad status -l0"} result] {
+    error $result $errorInfo
+  }
+  if [catch {cli_read_pattern $cli(fd) "DIP"} result] {
+    error $result $errorInfo
+  }
+  puts $FH "OUTPUT for (gatm0 dad status -l0):\n$result"
+
+
+  if [catch {cli_write $cli(fd) "gatm0 dad status -l1"} result] {
+    error $result $errorInfo
+  }
+  if [catch {cli_read_pattern $cli(fd) "DIP"} result] {
+    error $result $errorInfo
+  }
+  puts $FH "OUTPUT for (gatm0 dad status -l1):\n$result"
+
+
+  if [catch {cli_write $cli(fd) "gatm0 dad status -l2"} result] {
+    error $result $errorInfo
+  }
+  if [catch {cli_read_pattern $cli(fd) "DIP"} result] {
+    error $result $errorInfo
+  }
+  puts $FH "OUTPUT for (gatm0 dad status -l2):\n$result"
+
+
+  if [catch {cli_write $cli(fd) "gatm0 dad status -l3"} result] {
+    error $result $errorInfo
+  }
+  if [catch {cli_read_pattern $cli(fd) "DIP"} result] {
+    error $result $errorInfo
+  }
+  puts $FH "OUTPUT for (gatm0 dad status -l3):\n$result"
+
+
+  if [catch {cli_write $cli(fd) "gatm0 dad pm cpk -l0"} result] {
+    error $result $errorInfo
+  }
+  if [catch {cli_read_pattern $cli(fd) "DIP"} result] {
+    error $result $errorInfo
+  }
+  puts $FH "OUTPUT for (gatm0 dad pm cpk -l0):\n$result"
+
+
+  if [catch {cli_write $cli(fd) "gatm0 dad pm cpk -l1"} result] {
+    error $result $errorInfo
+  }
+  if [catch {cli_read_pattern $cli(fd) "DIP"} result] {
+    error $result $errorInfo
+  }
+  puts $FH "OUTPUT for (gatm0 dad pm cpk -l1):\n$result"
+
+
+  if [catch {cli_write $cli(fd) "gatm0 dad pm cpk -l2"} result] {
+    error $result $errorInfo
+  }
+  if [catch {cli_read_pattern $cli(fd) "DIP"} result] {
+    error $result $errorInfo
+  }
+  puts $FH "OUTPUT for (gatm0 dad pm cpk -l2):\n$result"
+
+
+  if [catch {cli_write $cli(fd) "gatm0 dad pm cpk -l3"} result] {
+    error $result $errorInfo
+  }
+  if [catch {cli_read_pattern $cli(fd) "DIP"} result] {
+    error $result $errorInfo
+  }
+  puts $FH "OUTPUT for (gatm0 dad pm cpk -l3):\n$result"
+
+  if [catch {cli_write $cli(fd) "quit"} result] {
+    error $result $errorInfo
+  }
+  if [catch {cli_read_pattern $cli(fd) "ksh-LC"} result] {
+    error $result $errorInfo
+  }
+
+  if [catch {cli_write $cli(fd) "exit"} result] {
+    error $result $errorInfo
+  }
+  incr run
+}
+
+
+
+
+
+
+
+set msg "EEM script PLIM_heartbeat_collection ($node) detected a possible Engine 3 ATM LC failure and captured a number of commands"
+send_syslog $msg $repeat
+
+# Send an email message if all below exists:
+if {[info exists _email_server] && [info exists _domainname] && [info exists _email_from] && [info exists _email_to]} {
+  # Call on the send_email proc to generate an email message
+  send_email $node $syslog_msg $msg
+}
+
+close $FH

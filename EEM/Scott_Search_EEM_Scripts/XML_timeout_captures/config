@@ -1,0 +1,22 @@
+event manager environment _xml_timeout_captures_storage_location disk0:/XML_timeout_captures
+event manager directory user policy disk0:/eem
+!
+aaa authorization exec eem-user local
+aaa authorization commands eem-user none
+aaa authorization eventmanager default local
+aaa authorization eventmanager eem-user local
+aaa authentication login eem-user local
+!
+line template EEM
+ authorization exec eem-user
+ authorization commands eem-user
+!
+vty-pool eem 100 120 line-template EEM
+!
+username eem-user
+ group root-system
+ group cisco-support
+ no password
+!
+!
+commit

@@ -1,0 +1,76 @@
+#!/usr/bin/tclsh
+
+set show_module "s1# show module 
+Mod  Ports  Module-Type                         Model              Status
+---  -----  ----------------------------------- ------------------ ----------
+2    48     10/100/1000 Mbps Ethernet Module    N7K-M148GT-11      ok
+3    32     10 Gbps Ethernet Module             N7K-M132XP-12      ok
+5    0      Supervisor Module-1X                N7K-SUP1           active *
+9    48     10/100/1000 Mbps Ethernet Module    N7K-M148GT-11      ok
+10   32     10 Gbps Ethernet Module             N7K-M132XP-12      ok
+
+Mod  Sw              Hw
+---  --------------  ------
+2    6.2(8)          1.5     
+3    6.2(8)          2.3     
+5    6.2(8)          1.4     
+9    6.2(8)          1.5     
+10   6.2(8)          1.6     
+
+
+
+Mod  MAC-Address(es)                         Serial-Num
+---  --------------------------------------  ----------
+2    00-25-84-e4-1a-54 to 00-25-84-e4-1a-87  JAF1322AABD
+3    00-24-98-e8-25-14 to 00-24-98-e8-25-37  JAF1302BCBP
+5    00-24-f7-17-d3-90 to 00-24-f7-17-d3-97  JAF1325AFST
+9    00-25-84-e6-e4-4c to 00-25-84-e6-e4-7f  JAF1322AABS"
+
+
+foreach line [split $show_module "\n"] {
+  regsub -all {[ \r\t\n]+} $line " " line
+  regsub -all {^[ ]} $line "" line
+  regsub -all {[ ]$} $line "" line
+
+  if {$line == ""} {
+    puts ""
+    puts "Empty line - Exiting"
+    puts ""
+    break
+  }
+
+  if {![regexp {Supervisor} $line]} {
+    set first_column [lindex $line 0]
+    if {[string is integer -strict $first_column]} {
+      lappend LC $first_column
+    }
+  }
+
+#  if {![regexp {CPU0$} $first_column] && ![regexp {CPU0} $line]} {
+#    puts "first_column: $first_column"
+#    lappend node_name $first_column
+#
+#    regexp {^\d+\/\d+\/(\d+)} $first_column - spa
+#
+#puts "spa: $spa"
+
+#    regexp {(\d+)\/(\d+)\/CPU0} $first_column - chassis slot
+#
+#    set node_name "node"
+#    append node_name $chassis
+#    append node_name "_"
+#    append node_name $slot
+#    append node_name "_cpu0"
+#
+#    puts "node_name: $node_name"
+#  }
+}
+
+puts ""
+foreach line [split $LC " "] {
+  puts "LC: $line"
+}
+puts ""
+
+exit
+

@@ -1,0 +1,9 @@
+
+run echo "LC/0/2/CPU0:May  5 00:19:10.713 : tx_xbma[87]: %L2-QM_E5-3-SANITY_WARNING : QM Buffer Depletion: Out of pool qelem range head (118456) tail (503) in FrFab FreeQ pool# 2" > /dev/syslog
+
+
+
+run echo "ETHPORT-3-IF_XCVR_ALARM: Interface Ethernet4/3, High Tx Power Alarm" >  /dev/syslog
+
+
+

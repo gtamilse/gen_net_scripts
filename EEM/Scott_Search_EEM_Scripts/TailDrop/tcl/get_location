@@ -1,0 +1,18 @@
+#!/usr/bin/tclsh
+
+set line "LC/1/5/CPU0:Jan 17 04:36:56.849 : fabio_svr\[167\]: %PKT_INFRA-PQMON-6-QUEUE_DROP : Taildrop on QAD queue 8 owned by netio (jid=268)"
+
+
+puts ""
+
+regsub -all {[ \r\t\n]+} $line " " line
+regsub -all {^[ ]} $line "" line
+regsub -all {[ ]$} $line "" line
+
+set location [ lindex [split $line ":"] 0 ]
+regsub -all {^LC\/} $location "" location
+
+puts "location: $location"
+puts ""
+
+

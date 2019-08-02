@@ -1,0 +1,16 @@
+
+
+
+run echo "bgp[1046]: %ROUTING-BGP-5-ADJCHANGE : neighbor 12.0.3.2 Down - Interface flap (VRF: 13979:32545)" > /dev/syslog
+
+
+RP/0/8/CPU0:Sep 10 14:21:29.047 : bgp[1046]: %ROUTING-BGP-5-ADJCHANGE : neighbor 10.242.3.158 Down - Interface flap (VRF: 13979:32545) 
+RP/0/8/CPU0:Sep 10 14:21:29.047 : pim[1139]: %ROUTING-IPV4_PIM-5-NBRCHG : VRF 13979:32545: PIM neighbor 10.242.3.157 DOWN on Se0/1/0/0/2/28:9 - interface state changed 
+RP/0/8/CPU0:Sep 10 14:21:29.199 : pim[1139]: %ROUTING-IPV4_PIM-5-NBRCHG : VRF 13979:32545: PIM neighbor 10.242.3.157 UP on Se0/1/0/0/2/28:9  
+RP/0/8/CPU0:Sep 10 14:22:00.513 : bgp[1046]: %ROUTING-BGP-5-ADJCHANGE : neighbor 10.242.3.158 Up (VRF: 13979:32545) 
+RP/0/8/CPU0:Sep 10 14:28:04.565 : bgp[1046]: %ROUTING-BGP-5-ADJCHANGE : neighbor 10.242.3.158 Down - Interface flap (VRF: 13979:32545) 
+RP/0/8/CPU0:Sep 10 14:28:04.566 : pim[1139]: %ROUTING-IPV4_PIM-5-NBRCHG : VRF 13979:32545: PIM neighbor 10.242.3.157 DOWN on Se0/1/0/0/2/28:9 - interface state changed 
+RP/0/7/CPU0:Sep 10 14:28:04.566 : bgp[1046]: %ROUTING-BGP-5-NBR_NSR_DISABLED_STANDBY : NSR disabled on neighbor 10.242.3.158 on standby due to Interface flap (VRF: 13979:32545) 
+RP/0/8/CPU0:Sep 10 14:28:04.713 : pim[1139]: %ROUTING-IPV4_PIM-5-NBRCHG : VRF 13979:32545: PIM neighbor 10.242.3.157 UP on Se0/1/0/0/2/28:9  
+RP/0/8/CPU0:Sep 10 14:28:36.034 : bgp[1046]: %ROUTING-BGP-5-ADJCHANGE : neighbor 10.242.3.158 Up (VRF: 13979:32545) 
+RP/0/8/CPU0:Sep 10 14:37:32.276 : pim[1139]: %ROUTING-IPV4_PIM-5-NBRCHG : VRF 13979:32545: PIM neighbor 10.242.94.5 DOWN on Se0/1/0/0/9/28:1 - interface state changed

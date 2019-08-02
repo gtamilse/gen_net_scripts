@@ -1,0 +1,74 @@
+#!/usr/bin/tclsh
+
+
+set date [clock format [clock sec] -format "%T %Z %a %b %d %Y"]
+set day [clock format [clock sec] -format "%a"]
+set stamp [clock format [clock sec] -format "%T_%b_%d_%Y"]
+
+puts ""
+puts "Before - stamp: $stamp"
+
+regsub -all {:} $stamp "." stamp
+
+
+puts ""
+puts "date: $date"
+puts "After - stamp: $stamp"
+puts ""
+puts ""
+puts "day: $day"
+puts ""
+
+
+set time [clock format [clock sec] -format "%T"]
+
+
+
+puts "time: $time"
+puts ""
+
+
+set run ""
+
+if {$time >= "00:00:00" && $time < "01:00:00"} {
+  set run "Run0"
+} elseif {$time > "01:00:00" && $time < "07:00:00"} {
+  set run "Run1"
+} elseif {$time > "07:00:00" && $time < "13:00:00"} {
+  set run "Run2"
+} elseif {$time > "13:00:00"} {
+  set run "Run3"
+}
+
+puts ""
+
+set node "router123"
+
+set LogFile "$node.LISP_DefineEID.$day.$run"
+
+puts "LogFile: $LogFile"
+puts ""
+
+# date: 12:40:14 MDT Tue Oct 21 2014
+
+
+## Open logging file (this can be removed or commented out once EEM script testing is finalized)
+#set LogFile "$node.LISP_DefineEID.$stamp"
+
+
+
+#::cisco::eem::event_register_timer cron name LISP_DefineEID cron_entry "0 0,6,12,18 * * *" maxrun_sec 300
+# 
+#So it runs at every six hours starting at midnight.
+# 
+# 
+#Two questions:
+#1.       How do you get the time
+#set time [clock format [clock sec] –format “%T”]
+# 
+#2.       How do we set the logic for a run value. I set the logic where the cron time is in the middle of the time interval check.
+# 
+#If $time >21:00 && < 03:00 $run = 1 (midnight run)
+#If $time >03:00 && < 09:00 $run =2 (6am run)
+#If $time >09:00 && < 15:00 $run =3 (noon run)
+#If $time >15:00 && < 021:00 $run =4 (9pm run)

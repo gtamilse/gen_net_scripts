@@ -1,0 +1,13 @@
+event manager environment _email_to ssearch@cisco.com
+event manager environment _domainname cisco.com
+event manager environment _email_from ssearch@cisco.com
+event manager environment _email_server 9.3.3.249
+event manager environment _s2FailDetect_ospf_id 0
+event manager environment _s2FailDetect_msg_repeat 2
+event manager environment _s2FailDetect_output_log s2FailDetect.log
+event manager environment _s2FailDetect_second_diff 30
+event manager environment _s2FailDetect_msg_NoCostOut No CostOut s2FailDetect_ospf_id set to 0
+event manager environment _s2FailDetect_storage_location harddisk:/eem
+event manager environment _s2FailDetect_unique_locations 0
+event manager directory user policy harddisk:/eem
+event manager policy s2FailDetect.tcl username cisco type user

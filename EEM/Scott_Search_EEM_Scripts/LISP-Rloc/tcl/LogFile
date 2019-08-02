@@ -1,0 +1,28 @@
+#!/usr/bin/tclsh
+
+set day [clock format [clock sec] -format "%a"]
+set time [clock format [clock sec] -format "%T"]
+set run ""
+set node "router123"
+
+
+if {$time >= "00:00:00" && $time < "01:00:00"} {
+  set run "Run0"
+} elseif {$time > "01:00:00" && $time < "07:00:00"} {
+  set run "Run1"
+} elseif {$time > "07:00:00" && $time < "13:00:00"} {
+  set run "Run2"
+} elseif {$time > "13:00:00"} {
+  set run "Run3"
+}
+
+puts ""
+
+
+set LogFile "$node.LISP_DefineEID.$day.$run"
+
+
+puts "LogFile: $LogFile"
+puts ""
+
+

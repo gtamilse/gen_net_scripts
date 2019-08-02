@@ -1,0 +1,167 @@
+::cisco::eem::event_register_syslog pattern "PKT_INFRA-LINK-3-UPDOWN : Interface GigabitE.*changed state to Down" maxrun 240
+
+#::cisco::eem::event_register_syslog pattern "PKT_INFRA-LINK-3-UPDOWN : Interface FortyGigE.*changed state to Down" maxrun 240
+
+#------------------------------------------------------------------
+# 40G_bw_update.tcl
+# October 2012 - Scott Search (ssearch@cisco.com)
+#
+# Syslog message:
+# PKT_INFRA-LINK-3-UPDOWN : Interface FortyGigE5/3/0/0, changed state to Down
+#
+# EEM script will be triggered off the above syslog message.
+#
+# Below environment varibales need to be set within the XR config:
+# set _storage_location "disk0:/eem"
+# set _output_log "40G_bw_update.log"
+# set _40G_mappings "40G_mappings"
+#
+#
+# Copyright (c) 2012 by cisco Systems, Inc.
+# All rights reserved.
+#------------------------------------------------------------------
+namespace import ::cisco::eem::*
+namespace import ::cisco::lib::*
+
+action_syslog msg "EEM policy 40G_bw_update has started"
+
+# Verify the environment vars:
+if {![info exists _storage_location]} {
+  set result "EEM policy error: environment var _storage_location not set"
+  error $result $errInfo
+}
+if {![info exists _output_log]} {
+  set result "EEM policy error: environment var _output_log not set"
+  error $result $errInfo
+}
+
+if {![info exists _40G_mappings]} {
+  set result "EEM policy error: environment var _40G_mappings not set"
+  error $result $errInfo
+}
+#################################################################################################
+
+
+###########################################
+# Procedures
+###########################################
+proc sleep {wait_time} {
+  after [expr {int($wait_time * 1000)}]
+}
+
+proc extract_interface {syslog} {
+  # Trim up the line remove extra space/tabs etc:
+  regsub -all {[ \r\t\n]+} $syslog " " syslog
+  # Remove any leading white space:
+  regsub -all {^[ ]} $syslog "" syslog
+  # Remove any ending white space:
+  regsub -all {[ ]$} $syslog "" syslog
+
+  regexp {Interface (GigabitEthernet\d+\/\d+\/\d+\/\d+), changed} $syslog - interface
+  return $interface
+}
+
+proc determine_tunnel_dummy {Interface} {
+  set return_tunnel_int ""
+  set mapping_file "$_storage_location/$_40G_mappings"
+  
+  if {[file exists $mapping_file]} {
+    action_syslog msg "**ERROR: EEM policy 40G_bw_update 40Gig mappings file unknown or does not exist"
+    exit
+  }
+
+  # open file for read
+  set OPEN_FH [open $mapping_file r]
+  set file_contents [read $OPEN_FH]
+  close $OPEN_FH
+
+  # process the data
+  set contents [split $file_contents "\n"]
+  foreach line $contents {
+    regsub -all {[ \r\t\n]+} $line " " line
+    regsub -all {^[ ]} $line "" line
+    regsub -all {[ ]$} $line "" line
+
+    set FortyGig_int [ lindex [split $line " "] 0 ]
+    set Tunnel_int   [ lindex [split $line " "] 1 ]
+
+    if {($FortyGig_int != "" && $Tunnel_int != "")} {
+      if {$FortyGig_int == $interface} {
+        set return_tunnel_int $Tunnel_int
+      }
+    }
+  }
+  return $return_tunnel_int
+}
+
+
+###########################################
+# MAIN/main
+###########################################
+
+# Globals:
+global FH
+
+set date [clock format [clock sec] -format "%T %Z %a %b %d %Y"]
+set stamp [clock format [clock sec] -format "%T_%b_%d_%Y"]
+regsub -all {:} $stamp "." stamp
+set _output_log "${_output_log}_$stamp"
+
+# open the output file (for write):
+if [catch {open $_storage_location/$_output_log w} result] {
+    error $result
+}
+set FH $result
+
+puts $FH "*Timestamp = $date"
+puts $FH "Cisco 40G_bw_update"
+puts $FH "by: Scott Search (ssearch@cisco.com)\n"
+
+# set the array arr_einfo to the eem event_reqinfo
+array set arr_einfo [event_reqinfo]
+# extract the syslog message:
+set syslog_msg $arr_einfo(msg)
+
+set Interface [extract_interface $syslog_msg]
+
+puts $FH "SYSLOG MSG:\n$syslog_msg\n\n"
+puts $FH "Interface Down: $Interface\n"
+
+set $dummy_interface [determine_tunnel_dummy $Interface]
+
+puts $FH "Tunnel dummy interface: $dummy_interface\n"
+
+if {$dummy_interface != ""} {
+  # open Node Connection
+  if [catch {cli_open} result] {
+    error $result $errorInfo
+  } else {
+    array set cli $result
+  }
+
+  # set node hostname:
+  set node [info hostname]
+  puts $FH "Node: $node"
+
+  # shutdown the Tunnel dummy interface
+  if [catch {cli_exec $cli(fd) "config"} result] {
+    error $result $errorInfo
+  }
+  if [catch {cli_exec $cli(fd) "interface $dummy_interface"} result] {
+    error $result $errorInfo
+  }
+  if [catch {cli_exec $cli(fd) "shutdown"} result] {
+    error $result $errorInfo
+  }
+  if [catch {cli_exec $cli(fd) "commit"} result] {
+    error $result $errorInfo
+  }
+  if [catch {cli_exec $cli(fd) "end"} result] {
+    error $result $errorInfo
+  }
+  close $FH
+
+  action_syslog msg "EEM policy 40G_bw_update shutdown for following Tunnel Dummy interface: $dummy_interface"
+} else {
+  action_syslog msg "**ERROR: EEM policy 40G_bw_update unable to determien the Tunnel Dummy Interface"
+}

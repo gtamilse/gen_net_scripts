@@ -1,0 +1,63 @@
+#!/usr/bin/tclsh
+
+set output "SW25-C7600#show diagnostic result module 6 test TestFabricFlowControlStatus detail        
+
+Current bootup diagnostic level: minimal
+
+  Test results: (. = Pass, F = Fail, U = Untested)
+
+  ___________________________________________________________________________
+
+   36) TestFabricFlowControlStatus -----> U
+
+          Error code ------------------> 3 (DIAG_SKIPPED)
+          Total run count -------------> 0
+          Last test testing type ------> n/a 
+          Last test execution time ----> n/a
+          First test failure time -----> n/a
+          Last test failure time ------> n/a
+          Last test pass time ---------> n/a
+          Total failure count ---------> 0
+          Consecutive failure count ---> 88
+          Current run count --------------->: 0
+          First test execution time ------->: 
+          Last test execution time -------->: 
+          Total FPOE Rate0 Count ---------->: 0
+          Total FPOE Reduced Rate Count --->: 0 
+  ___________________________________________________________________________
+"
+
+
+puts ""
+
+foreach line [split $output "\n"] {
+  regsub -all {[ \r\t\n]+} $line " " line
+  regsub -all {^[ ]} $line "" line
+  regsub -all {[ ]$} $line "" line
+
+  if {[regexp "^Consecutive failure count" $line]} {
+    regexp {^Consecutive failure count .* (\d+)} $line - count
+    puts "count: $count"
+  }
+
+#  if {[regexp "VQI\\($update_VQI" $line]} {
+#    puts "LINE: $line"
+#    regexp {^LTL\((0x.*?)\)\,} $line - LTL
+#    puts "LTL: $LTL"
+#    lappend LTLs $LTL
+#  }
+
+}
+
+if {$count >= 10} {
+  puts "count is greater than or equal to 10"
+} else {
+  puts "count is less than 10"
+}
+
+
+puts ""
+
+exit
+
+

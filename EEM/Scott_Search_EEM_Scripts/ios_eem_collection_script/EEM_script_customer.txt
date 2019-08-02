@@ -1,0 +1,74 @@
+1) Add below commands to the configuration for script to run when CPU goes above 90 % and exit at 40 %. Also when we see error message "Missed 5 keepalives" in the logs. And collect the command outputs to flash:
+
+event manager applet HighCPU
+ event snmp oid 1.3.6.1.4.1.9.9.109.1.1.1.1.3.1 get-type exact entry-op gt entry-val "90" exit-op lt exit-val "40" poll-interval 5 maxrun 90.000
+ action 1.0 syslog msg "HIGH CPU DETECTED $_snmp_oid_val %"
+ action 1.1 cli command "enable"
+ action 1.2 cli command "show clock | append flash0:highcpu.txt"
+ action 1.3 cli command "show proc cpu sort | append flash0:highcpu.txt"
+ action 1.4 cli command "show process cpu history | append flash:highcpu.txt"
+ action 1.5 cli command "show process memory | append flash0:highcpu.txt"
+ action 1.6 cli command "show interfaces | append flash0:highcpu.txt"
+ action 1.7 cli command "show alignment | append flash0:highcpu.txt"
+ action 1.8 cli command "show cef interface | append flash0:highcpu.txt"
+ action 1.9 cli command "show cef not-cef-switched | append flash0:highcpu.txt"
+ action 2.0 cli command "show cef drop | append flash0:highcpu.txt"
+ action 2.1 cli command "show ip traffic | append flash0:highcpu.txt"
+ action 2.2 cli command "show interface switching | append flash0:highcpu.txt"
+ action 2.3 cli command "show interface summary | append flash0:highcpu.txt"
+ action 2.4 cli command "show log | append flash0:highcpu.txt"
+ action 2.5 cli command "show interface stats | append flash0:highcpu.txt"
+
+
+
+
+
+event manager applet Missed_PPP_Keepalive
+event syslog pattern "Missed 5 keepalives"
+action 1.0 syslog msg "PPP script collection start"
+ action 1.1 cli command "enable"
+ action 1.2 cli command "show clock | append flash0:highcpu_ppp.txt"
+ action 1.3 cli command "show proc cpu sort | append flash0:highcpu_ppp.txt"
+ action 1.4 cli command "show process cpu history | append flash:highcpu_ppp.txt"
+ action 1.5 cli command "show process memory | append flash0:highcpu_ppp.txt"
+ action 1.6 cli command "show interfaces | append flash0:highcpu_ppp.txt"
+ action 1.7 cli command "show alignment | append flash0:highcpu_ppp.txt"
+ action 1.8 cli command "show cef interface | append flash0:highcpu_ppp.txt"
+ action 1.9 cli command "show cef not-cef-switched | append flash0:highcpu_ppp.txt"
+ action 2.0 cli command "show cef drop | append flash0:highcpu_ppp.txt"
+ action 2.1 cli command "show ip traffic | append flash0:highcpu_ppp.txt"
+ action 2.2 cli command "show interface switching | append flash0:highcpu_ppp.txt"
+ action 2.3 cli command "show interface summary | append flash0:highcpu_ppp.txt"
+ action 2.4 cli command "show log | append flash0:highcpu_ppp.txt"
+ action 2.5 cli command "show interface stats | append flash0:highcpu_ppp.txt"
+
+
+
+
+2) Then verify in the flash0: if the file is there. File will be created only if high CPU condition or keep-alive error message has triggered the script.
+ 
+dir flash0:
+ 
+3). Then view content of the file
+
+more flash0:highcpu.txt
+flash0:highcpu_ppp.txt
+
+
+
+4) Command to remove To Remove the script after testing and needed outputs are collected. Run it for a day or two and then remove the script.
+
+no event manager applet HighCPU
+no event manager applet Missed_PPP_Keepalive
+ 
+
+
+
+
+
+
+
+
+
+
+

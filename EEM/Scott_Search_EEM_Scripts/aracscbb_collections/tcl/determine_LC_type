@@ -1,0 +1,28 @@
+#!/usr/bin/tclsh
+
+#set output "RP/0/7/CPU0:auttx306me1#show plat | inc 0/1/0
+#0/1/0           SPA             SPA-1XCHOC12/DS READY           PWR,NSHUT"
+
+set output "RP/0/7/CPU0:auttx306me1#show plat | inc 0/1/0
+0/1/0           SPA             SPA-1XCHOC48/DS READY           PWR,NSHUT"
+
+
+puts ""
+
+set channel 1
+
+foreach line [split $output "\n"] {
+  regsub -all {[ \r\t\n]+} $line " " line
+  regsub -all {^[ ]} $line "" line
+  regsub -all {[ ]$} $line "" line
+
+  if {[regexp {CHOC12} $line]} {
+    set channel 3
+  }
+}
+
+
+puts "channel: $channel"
+puts ""
+
+

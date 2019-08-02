@@ -1,0 +1,82 @@
+# cat test1.tcl
+::cisco::eem::event_register_syslog pattern "CONFIG" maxrun 300
+
+# Define the namespace
+namespace import ::cisco::eem::*
+namespace import ::cisco::lib::*
+
+set _s2FailDetect_output_log "disk0:/eem/test_output"
+set seconds_to_go_back 50
+
+##################################
+# Main/main
+##################################
+global FH
+
+# Open the output file (for write):
+if [catch {open $_s2FailDetect_output_log w} result] {
+    error $result
+}
+set FH $result
+ 
+# Set the array arr_einfo to the eem event_reqinfo
+array set arr_einfo [event_reqinfo]
+# Extract the syslog message the finally kicked off the EEM script:
+set syslog_msg $arr_einfo(msg)
+ 
+# Capture the syslogs history:
+set hist_list [sys_reqinfo_syslog_history]
+
+
+# Remove the following characters from $hist_list: {}"
+regsub -all {\{|\}|\"} $hist_list {} hist_list
+
+set concat_string ""
+foreach rec $hist_list {
+  foreach syslog $rec {
+    if {[regexp {^time_sec} $syslog]} {
+      if {[llength $concat_string] > 4} {
+        ;# puts $FH "DEBUG: concat_string: $concat_string"
+ 
+;#        if {[regexp $pattern $concat_string]} {
+          set time_rec [lindex $concat_string 0]
+          set location [lindex $concat_string 4]
+          # Remove the : from the location string
+          set location [ lindex [split $location ":"] 0 ]
+          # Verify the time_rec string is numeric:
+          if {[string is double -strict $time_rec] || [string is digit -strict $time_rec]} {
+            puts $FH "DEBUG: time_rec: $time_rec"
+          }
+          if {[regexp -nocase "cpu0$" $location]} {
+            puts $FH "Location Extracted: $location"
+            if {$time_rec > $seconds_to_go_back} {
+              lappend locations $location
+            }
+          }
+ 
+          # Reset the concat_string variable:
+          set concat_string ""
+;#        }
+      } else {
+        if {![regexp {^time_sec} $syslog]} {
+          lappend concat_string $syslog
+        }
+      }
+    } else {
+      if {![regexp {^rec_list} $syslog]} {
+        lappend concat_string $syslog
+      }
+    }
+  }
+}
+
+
+close $FH
+
+
+;# syslog_dev[86]: syslog_dev: list element in braces followed by "}" instead of space
+;# syslog_dev:     while executing
+;# syslog_dev: "lindex $hist_list 1"
+;# syslog_dev:     invoked from within
+;# syslog_dev: "set new_hist_list [lindex $hist_list 1]"
+;# syslog_dev:     (file "/dev/syncfs2/svr/dev/shmem/test1.tcl" line 93)

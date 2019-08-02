@@ -1,0 +1,15 @@
+#!/usr/bin/tclsh
+
+set interface "GigabitEthernet0/0/0/0"
+
+set _40G_mappings "40G_mappings"
+#set _40G_mappings "40Gi_mappings"
+
+if {![file exists $_40G_mappings]} {               
+  puts "\nFile does not exist\n"
+} else {
+  puts "\nMappings file exists, continuing\n\n"
+}
+
+
+

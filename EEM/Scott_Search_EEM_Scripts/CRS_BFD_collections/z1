@@ -1,0 +1,7 @@
+
+
+:cisco::eem::event_register_syslog occurs 30 period 60 pattern "ROUTING-BGP-3-NBR_NSR_DISABLED : NSR disabled on neighbor.*due to TCP retransmissions" maxrun 300
+
+
+
+

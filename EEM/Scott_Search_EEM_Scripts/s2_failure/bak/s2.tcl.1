@@ -1,0 +1,82 @@
+::cisco::eem::event_register_syslog occurs 3 pattern "CONFIG"
+  
+# Define the namespace
+namespace import ::cisco::eem::*
+namespace import ::cisco::lib::*
+ 
+set pattern "CONFIG"
+ 
+ 
+# Verify the environment vars:
+if {![info exists _s2FailDetect_storage_location]} {
+  set result "EEM policy error: environment var _s2FailDetect_storage_location not set"
+  error $result $errInfo
+}
+if {![info exists _s2FailDetect_output_log]} {
+  set result "EEM policy error: environment var _s2FailDetect_output_log not set"
+  error $result $errInfo
+}
+if {![info exists _s2FailDetect_second_diff]} {
+  set result "EEM policy error: environment var _s2FailDetect_second_diff not set"
+  error $result $errInfo
+}
+  
+global FH
+  
+# Open the output file (for write):
+if [catch {open $_s2FailDetect_storage_location/$_s2FailDetect_output_log w} result] {
+    error $result
+}
+set FH $result
+  
+####################################
+#  _s2FailDetect_second_diff
+set time_now [clock seconds]
+set seconds_to_go_back [expr $time_now - $_s2FailDetect_second_diff]
+####################################
+ 
+ 
+set date [clock format [clock sec] -format "%T %Z %a %b %d %Y"]
+puts $FH "*Timestamp = $date"
+  
+# Set node hostname:
+set node [info hostname]
+puts $FH "Node: $node"
+ 
+# Set the array arr_einfo to the eem event_reqinfo
+array set arr_einfo [event_reqinfo]
+# Extract the syslog message:
+set syslog_msg $arr_einfo(msg)
+ 
+puts $FH "\n\n"
+puts $FH "Syslog(s):"
+puts $FH $syslog_msg
+puts $FH "\n\n"
+  
+#set freq_list [sys_reqinfo_syslog_freq]
+set hist_list [sys_reqinfo_syslog_history]
+#puts $FH $freq_list
+foreach rec $hist_list {
+  foreach syslog $rec {
+    if {[regexp "$pattern" $syslog]} {
+      # Trim up the line remove extra space/tabs etc:
+      regsub -all {[ \r\t\n]+} $syslog " " syslog
+      # Remove any leading white space:
+      regsub -all {^[ ]} $syslog "" syslog
+      # Remove any ending white space:
+      regsub -all {[ ]$} $syslog "" syslog
+ 
+      if {[regexp {^time_sec} $syslog]} {
+        regexp {^time_sec (\d+) .*} $syslog - time_rec
+        if {$time_rec > $seconds_to_go_back} {
+          puts $FH $syslog
+        }
+      }
+    }
+  }
+}
+  
+close $FH
+  
+# Send syslog message:
+action_syslog msg "EEM policy completed"

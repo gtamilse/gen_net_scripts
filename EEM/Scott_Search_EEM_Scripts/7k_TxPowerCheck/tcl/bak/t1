@@ -1,0 +1,19 @@
+#!/usr/bin/tclsh
+
+puts ""
+
+set tunnel 88
+set last_req_bw 99
+set bw($tunnel) $last_req_bw
+
+puts "tunnel: $tunnel"
+puts "last_req_bw: $last_req_bw"
+
+puts ""
+
+foreach key [array names bw] {
+  puts "key: $key -- Value:  $bw($key)"
+}
+
+
+puts ""

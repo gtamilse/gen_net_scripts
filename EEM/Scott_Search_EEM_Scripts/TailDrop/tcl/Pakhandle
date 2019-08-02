@@ -1,0 +1,60 @@
+#!/usr/bin/tclsh
+
+set output "RP/0/RP0/CPU0:cgcil21crs#show packet-memory inuse location 2/0/cpu0
+Display inuse packets:
+
+Pakhandle   Job Id Ifinput      Ifoutput     dll/pc      
+0xb5d47df8  167    NULLIFHNDL   NULLIFHNDL   0x00000000
+0xb5d4a580  167    NULLIFHNDL   Bundle-Ether28170x09bb162c
+Total packets inuse = 2"
+
+
+puts ""
+
+
+set handles ""
+set PakHandle ""
+set good 0
+
+foreach line [split $output "\n"] {
+  regsub -all {[ \r\t\n]+} $line " " line
+  regsub -all {^[ ]} $line "" line
+  regsub -all {[ ]$} $line "" line
+
+  if {[regexp "Pakhandle Job" $line]} {
+    set good 1
+  }
+
+  if {$good ne 0} {
+    if {[regexp {^0x} $line]} {
+      set PakHandle [lindex [split $line " "] 0]
+      lappend handles $PakHandle
+    }
+  }
+}
+
+
+
+puts "PakHandles: $handles"
+puts ""
+
+
+#proc get_locations {output} {
+#  set loc ""
+#  set locations ""
+#
+#  foreach line [split $output "\n"] {
+#    regsub -all {[ \r\t\n]+} $line " " line
+#    regsub -all {^[ ]} $line "" line
+#    regsub -all {[ ]$} $line "" line
+#
+#    if {[regexp {^\S+\d+\/\d+\/\d+\/\d+.*} $line]} {
+#      regexp {^\S+\d+\/(\d+)\/\d+\/\d+.*} $line - loc
+#      lappend locations $loc
+#    }
+#  }
+#
+#  set locations [lsort -unique $locations]
+#
+#  return $locations
+#} ;# get_locations

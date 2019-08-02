@@ -1,0 +1,289 @@
+::cisco::eem::event_register_timer cron name bcc_v1_0 cron_entry "0,10,20,30,40,50 * * * *" maxrun_sec 300
+
+#  ::cisco::eem::event_register_timer cron name bcc_v1_0 cron_entry "0,5,10,15,20,25,30,35,40,45,50,55 * * * *" maxrun_sec 290
+  
+namespace import ::cisco::eem::*
+namespace import ::cisco::lib::*
+  
+###########################################
+# PROCEDURES
+###########################################
+proc get_bundle_members {bundle retval} {
+  global FH flags members members2
+  set kont 0
+  set iface ""
+  set state ""
+  set bw ""
+  set bw_totals ""
+
+  foreach line [split $retval "\n"] {
+    # Trim up the line remove extra space/tabs etc:
+    regsub -all {[ \r\t\n]+} $line " " line
+    # Remove any leading white space:
+    regsub -all {^[ ]} $line "" line
+  
+    if {$line == ""} { set kont 0 }
+    if {$kont == 2} { set kont 3 }
+    if {[regexp "^Port" $line]} { set kont [expr $kont + 1]}
+    if {$kont == 1 && [regexp "^------" $line]} { set kont [expr $kont + 1] }
+    if {$kont == 3 && $line != ""} {
+      set iface [lindex [split $line " "] 0]
+      set state [lindex [split $line " "] 1]
+      regsub -all {[a-zA-Z]} $state "" state
+      set bw    [lindex [split $line " "] 4]
+      if {$bw != ""} { lappend bw_totals $bw }
+      # If state is not equal to 4 then flag this:
+      if {$state != 4} {lappend flags "$bundle|$iface|Member state not equal to 4 ($state)"}
+      set iface2 $iface
+      # Change the TenGig member 'Te' to 'ten':
+      regsub -all {^(Te)} $iface2 "ten" iface2
+      lappend members2 $iface2
+      lappend members $iface
+      lappend members_check "$iface|$bw"
+  
+      puts $FH "iface: $iface"
+      puts $FH "state: $state"
+      puts $FH "bw: $bw"
+    }
+  }
+  
+  # Only need to perform the next section if the bundle type is POS:
+  if {[regexp -nocase "pos" $bundle]} {
+    puts $FH "POS bundle detected, need to determine egress/ingress entries"
+    determine_num_entries $members_bw $bw_totals
+  }
+}
+
+proc determine_num_entries {members_bw bw_totals} {
+  global ingress_total_entries egress_total_entries highest_member FH
+  set ingress_total_entries 0
+  set egress_total_entries 0
+  set highest_bw 0
+  set num_high_keys 0
+  set num_not_high_keys 0
+  set high_key 0
+  set highest_member ""
+
+  set sorted_bw [lsort -unique $bw_totals]  ;# Unique list of BW totals
+  set sorted_bw_num [llength $sorted_bw]    ;# Number of unique BW totals
+
+  if {$sorted_bw_num > 1} {
+    # If $sorted_bw_num is greater than 1 then there are mismatched Bandwidth members. This
+    # will also change the Ingress HW Asic collection and Ingress HW programming
+    # validation. The highest bandwidth member will be the Ingress HW data we collect and
+    # verify since all 'sponge_queue' and 'uidb_index' will be based off the highest
+    # BW member.
+    puts $FH "POS bundle with more than one bandwidth"
+
+    # Find the highest BW value:
+    foreach key [split $sorted_bw " "] {
+      if {$key > $high_key} { set high_key $key }
+    }
+    set highest_bw $high_key
+
+    # Get the number of high_keys (number of high BW values):
+    foreach val [split $bw_totals " "] {
+      if {$val == $high_key} { set num_high_keys [expr $num_high_keys + 1] }
+    }
+    set total_entries [expr $num_high_keys * 4]
+
+    # Next update the total_entries with the number of BW's not equal to $high_key:
+    foreach val [split $bw_totals " "] {
+      if {$val != $high_key} { set num_not_high_keys [expr $num_not_high_keys + 1] }
+    }
+    set total_entries [expr $total_entries + $num_not_high_keys]
+    set egress_total_entries $total_entries
+
+    foreach val [split $members_bw " "] {
+      regexp {(.*)\|(\d+)} $val - mem bw
+      if {$bw == $highest_bw} { set highest_member $mem }
+    }
+  } else {
+    # Else no mismatched members.  Next  determine if the members are oc768 and if so set the
+    # ingress num_entries multiply by 4 and egress multiply by 2:
+    set bw0 [lindex $bw_totals 0]
+
+    if {$bw0 >= 39000000} {
+      # Only oc768 members, need to multiply by 4 and 2
+      set num [llength $bw_totals]
+      set ingress_total_entries [expr $num * 4]
+      set egress_total_entries [expr $num * 2]
+    }
+  }
+}
+
+proc determine_xr_location {members} {
+  global bundle_member_locations FH
+  set chassis 0
+  set slot 0
+  set subslot 0
+  set port 0
+  set iface ""
+  set locale ""
+
+  foreach iface [split $members " "] {
+    regexp {.*(\d+)\/(\d+)\/(\d+)\/(\d+)} $iface - chassis slot subslot port
+    set locale "$chassis/$slot/cpu0"
+    lappend bundle_member_locations $locale
+    puts $FH "iface: $iface Location: $locale"
+  }
+}
+
+
+   
+###########################################
+# MAIN/main
+###########################################
+   
+###########################################
+# Globals:
+global FH flags members members2 ingress_total_entries egress_total_entries highest_member
+global num_bundle_members modified_num_bundle_members bundle_member_locations
+
+set flags                    ""
+set bundle                   ""
+set members                  ""
+set members2                 ""
+set highest_member           ""
+set bundle_member_locations  ""
+set output_file              "eem_bcc.log"
+set ingress_total_entries    0
+set egress_total_entries     0
+
+
+# Open the output file (for write):
+if [catch {open harddisk:/eem/$output_file w} result] {
+    error $result
+}
+set FH $result
+ 
+###########################################
+# Node Connection
+if [catch {cli_open} result] {
+  error $result $errorInfo
+} else {
+  array set cli $result
+}
+ 
+# Find all the active Bundle interfaces:
+if [catch {cli_exec $cli(fd) "show ipv4 inter brief | inc Bundle| inc Up"} result] {
+  error $result $errorInfo
+}
+set retval $result
+ 
+# Process the output and extract the Bundle interfaces:
+foreach line [split $retval "\n"] {
+  # Trim up the line remove extra space/tabs etc:
+  regsub -all {[ \r\t\n]+} $line " " line
+  # Remove any leading white space:
+  regsub -all {^[ ]} $line "" line
+  
+  if [regexp {(^Bundle-\w+) *} $line - iface] {
+    lappend bundles $iface
+  }
+}
+  
+# Next get the 'show bundle $bundle' data:
+if {[string length $bundles]!=0} {
+  foreach bundle [split $bundles " "] {
+    if [catch {cli_exec $cli(fd) "show bundle $bundle"} result] {
+      error $result $errorInfo
+    }
+    set bundle_data $result
+ 
+    # Get the current time:
+    set time_now [clock seconds]
+    set time_now [clock format $time_now -format "%T %Z %a %b %d %Y"]
+    puts $FH "**Timestamp = $time_now"
+ 
+    puts $FH "Processing Bundle: $bundle"
+ 
+    ###############################################################
+    # Step 1: Gathering Bundle Info and States
+    ###############################################################
+    # Call the get_bundle_members proc to extract the bundle member data:
+    get_bundle_members $bundle $bundle_data
+
+    puts $FH "highest_member: $highest_member"
+    puts $FH "ingress_total_entries: $ingress_total_entries"
+    puts $FH "egress_total_entries: $egress_total_entries"
+
+    set num_bundle_members [llength $members]
+    if {$ingress_total_entries} {
+      # If the $ingress_total_entries exists then the modified_num_bundle_members will be updated accordingly:
+      set modified_num_bundle_members $egress_total_entries
+      puts $FH "total (1) Bundle Members for $bundle = $num_bundle_members (entries (i/e): $ingress_total_entries/$egress_total_entries"
+    } elseif {$egress_total_entries} {
+      set modified_num_bundle_members $egress_total_entries
+      puts $FH "total (2) Bundle Members for $bundle = $num_bundle_members (entries: $modified_num_bundle_members)"
+    } else {
+      set modified_num_bundle_members $num_bundle_members
+      puts $FH "total (3) Bundle Members for $bundle = $num_bundle_members (entries: $modified_num_bundle_members)"
+    }
+
+    ###############################################################
+    # Step 2: Gather interface details and lacp counters
+    ###############################################################
+
+    # Currently on HOLD
+
+    ###############################################################
+    # Step 3: Verify iir interfaces details
+    ###############################################################
+    # Next need to determine XR LC locations
+    determine_xr_location $members
+    set bundle_member_locations [lsort -unique $bundle_member_locations]
+    set bundle_member_locations2 $bundle_member_locations
+
+    foreach location [split $bundle_member_locations " "] {
+      set cmd "show iir interface name $bundle location $location"
+      puts $FH $cmd
+                                                                                                                                        
+                                                                                                                                        
+    #  if (!@cmd_output) {
+    #    $p_s3 = 1;
+    #  } else {
+    #    $p_s3 = verify_iir_int_data($location, @cmd_output);
+    #    if ($p_s3) {
+    #      $msg = "**ERROR: Verify IIR interface failed **\n";
+    #      if ($verbose) { print $msg; }
+    #      push(@script_run_errors, $msg);
+    #      print $log_handle $msg;
+    #    } else {
+    #      $msg = "Verify IIR interface PASSED\n";
+    #      if ($verbose) { print $msg; }
+    #      print $log_handle $msg;
+    #    }
+    #  }
+    }
+
+
+
+  }  ;# Close curly for the foreach of bundles
+}  ;# Close curly for checking for bundle interfaces exist
+ 
+# Close CLI
+cli_close $cli(fd) $cli(tty_id)
+# End of Node Connection
+###########################################
+ 
+ 
+###########################################
+# Check for flagged events:
+if {[string length $flags]!=0} {
+  # Issues/Flags found
+  puts $FH "Flagged event(s) found:"
+  set kont 0
+  set flags_length [llength $flags]
+  while {$kont < $flags_length} {
+    set msg [lindex $flags $kont]
+    puts $FH "FLAG $kont: $msg"
+    set kont [expr $kont + 1]
+  }
+} else {
+  # No issues/flags found
+  puts $FH "No flags or errors encountered.  Node  **PASSED**  all BCC checks!"
+}
+ 
+close $FH
+################### End of Script ##########################################

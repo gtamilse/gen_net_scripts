@@ -1,0 +1,120 @@
+EXEC mode:
+----------------------------------------------------------------------------
+sh red
+sh gsp stats client
+sh lpts trace global
+sh qsm trace
+sh lrd trace server client notification sent
+sh gsp trace server notification
+sh redundancy driver trace
+sh ospf trace all
+sh mpls ldp trace
+
+sh tech sysdb file disk0:/sysdb_shtech_  (date&time) background compress
+sh tech gsp file disk0:/gsp_shtech_ (date&time) background compress
+
+ADMIN mode:
+----------------------------------------------------------------------------
+sh mbus can-error location all
+sh mbus counters location all
+sh mbus can-error location all
+sh logging onboard all
+
+sh tech shelf file disk0:/shelf_shtech_ (date&time) background compress
+
+
+
+
+LC Location Needed:
+----------------------------------------------------------------------------
+sh arm trace loc <LC location> <cr>
+sh ipv4 ma trace loc <LC location> <cr>
+sh ital trace loc <LC location> <cr>
+
+sh qsm trace location <LC location> <cr>
+sh qsm trace location <LC location> | inc node_is_down <cr>
+
+sh lrd trace server client notification sent location <LC location> <cr>
+
+sh gsp trace server notification location <LC location> <cr>
+
+sh redundancy driver trace location <LC location> <cr>
+
+ 
+
+JOB ID Needed:
+----------------------------------------------------------------------------
+sh process ipv4_ma location <LC location> <cr>  (for getting the job-id)
+
+Example:
+RP/0/7/CPU0:CACLGR1001CR1#sh process ipv4_ma location 0/11/cpu0
+                  Job Id: 167  <<<<<<<<<<<<<<<<<<
+                     PID: 86101
+         Executable path: /c12k-base-3.8.4/bin/ipv4_ma
+              Instance #: 1
+              Version ID: 00.00.0000
+                 Respawn: ON
+           Respawn count: 1
+  Max. spawns per minute: 12
+            Last started: Fri Dec 10 18:43:38 2010
+           Process state: Run
+           Package state: Normal
+                    core: MAINMEM 
+               Max. core: 0
+                   Level: 99
+               Placement: None
+            startup_path: /pkg/startup/ipv4_ma_nonrp.startup
+                   Ready: 16.833s
+               Available: 4.053s
+        Process cpu time: 1.249 user, 0.517 kernel, 1.766 total
+JID    TID  Stack pri state         TimeInState       HR:MM:SS:MSEC NAME
+167    1      76K  10 Receive        0:00:38:0314    0:00:00:0584 ipv4_ma
+167    2      76K  10 Receive        0:01:38:0316    0:00:00:0116 ipv4_ma
+167    3      76K  10 Receive      287:28:12:0156    0:00:00:0008 ipv4_ma
+167    4      76K  10 Receive        0:01:35:0477    0:00:01:0054 ipv4_ma
+167    5      76K  10 Receive      287:27:51:0902    0:00:00:0004 ipv4_ma
+-------------------------------------------------------------------------------
+
+sh proc files <job_id of ipv4_ma on LC> location <LC location> <cr>
+
+sh process ipv4_ma <cr>	(for getting the job-id)
+sh proc files <job_id of ipv4_ma> detail <cr>
+sh lwm <job_id of ipv4_ma> <cr>
+
+
+sh process ipv4_arm <cr> (for getting the job_id)
+sh proc files <job_id of ipv4_arm> detail <cr>
+sh lwm <job_id of ipv4_arm> <cr>
+
+
+sh process ipv4_io <cr> (for getting the job_id)
+sh proc files <job_id of ipv4_io> detail <cr>
+sh lwm <job_id of ipv4_io> <cr>
+          
+
+
+Note: The following is run in Shell
+----------------------------------------------
+run show_psarb_trace -i all <cr>
+run show_psarb_listener -c -l all –A <cr>
+run show_psarb_lc_trace -i all <cr>
+run psarbcmd showlr <cr>
+
+
+
+run <cr>
+  		#ls /net <cr>       (get the nodename. Eg.one of the nodename is node0_11_CPU0)
+  		#ls /net/<nodename> <cr>   (nodename obtained from  previous command) 
+
+run attach <node> <cr> (eg. run attach 0/11/cpu0) 
+  		ksh-LC#cat /proc/qnetstats* <cr>
+  		ksh-LC#pidin –p 1 fds <cr>   (note: decimal 1)
+ksh-LC#show_psarb_listener -c -l all –A <cr>
+
+
+
+
+
+
+
+

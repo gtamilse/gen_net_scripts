@@ -1,0 +1,58 @@
+#!/usr/bin/tclsh
+
+proc clean_string {line} {
+  # Trim up the line remove extra space/tabs:
+  regsub -all {[ \r\t\n]+} $line " " line
+  # Remove any leading white space:
+  regsub -all {^[ ]} $line "" line
+  # Remove any ending white space:
+  regsub -all {[ ]$} $line "" line
+  
+  return $line
+}
+
+
+set log "MSMR#show run | inc router lisp
+router lisp 1
+router lisp 2
+router lisp test1
+router lisp test2
+router lisp test2
+router lisp test2
+router lisp test2
+router lisp test2
+router lisp test3
+router lisp test4
+router lisp test2
+router lisp test2
+MSMR#"
+
+
+set lisp_processes ""
+
+
+foreach line [split $log "\n"] {
+  set line [clean_string $line]
+
+  if {[regexp {^router } $line]} {
+    lappend lisp_processes [lindex [split $line " "] end]
+  }
+}
+
+set lisp_processes [lsort -unique $lisp_processes]
+
+foreach process [split $lisp_processes " "] {
+  puts "process: $process"
+}
+
+
+
+
+#;if {[regexp {^time_sec} $log]} {
+#;  regexp "\{(.*): .*" $log - msg
+#;  set location [ lindex [split $msg ":"] 0 ]
+#;
+#;  puts "location: $location\n"
+#;}
+
+

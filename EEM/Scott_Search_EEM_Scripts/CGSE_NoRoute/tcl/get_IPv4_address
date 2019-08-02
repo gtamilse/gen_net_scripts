@@ -1,0 +1,62 @@
+#!/usr/bin/tclsh
+
+puts ""
+
+set IPv4 ""
+
+set syslogs "RP/0/RP0/CPU0:rmonc401cts#show run interface serviceapp 41
+interface ServiceApp41
+ ipv4 address 12.83.67.105 255.255.255.252
+ load-interval 30
+ service cgn cgse1 service-type tunnel v6rd
+ logging events link-status
+!
+"
+
+proc get_IPv4_address {syslogs} {
+  set IPv4 ""
+
+  foreach line [split $syslogs "\n"] {
+    regsub -all {[ \r\t\n]+} $line " " line
+    regsub -all {^[ ]} $line "" line
+    regsub -all {[ ]$} $line "" line
+
+    if {[regexp {^ipv4 address \d+\.\d+\.\d+\.\d+} $line]} {
+      regexp {^ipv4 address (\d+\.\d+\.\d+\.\d+) \d+\.\d+} $line - IPv4
+    }
+  }
+  return $IPv4
+} ;# get_IPv4_address
+
+
+
+#foreach line [split $syslogs "\n"] {
+#  regsub -all {[ \r\t\n]+} $line " " line
+#  regsub -all {^[ ]} $line "" line
+#  regsub -all {[ ]$} $line "" line
+#
+#  if {[regexp {^ipv4 address \d+\.\d+\.\d+\.\d+} $line]} {
+#    regexp {^ipv4 address (\d+\.\d+\.\d+\.\d+) \d+\.\d+} $line - IPv4 
+#  }
+#}
+
+set IPv4 [get_IPv4_address $syslogs]
+
+puts "IPv4: $IPv4"
+
+if {$IPv4 != ""} {
+  regexp {(\d+\.\d+\.\d+\.)(\d+)} $IPv4 - IPv4_cut last_octet 
+
+  set up [expr $last_octet + 1]
+  set down [expr $last_octet - 1]
+   
+  set IPv4_up $IPv4_cut
+  append IPv4_up $up
+  set IPv4_down $IPv4_cut
+  append IPv4_down $down
+
+  puts "IPv4_up: $IPv4_up"
+  puts "IPv4_down: $IPv4_down"
+}
+
+puts ""

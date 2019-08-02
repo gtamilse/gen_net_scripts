@@ -1,0 +1,187 @@
+RP/1/RP0/CPU0:JC22CRS#run attach F0/SM10/SP
+Fri Apr 30 17:40:49.917 UTC
+ 
+attach: Starting session 1 to node F0/SM10/SP
+ 
+#
+# echo "sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled" > /dev/syslog
+# SP/F0/SM10/SP:Apr 30 17:41:40.442 : syslog_dev[74]: syslog_dev: sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled
+exit
+Terminating attach to node F0/SM10/SP..
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#RP/1/RP0/CPU0:Apr 30 17:41:49.118 : fab_detect.tcl[65824]: EEM policy fab_detect detected Fabric Error on card F0/SM10/SP yet harddisk:/eem/fab_detect_run_flag exists No Action Taken!
+ 
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#dir harddisk:/eem
+Fri Apr 30 17:42:04.108 UTC
+                                                                                                                                
+Directory of harddisk:/eem
+ 
+2087387232  -rwx  49874       Wed Apr  7 21:27:32 2010  bcc.tcl
+2087387296  -rwx  22063       Fri Apr 16 22:21:47 2010  eem_bcc.log
+2087387392  -rwx  8943        Thu Apr 22 14:24:00 2010  fab_detect.tcl
+2087387488  -rwx  921         Fri Apr 30 17:41:50 2010  eem_fabric_detect.log
+2087387584  -rwx  42          Fri Apr 30 17:37:16 2010  fab_detect_run_flag
+ 
+39929724928 bytes total (39241072640 bytes free)
+RP/1/RP0/CPU0:JC22CRS#dele harddisk:/eem/eem_fabric_detect.log
+Fri Apr 30 17:42:18.765 UTC
+Delete harddisk:/eem/eem_fabric_detect.log[confirm]
+RP/1/RP0/CPU0:Apr 30 17:42:21.597 : [-1]: User csco-se has deleted file harddisk:/eem/eem_fabric_detect.log
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#dele harddisk:/eem/fab_detect_run_flag
+Fri Apr 30 17:43:08.764 UTC
+Delete harddisk:/eem/fab_detect_run_flag[confirm]
+RP/1/RP0/CPU0:Apr 30 17:43:11.828 : filesys_cli[65822]: User csco-se has deleted file harddisk:/eem/fab_detect_run_flag
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#dir harddisk:/eem
+Fri Apr 30 17:43:18.163 UTC
+                                                                                                                                
+Directory of harddisk:/eem
+ 
+2087387232  -rwx  49874       Wed Apr  7 21:27:32 2010  bcc.tcl
+2087387296  -rwx  22063       Fri Apr 16 22:21:47 2010  eem_bcc.log
+2087387392  -rwx  8943        Thu Apr 22 14:24:00 2010  fab_detect.tcl
+ 
+39929724928 bytes total (39241080832 bytes free)
+RP/1/RP0/CPU0:JC22CRS#run attach F0/SM10/SP
+Fri Apr 30 17:43:28.748 UTC
+ 
+attach: Starting session 1 to node F0/SM10/SP
+ 
+#
+# echo "sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled" > /dev/syslog
+# SP/F0/SM10/SP:Apr 30 17:44:23.452 : syslog_dev[74]: syslog_dev: sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled
+exit
+Terminating attach to node F0/SM10/SP..
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#dir harddisk:/eem
+Fri Apr 30 17:44:31.311 UTC
+                                                                                                                                
+Directory of harddisk:/eem
+ 
+2087387232  -rwx  49874       Wed Apr  7 21:27:32 2010  bcc.tcl
+2087387296  -rwx  22063       Fri Apr 16 22:21:47 2010  eem_bcc.log
+2087387392  -rwx  8943        Thu Apr 22 14:24:00 2010  fab_detect.tcl
+2087387488  -rwx  0           Fri Apr 30 17:44:32 2010  eem_fabric_detect.log
+2087387584  -rwx  42          Fri Apr 30 17:44:32 2010  fab_detect_run_flag
+ 
+39929724928 bytes total (39241076736 bytes free)
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#RP/1/RP0/CPU0:Apr 30 17:44:35.959 : fab_detect.tcl[65824]: EEM policy fab_detect detected a Fabric Error and has SHUTDOWN CARD: F0/SM10/SP
+ 
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#more harddisk:/eem/eem_fabric_detect.log
+Fri Apr 30 17:45:04.777 UTC
+*Timestamp = 17:44:25 EDT Fri Apr 30 2010
+Cisco Fabric Error Detection Script
+Designed for: IOX Embedded Event Manager (EEM)
+by: Scott Search (ssearch@cisco.com)
+ 
+Node: JC22CRS
+SYSLOG MSG:
+SP/F0/SM10/SP: syslog_dev[74]: syslog_dev: sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled
+ 
+Suspect location: F0/SM10/SP
+ 
+Show controllers fabric plane all CHECK:
+ 
+ 
+**Node: JC22CRS Fabric Error Detection**
+The JC22CRS node experienced the following syslog:
+SP/F0/SM10/SP: syslog_dev[74]: syslog_dev: sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled
+ 
+ 
+The fab_detect eem policy script has shutdown the following card location:
+F0/SM10/SP
+ 
+Fabric Plane All Output (before card shutdown):
+RP/1/RP0/CPU0:JC22CRS(admin)#
+ 
+ 
+ 
+ 
+The harddisk:/eem/fab_detect_run_flag file exists. Be sure to delete the file in order to
+Activate the EEM fab_detect script.
+ 
+ 
+*Timestamp = 17:44:35 EDT Fri Apr 30 2010
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#sh run | in event man
+Fri Apr 30 17:45:33.209 UTC
+Building configuration...
+event manager environment _output_log eem_fabric_detect.log
+event manager environment _storage_location harddisk:/eem
+event manager directory user policy harddisk:/eem
+event manager policy bcc.tcl username teamops type user
+event manager policy fab_detect.tcl username teamops type user
+RP/1/RP0/CPU0:JC22CRS#
+
+
+RP/1/RP0/CPU0:JC22CRS#sh run
+taskgroup tg1
+ inherit taskgroup root-system
+ inherit taskgroup cisco-support
+ description Privileges for tg1
+!
+taskgroup tg2
+ task read lpts
+ task write network
+ inherit taskgroup operator
+ description Priviledges for tg2
+!
+taskgroup teamops
+ inherit taskgroup superuser
+ description Unrestricted Access - Operations
+!
+taskgroup superuser
+ inherit taskgroup root-system
+ inherit taskgroup cisco-support
+ description Unrestricted Access - SuperUser
+!
+usergroup ug1
+ taskgroup tg2
+ description Permission for ug1
+!
+usergroup ug2
+ taskgroup tg1
+ description Permission for ug2
+!
+usergroup priv13
+ taskgroup superuser
+!
+usergroup teamops
+ taskgroup teamops
+!
+usergroup superuser
+ taskgroup superuser
+!
+tacacs-server host 192.168.45.152 port 49
+!
+tacacs-server host 192.168.45.210 port 49
+!
+tacacs-server host 192.168.45.211 port 49
+!
+tacacs-server host 192.168.45.153 port 49
+!
+tacacs-server host 135.16.32.174 port 49331
+!
+tacacs-server key 7 130E120B
+tacacs-server timeout 2
+tacacs source-interface MgmtEth0/RP0/CPU0/0
+aaa accounting exec default start-stop group tacacs+ none
+aaa accounting commands console start-stop group tacacs+ none
+aaa accounting commands default start-stop group tacacs+ none
+aaa authorization exec console group tacacs+ local none
+aaa authorization exec default group tacacs+ local none
+aaa authorization commands console group tacacs+ none
+aaa authorization commands default group tacacs+ none
+aaa authorization eventmanager default local
+aaa authentication login CBB group tacacs+ local
+aaa authentication login console group tacacs+ local
+aaa authentication login default group tacacs+ local

@@ -1,0 +1,105 @@
+#!/usr/bin/tclsh
+
+puts ""
+
+proc clean_string {line} {
+  # Trim up the line remove extra space/tabs:
+  regsub -all {[ \r\t\n]+} $line " " line
+  # Remove any leading white space:
+  regsub -all {^[ ]} $line "" line
+  # Remove any ending white space:
+  regsub -all {[ ]$} $line "" line
+  
+  return $line
+}
+# clean_string
+
+
+proc verify_registered_prefixes {output} {
+  set kont 0
+
+  foreach line [split $output "\n"] {
+    set line [clean_string $line]
+  
+    if {$line ne ""} {
+      # Looking for lines that end in a prefix and mask
+      if {[regexp {[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\/[0-9]+$} $line]} {
+        set fields [split $line " "]
+
+        set site_name     [lindex $fields 0]
+        set last_reg      [lindex $fields 1]
+        set UP            [lindex $fields 2]
+        set who_last_reg  [lindex $fields 3]
+        set InstanceID    [lindex $fields 4]
+        set EID_prefix    [lindex $fields 5]
+
+#        set fields [split $line " "]
+#        lassign $fields site_name last_reg UP who_last_reg InstanceID EID_prefix
+   
+        if {$EID_prefix eq "" && $site_name eq "never" || [regexp {[0-9]+\:[0-9]+\:[0-9]+} $site_name]} {
+          set fields [split $line " "]
+
+          set last_reg      [lindex $fields 0]
+          set UP            [lindex $fields 1]
+          set who_last_reg  [lindex $fields 2]
+          set InstanceID    [lindex $fields 3]
+          set EID_prefix    [lindex $fields 4]
+
+#          set site_name     [lindex [split $line " "] 0]
+#          set last_reg      [lindex [split $line " "] 1]
+#          set UP            [lindex [split $line " "] 2]
+#          set who_last_reg  [lindex [split $line " "] 3]
+#          set InstanceID    [lindex [split $line " "] 4]
+#          set EID_prefix    [lindex [split $line " "] 5]
+#          lassign $fields last_reg UP who_last_reg InstanceID EID_prefix
+
+          if {[regexp {^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$} $who_last_reg]} {
+#            puts "Save this so we can define the EID"
+#            puts "Non-default (1) - Registered RLOC prefix:"
+#
+#            puts "last_reg: $last_reg --  UP: $UP"
+#            puts "who_last_reg: $who_last_reg -- InstanceID: $InstanceID -- EID_prefix: $EID_prefix"
+#            puts "\n"
+
+            if {$InstanceID ne "" && $EID_prefix ne ""} {
+              set array1($kont) [list $InstanceID $EID_prefix]
+              incr kont
+            }
+          }
+        }
+      }
+    }
+  }
+  return [array get array1]
+} 
+# verify_registered_prefixes
+
+
+set output "MSMR#sh lisp 1 site
+LISP Site Registration Information
+
+Site Name      Last      Up   Who Last             Inst     EID Prefix
+               Register       Registered           ID
+0000           never     no   --                   101      0.0.0.0/0
+0001           00:04:44  yes  172.88.88.88         101      172.88.99.111/32
+               00:00:56  yes  172.16.1.2           101      172.16.100.3/32
+               00:00:56  yes  172.99.99.99         101      172.99.99.222/32
+
+"
+
+
+array set array1 [verify_registered_prefixes $output]
+
+if {[array exist array1]} {
+  foreach key [array names array1] {
+    puts "key: $key -- Value: $array1($key)"
+  }
+} else {
+  puts "array1 does not exist."
+}
+
+puts ""
+
+
+
+

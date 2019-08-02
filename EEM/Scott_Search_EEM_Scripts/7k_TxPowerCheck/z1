@@ -1,0 +1,53 @@
+logging server X.X.X.X 7 use-vrf default
+logging monitor 7
+logging level local0 7
+logging level local1 7
+logging level local2 7
+logging level local3 7
+logging level local4 7
+logging level local5 7
+logging level local6 7
+logging level local7 7
+logging logfile messages 6
+
+
+
+
+
+s1# dir log: 
+       2526    Jul 08 17:12:29 2015  bootup_test.3445
+      18633    Jul 08 17:12:29 2015  bootup_test.log
+         31    Jul 08 17:12:24 2015  dmesg
+          3    Jul 08 17:12:29 2015  eobc_port_test_result
+          0    Jul 08 17:12:37 2015  libfipf.4042
+          0    Jul 08 17:12:46 2015  libfipf.4097
+          0    Jul 08 17:13:51 2015  libfipf.4644
+          0    Jul 08 17:14:04 2015  libfipf.4674
+          0    Jul 09 11:56:11 2015  libfipf.7394
+          0    Jul 09 11:56:49 2015  libfipf.7598
+    4194304    Jun 13 14:33:20 2016  messages
+          3    Jul 08 17:12:29 2015  mgmt_port_test_result
+        389    Jul 08 17:13:29 2015  snmp_log
+    4194304    Feb 02 12:07:53 2016  startupdebug
+        507    Jul 13 11:30:57 2015  syslogd_ha_debug
+       9494    Oct 13 16:45:14 2015  tm_startup_cleanup-vdc1.log
+
+Usage for log://sup-local
+    8486912 bytes used
+   96370688 bytes free
+  104857600 bytes total
+s1# 
+s1# tclsh bootflash:/scripts/7k_TxPowerCheck.tcl /bootflash/eem/interface_transceiver_details.txt
+
+
+
+
+no logging monitor 7
+no logging level local0 7
+no logging level local1 7
+no logging level local2 7
+no logging level local3 7
+no logging level local4 7
+no logging level local5 7
+no logging level local6 7
+no logging level local7 7

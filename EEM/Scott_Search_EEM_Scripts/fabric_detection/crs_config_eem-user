@@ -1,0 +1,30 @@
+event manager environment _output_log eem_fabric_detect.log
+event manager environment _storage_location harddisk:/eem
+event manager directory user policy harddisk:/eem
+event manager policy fab_detect.tcl username eem-user type user
+!
+!
+!
+username eem-user
+ group root-system
+ group cisco-support
+!
+!
+!
+aaa authorization exec eem-user local
+aaa authorization commands eem-user none
+aaa authorization eventmanager default local
+aaa authorization eventmanager eem-user local
+aaa authentication login eem-user local
+!
+!
+!
+line template eem-user
+ authorization exec eem-user
+ authorization commands eem-user
+!
+! Below for 3.8.x and above:
+! vty-pool eem 100 110 line-template eem-user
+!
+! Below for 3.6.x and below:
+vty-pool fm 100 110 line-template eem-user

@@ -1,0 +1,92 @@
+#!/usr/bin/tclsh
+
+puts ""
+
+set syslogs "RP/0/RP1/CPU0:HUCAR6#show  running-config interface serviceApp 61
+Wed Jan 18 13:42:25.174 EDT
+interface ServiceApp61
+description 6RD CGSE2 Service App Interface 61 - ipv6
+bandwidth 76000000
+ipv6 address cafe:1890:c00:4601::1/126
+service cgn cgse2 service-type tunnel v6rd
+logging events link-status
+!
+"
+
+
+proc get_IPv6_address {syslogs} {
+  set IPv6 ""
+
+  foreach line [split $syslogs "\n"] {
+    regsub -all {[ \r\t\n]+} $line " " line
+    regsub -all {^[ ]} $line "" line
+    regsub -all {[ ]$} $line "" line
+
+    if {[regexp {^ipv6 address \w+:\w+:} $line]} {
+      regexp {^ipv6 address (\w+\:\w+\:.*)\/\d+$} $line - IPv6
+    }
+
+
+#    if {[regexp {^ipv6 address \d+:\d+:\d+:} $line]} {
+#      regexp {^ipv6 address (\d+\:\d+\:\d+\:.*)\/\d+$} $line - IPv6
+#    }
+  }
+  return $IPv6
+} ;# get_IPv6_address
+
+
+#set IPv6 ""
+#
+#foreach line [split $syslogs "\n"] {
+#  regsub -all {[ \r\t\n]+} $line " " line
+#  regsub -all {^[ ]} $line "" line
+#  regsub -all {[ ]$} $line "" line
+#
+#  if {[regexp {^ipv6 address \d+:\d+:\d+:} $line]} {
+#    regexp {^ipv6 address (\d+\:\d+\:\d+\:.*)\/\d+$} $line - IPv6
+#  }
+#}
+
+set IPv6 [get_IPv6_address $syslogs]
+
+puts ""
+
+puts "IPv6: $IPv6"
+set total_len [string length $IPv6]
+
+set lastval [lindex [split $IPv6 ":"] end]
+set len_last [llength $lastval]
+set len_last [expr $len_last + 1]
+
+set cut_len [expr $total_len - $len_last]
+
+set IPv6_without_end [string range $IPv6 0 $cut_len]
+puts $IPv6_without_end
+puts $IPv6
+
+
+set up [expr $lastval + 1]
+puts "up: $up"
+
+set down [expr $lastval - 1]
+puts "down: $down"
+
+
+
+set IPv6_up $IPv6_without_end
+append IPv6_up $up
+
+set IPv6_down $IPv6_without_end
+append IPv6_down $down
+
+puts ""
+puts "IPv6_up: $IPv6_up"
+puts "orig   : $IPv6"
+
+puts ""
+puts "IPv6_down: $IPv6_down"
+puts "orig   : $IPv6"
+
+
+
+puts ""

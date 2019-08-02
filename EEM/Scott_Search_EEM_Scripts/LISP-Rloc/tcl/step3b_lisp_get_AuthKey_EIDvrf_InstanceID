@@ -1,0 +1,73 @@
+#!/usr/bin/tclsh
+
+proc clean_string {line} {
+  # Trim up the line remove extra space/tabs:
+  regsub -all {[ \r\t\n]+} $line " " line
+  # Remove any leading white space:
+  regsub -all {^[ ]} $line "" line
+  # Remove any ending white space:
+  regsub -all {[ ]$} $line "" line
+  
+  return $line
+}
+# clean_string
+
+
+proc get_AuthKey_EIDvrf_InstanceID {output} {
+  set authen_key ""
+  set eid_vrf ""
+  set instance_id ""
+
+  foreach line [split $output "\n"] {
+    set line [clean_string $line]
+  
+    if {$line ne ""} {
+      if {[regexp {^authentication-key } $line]} {
+        set authen_key [lindex [split $line " "] end]
+      }
+
+      if {[regexp {^eid-table vrf } $line]} {
+        set eid_vrf      [lindex [split $line " "] 2]
+        set instance_id  [lindex [split $line " "] 4]
+      }
+    }
+  }
+  return [list $authen_key $eid_vrf $instance_id]
+} 
+# get_AuthKey_EIDvrf_InstanceID
+
+
+set output "router lisp 1
+ locator-table vrf cust1-rloc
+ eid-table vrf cust1-eid instance-id 101
+  ipv4 route-export site-registration
+  ipv6 route-export site-registration
+  exit
+ !
+site 0000
+  description EEM-managed
+  authentication-key vpn-1-key
+  eid-prefix instance-id 101 0.0.0.0/0 route-tag 999 accept-more-specifics
+  eid-prefix instance-id 101 ::/0 route-tag 999 accept-more-specifics
+  exit
+ !
+!
+ ipv4 map-server
+ ipv4 map-resolver
+ ipv6 map-server
+ ipv6 map-resolver
+ exit
+
+"
+
+set retval [get_AuthKey_EIDvrf_InstanceID $output]
+set authen_key   [lindex $retval 0]
+set eid_vrf      [lindex $retval 1]
+set instance_id  [lindex $retval 2]
+
+puts ""
+puts "authen_key: $authen_key"
+puts "eid_vrf: $eid_vrf"
+puts "instance_id: $instance_id"
+puts ""
+

@@ -1,0 +1,51 @@
+1. Run tool (move commit archive):
+
+move_ca.pl {-h|-v|-r} <-n router | router_list> 
+
+-h                         : help manual
+-v                         : verbose mode
+-r                         : rdump mode
+-n <router | router_list>  : Run tool with one router or list of routers
+
+
+2. Tool will verify the router archive directory exists
+
+./archives/<router_name>
+
+Example:
+./archives/engco102me1
+
+
+3. Tool will create the new archive date directory
+
+./archives/<router_name>/<month>-<day>-<year>
+
+Example:
+./archives/engco102me1/8-7-2012
+
+
+4. Tool logs into router
+
+
+5. Tool determines the event manager _CommitArchive_storage_location where the commit archives are stored
+
+
+6. Tool verifies no one is in configuration mode.
+
+RP/0/7/CPU0:engco102me1#show configuration sessions 
+RP/0/7/CPU0:engco102me1#
+RP/0/7/CPU0:engco102me1#show configuration sessions 
+Current Configuration Session  Line       User     Date                     Lock
+00000070-0009b137-00000000     vty1       ssearch  Tue Mar  5 22:23:37 2013 
+RP/0/7/CPU0:engco102me1#
+
+
+7. Tool performs the SFTP command from the router to the Auriga server.  And copies all the existing Commit 
+   Archives to the Auriga server.
+
+
+8. Tool deletes all Commit Archive files from the router
+
+
+
+

@@ -1,0 +1,54 @@
+RP/0/RP0/CPU0:PSL-CRS2#more harddisk:/eem/eem_fabric_detect.log
+Thu Apr 15 20:26:10.789 UTC
+*Timestamp = 20:25:57 UTC Thu Apr 15 2010
+Cisco Fabric Error Detection Script
+Designed for: IOX Embedded Event Manager (EEM)
+by: Scott Search (ssearch@cisco.com)
+ 
+Node: PSL-CRS2
+SYSLOG MSG:
+RP/0/RP0/CPU0: syslog_dev[85]: syslog_dev: test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled End of test
+ 
+Suspect location: 0/RP0/CPU0
+ 
+Show controllers fabric plane all CHECK:
+Id: 0 - Admin: UP - Oper: UP
+Id: 1 - Admin: UP - Oper: UP
+Id: 2 - Admin: UP - Oper: UP
+Id: 3 - Admin: UP - Oper: UP
+ 
+ 
+**Node: PSL-CRS2 Fabric Error Detection**
+The PSL-CRS2 node experienced the following syslog:
+RP/0/RP0/CPU0: syslog_dev[85]: syslog_dev: test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled End of test
+ 
+ 
+The fab_detect eem policy script has shutdown the following card location:
+0/RP0/CPU0
+ 
+Fabric Plane All Output (before card shutdown):
+Thu Apr 15 20:26:00.410 UTC
+  Flags: P - plane admin down,       p - plane oper down
+         C - card admin down,        c - card  oper down
+         L - link port admin down,   l - linkport oper down
+         A - asic admin down,        a - asic oper down
+         B - bundle port admin Down, b - bundle port oper down
+         I - bundle admin down,      i - bundle oper down
+         N - node admin down,        n - node down
+         o - other end of link down  d - data down
+         f - failed component downstream
+         m - plane multicast down,   s - link port permanently shutdown
+         t - no barrier input        O - Out-Of-Service oper down
+         T - topology mismatch down
+ 
+ Plane  Admin   Oper   up->dn
+ Id     State   State  counter
+ -----------------------------
+ 0      UP      UP       0
+ 1      UP      UP       0
+ 2      UP      UP       0
+ 3      UP      UP       0
+RP/0/RP0/CPU0:PSL-CRS2(admin)#
+ 
+ 
+*Timestamp = 20:26:01 UTC Thu Apr 15 2010

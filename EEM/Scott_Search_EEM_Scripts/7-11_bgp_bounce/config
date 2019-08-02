@@ -1,0 +1,34 @@
+Router EEM configuration:
+----------------------------------------------------------------
+
+event manager environment _email_to ssearch@cisco.com
+event manager environment _domainname cisco.com
+event manager environment _email_from eem@cisco.com
+event manager environment _output_log 7_11_bgp_bounce
+event manager environment _email_server 10.122.96.30
+event manager environment _storage_location disk0:/eem
+event manager directory user policy disk0:/eem
+event manager policy bgp_bounce.tcl username eem-user type user
+!
+username eem-user
+ group root-system
+ group cisco-support
+ password 7 02050D480809
+!
+aaa authorization exec eem-user local
+aaa authorization commands eem-user none
+aaa authorization eventmanager default local
+aaa authorization eventmanager eem-user local
+aaa authentication login eem-user local
+!
+line template EEM
+ authorization exec eem-user
+ authorization commands eem-user
+!
+vty-pool eem 100 105 line-template EEM
+
+
+
+
+
+

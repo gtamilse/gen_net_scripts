@@ -1,0 +1,276 @@
+Hi Scott,
+
+Comments in-line:
+
+On Apr 7, 2010, at 9:35 PM, Scott Search wrote:
+
+> Mike,
+>
+> What I need to look for in the syslogs are the following line(s),  
+> these
+> lines could be generated once or many times:
+>
+> DIAG-HFRDIAG-3-ERROR|Failure(M:L) detected in node1_SM6_SP (Plane 6)
+> DIAG-HFRDIAG-3-ERROR|Failure(U:L) detected in node1_SM6_SP (Plane 6)
+>
+
+To create a regular expression for these two messages, you need to  
+make sure you escape the characters in the string that have special  
+meaning to the regular expression otherwise the regular expression  
+will not match like you expect.  The special characters that would  
+need to be escaped in this case are pipe and parentheses.
+
+You could reduce the regular expression for these two messages down to:
+
+"DIAG-HFRDIAG-3-ERROR\|Failure\([MU]:L\) detected in node1_SM6_SP \ 
+(Plane .*\)"
+
+Even this seems a little long though.  If there are no similar  
+messages that get printed you might be able to get away with something  
+like:
+
+"DIAG-HFRDIAG-3-ERROR\|Failure.*detected in .*"
+
+And since the parentheses are no longer in the regex match pattern  
+there is no need to escape them.
+
+>
+> Then if this line is generated just once kick off the script:
+>
+> FABRIC-FABRIC_SRVR-3-ERR_DRV_INIT|Initialization of fabric driver
+> failed: Waiting for fabric mother board to be powered up ; exiting...
+>
+
+A regular expression for this might be:
+
+"FABRIC-FABRIC_SRVR-3-ERR_DRV_INIT\|Initialization of fabric driver  
+failed.*"
+
+>
+> We know there is a major problem with fabric plane 6.  With the above
+> single line I need to complete the eem trigger and extract the  
+> "Plane 6"
+> from the lines above.  So with referring to your example below would
+> this be correct:
+>
+>
+> ::cisco::eem::event_register_syslog tag event1 pattern
+> "DIAG-HFRDIAG-3-ERROR|Failure(M:L) detected in node1_SM6_SP (Plane *"
+> ::cisco::eem::event_register_syslog tag event2 pattern
+> "FABRIC-FABRIC_SRVR-3-ERR_DRV_INIT|Initialization of fabric driver
+> failed: Waiting for fabric mother board to be powered up"
+> ::cisco::eem::trigger {
+>  ::cisco::eem::correlate event event1 and event2
+>    ::cisco::eem::attribute tag event1 occurs 1
+>    ::cisco::eem::attribute tag event2 occurs 1
+> }
+>
+>
+> Next I would do what you did below by setting an array to the
+> event_reqinfo and looking for the DIAG-HFRDIAG-3 event and finally
+> writing a tcl expression to extract the Plane number value.
+>
+> Does this look and sound like it should work?
+
+Well you might have a problem because of the order of the messages  
+being printed.  The FABRIC-FABRIC_SRVR-3-ERR_DRV_INIT message does not  
+contain the Plane number so you can only get it from the DIAG- 
+HFRDIAG-3-ERROR message.  If the DIAG-HFRDIAG-3-ERROR message is  
+printed first then the FABRIC-FABRIC_SRVR-3-ERR_DRV_INIT message is  
+printed, the policy will be invoked and the $arr_einfo(msg) will  
+contain only the FABRIC-FABRIC_SRVR-3-ERR_DRV_INIT message.
+
+If you can get around this issue in some way then the only other  
+suggestion I would make is to combine the detection of DIAG-HFRDIAG-3  
+and the extraction of the Plane number into a single regexp Tcl command.
+
+Mike
+
+>
+> Thanks,
+> Scott
+>
+>
+> On Wed, 2010-04-07 at 16:08, Michael Timm wrote:
+>> Here is the script (beware of line wrap):
+>>
+>> ::cisco::eem::event_register_syslog tag event1 pattern "CONFIG_I"
+>> ::cisco::eem::event_register_syslog tag event2 pattern "Line protocol
+>> on Interface.*changed state to up"
+>> ::cisco::eem::event_register_syslog tag event3 pattern "mtimm"
+>> ::cisco::eem::trigger {
+>>     ::cisco::eem::correlate event event1 or event event2 or event
+>> event3
+>>     ::cisco::eem::attribute tag event1 occurs 1
+>>     ::cisco::eem::attribute tag event2 occurs 1
+>>     ::cisco::eem::attribute tag event3 occurs 2
+>> }
+>>
+>> namespace import ::cisco::eem::*
+>> namespace import ::cisco::lib::*
+>>
+>> array set arr_einfo [event_reqinfo]
+>> if {$_cerrno != 0} {
+>>   set result [format "component=%s; subss err=%s; posix err=%s;\n 
+>> %s" \
+>>     $_cerr_sub_num $_cerr_sub_err $_cerr_posix_err $_cerr_str]
+>>   error $result
+>> }
+>>
+>> foreach einfo [array names arr_einfo] {
+>>     action_syslog msg "Key: $einfo Value: $arr_einfo($einfo)"
+>> }
+>>
+>> set stringfound [string first "CONFIG_I" $arr_einfo(msg)]
+>> if {$stringfound != -1} {
+>>     action_syslog msg "Detected configuration event"
+>> }
+>> set stringfound [string first "mtimm" $arr_einfo(msg)]
+>> if {$stringfound != -1} {
+>>     action_syslog msg "Detected mtimm event"
+>> }
+>> set stringfound [string first "Line" $arr_einfo(msg)]
+>> if {$stringfound != -1} {
+>>     action_syslog msg "Detected Line protocol up event"
+>> }
+>> #### End of script
+>>
+>> It basically looks for CONFIG_I or the line protocol on an interface
+>> coming up or the string mtimm in log messages.  It takes two
+>> occurrences of the "mtimm" string to cause the policy to trigger
+>> though, the other events only require one occurrence.  When the  
+>> policy
+>> runs, it retrieves the event info using a call to event_reqinfo and
+>> stores them in an array.  Then it loops through the array and  
+>> prints a
+>> syslog message with all of the key/value pairs in the array.  Then it
+>> determines the type of event that was triggered by looking for
+>> specific strings in the $arr_einfo(msg) variable.
+>>
+>> Here's an example of me triggering it using the three different  
+>> methods:
+>>
+>> esc-2821(config)#end
+>> esc-2821#
+>> 066419: Apr  7 22:02:14.089: %SYS-5-CONFIG_I: Configured from console
+>> by console
+>> 066420: Apr  7 22:02:14.537: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_severity Value: severity-notification
+>> 066421: Apr  7 22:02:14.537: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_trigger_num Value: 1
+>> 066422: Apr  7 22:02:14.537: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_type_string Value: syslog
+>> 066423: Apr  7 22:02:14.537: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> priority Value: notifications
+>> 066424: Apr  7 22:02:14.537: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_pub_time Value: 1270677734.089
+>> 066425: Apr  7 22:02:14.541: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_pub_sec Value: 1270677734
+>> 066426: Apr  7 22:02:14.541: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_id Value: 9
+>> esc-2821#
+>> 066427: Apr  7 22:02:14.541: %HA_EM-6-LOG: multi_event1.tcl: Key: msg
+>> Value:
+>> 066419: Apr  7 22:02:14.089: %SYS-5-CONFIG_I: Configured from console
+>> by console
+>> 066428: Apr  7 22:02:14.541: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> msg_count Value: 1
+>> 066429: Apr  7 22:02:14.541: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_type Value: 41
+>> 066430: Apr  7 22:02:14.541: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_pub_msec Value: 89
+>> 066431: Apr  7 22:02:14.541: %HA_EM-6-LOG: multi_event1.tcl: Detected
+>> configuration event
+>>
+>> esc-2821#send log 0 mtimm
+>> esc-2821#
+>> 066435: Apr  7 22:03:09.308: %SYS-0-USERLOG_EMERG: Message from
+>> tty0(user id: ): mtimm
+>> 066436: Apr  7 22:03:09.756: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_severity Value: severity-fatal
+>> 066437: Apr  7 22:03:09.756: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_trigger_num Value: 1
+>> 066438: Apr  7 22:03:09.756: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_type_string Value: syslog
+>> 066439: Apr  7 22:03:09.756: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> priority Value: emergencies
+>> 066440: Apr  7 22:03:09.756: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_pub_time Value: 1270677789.312
+>> 066441: Apr  7 22:03:09.756: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_pub_sec Value: 1270677789
+>> 066442: Apr  7 22:03:09.756: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_id Value: 9
+>> esc-2821#
+>> 066443: Apr  7 22:03:09.756: %HA_EM-6-LOG: multi_event1.tcl: Key: msg
+>> Value:
+>> 066435: Apr  7 22:03:09.308: %SYS-0-USERLOG_EMERG: Message from
+>> tty0(user id: ): mtimm
+>> 066444: Apr  7 22:03:09.756: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> msg_count Value: 2
+>> 066445: Apr  7 22:03:09.756: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_type Value: 41
+>> 066446: Apr  7 22:03:09.760: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_pub_msec Value: 312
+>> 066447: Apr  7 22:03:09.760: %HA_EM-6-LOG: multi_event1.tcl: Detected
+>> mtimm event
+>> esc-2821#conf t
+>> esc-2821(config)#int loop10001
+>> esc-2821(config-if)#end
+>> esc-2821#
+>> 066449: Apr  7 22:03:34.972: %SYS-5-CONFIG_I: Configured from console
+>> by console
+>> 066450: Apr  7 22:03:35.224: %LINEPROTO-5-UPDOWN: Line protocol on
+>> Interface Loopback10001, changed state to up
+>> 066451: Apr  7 22:03:35.416: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_severity Value: severity-notification
+>> 066452: Apr  7 22:03:35.416: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_trigger_num Value: 1
+>> 066453: Apr  7 22:03:35.416: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_type_string Value: syslog
+>> 066454: Apr  7 22:03:35.420: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> priority Value: notifications
+>> 066455: Apr  7 22:03:35.420: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_pub_time Value: 1270677814.972
+>> 066456: Apr  7 22:03:35.420: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_pub_sec Value: 1270677814
+>> 066457: Apr  7 22:03:35.420: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_id Value: 9
+>> 066458: Apr  7 22:03:35.420: %HA_EM-6-LOG: multi_event1.tcl: Key: msg
+>> Value:
+>> 066449: Apr  7 22:03:34.972: %SYS-5-CONFIG_I: Configured from console
+>> by console
+>> 066459: Apr  7 22:03:35.420: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> msg_count Value: 2
+>> 066460: Apr  7 22:03:35.420: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_type Value: 41
+>> 066461: Apr  7 22:03:35.420: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_pub_msec Value: 972
+>> 066462: Apr  7 22:03:35.420: %HA_EM-6-LOG: multi_event1.tcl: Detected
+>> configuration event
+>> 066463: Apr  7 22:03:35.916: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_severity Value: severity-notification
+>> 066464: Apr  7 22:03:35.916: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_trigger_num Value: 1
+>> 066465: Apr  7 22:03:35.916: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_type_string Value: syslog
+>> 066466: Apr  7 22:03:35.916: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> priority Value: notifications
+>> 066467: Apr  7 22:03:35.916: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_pub_time Value: 1270677815.224
+>> 066468: Apr  7 22:03:35.916: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_pub_sec Value: 1270677815
+>> 066469: Apr  7 22:03:35.916: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_id Value: 9
+>> 066470: Apr  7 22:03:35.916: %HA_EM-6-LOG: multi_event1.tcl: Key: msg
+>> Value:
+>> 066450: Apr  7 22:03:35.224: %LINEPROTO-5-UPDOWN: Line protocol on
+>> Interface Loopback10001, changed state to up
+>> 066471: Apr  7 22:03:35.916: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> msg_count Value: 1
+>> 066472: Apr  7 22:03:35.916: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_type Value: 41
+>> 066473: Apr  7 22:03:35.916: %HA_EM-6-LOG: multi_event1.tcl: Key:
+>> event_pub_msec Value: 224
+>> 066474: Apr  7 22:03:35.916: %HA_EM-6-LOG: multi_event1.tcl: Detected
+>> Line protocol up event
+>> esc-2821#

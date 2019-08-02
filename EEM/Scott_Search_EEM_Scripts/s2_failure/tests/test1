@@ -1,0 +1,53 @@
+RP/0/0/CPU0:XR_ROUTER#sh run | inc event mana
+Building configuration...
+event manager environment _s2FailDetect_ospf_id 100
+event manager environment _s2FailDetect_output_log s2.log
+event manager environment _s2FailDetect_second_diff 30
+event manager environment _s2FailDetect_storage_location disk0:/eem
+event manager environment _s2FailDetect_unique_locations 0
+event manager directory user policy disk0:/eem
+event manager policy s2FailDetect.tcl username cisco type user
+RP/0/0/CPU0:XR_ROUTER#
+RP/0/0/CPU0:XR_ROUTER#
+RP/0/0/CPU0:XR_ROUTER#
+RP/0/0/CPU0:XR_ROUTER#dir disk0:/eem
+                                                                                                                                                
+Directory of disk0:/eem
+ 
+506134656   -rwx  6391        Thu May 27 00:49:41 2010  s2FailDetect.tcl
+506135168   -rwx  8950        Thu Apr 29 15:22:26 2010  e3_fail_detect.tcl
+ 
+1024507904 bytes total (327319552 bytes free)
+RP/0/0/CPU0:XR_ROUTER#
+RP/0/0/CPU0:XR_ROUTER#sh event manager policy reg
+No.  Type    Event Type          Time Registered           Name
+1    user    syslog              Thu May 27 00:50:08 2010  s2FailDetect.tcl
+ occurs 3 period_sec 10 period_nsec 0 pattern {FABRIC-FABRICQ-3-RESET : Reseting Fabricq ASIC Device}
+ nice 0 priority normal maxrun_sec 20 maxrun_nsec 0
+persist_time: 3600 seconds,  username: cisco
+RP/0/0/CPU0:XR_ROUTER#
+RP/0/0/CPU0:XR_ROUTER#
+RP/0/0/CPU0:XR_ROUTER#
+RP/0/0/CPU0:XR_ROUTER#run echo "fabricq_mgr[136]: %FABRIC-FABRICQ-3-RESET : Reseting Fabricq ASIC Device 0. Reason: UC_PSN_WRAP" > /dev/syslog
+RP/0/0/CPU0:XR_ROUTER#RP/0/0/CPU0:May 27 00:51:05.586 : syslog_dev[86]: syslog_dev: fabricq_mgr[136]: %FABRIC-FABRICQ-3-RESET : Reseting Fabricq ASIC Device 0. Reason: UC_PSN_WRAP
+ 
+RP/0/0/CPU0:XR_ROUTER#
+RP/0/0/CPU0:XR_ROUTER#run echo "fabricq_mgr[136]: %FABRIC-FABRICQ-3-RESET : Reseting Fabricq ASIC Device 0. Reason: UC_PSN_WRAP" > /dev/syslog
+RP/0/0/CPU0:XR_ROUTER#RP/0/0/CPU0:May 27 00:51:07.481 : syslog_dev[86]: syslog_dev: fabricq_mgr[136]: %FABRIC-FABRICQ-3-RESET : Reseting Fabricq ASIC Device 0. Reason: UC_PSN_WRAP
+ 
+RP/0/0/CPU0:XR_ROUTER#
+RP/0/0/CPU0:XR_ROUTER#run echo "fabricq_mgr[136]: %FABRIC-FABRICQ-3-RESET : Reseting Fabricq ASIC Device 0. Reason: UC_PSN_WRAP" > /dev/syslog
+RP/0/0/CPU0:XR_ROUTER#RP/0/0/CPU0:May 27 00:51:08.977 : syslog_dev[86]: syslog_dev: fabricq_mgr[136]: %FABRIC-FABRICQ-3-RESET : Reseting Fabricq ASIC Device 0. Reason: UC_PSN_WRAP
+ 
+RP/0/0/CPU0:XR_ROUTER#
+RP/0/0/CPU0:XR_ROUTER#
+RP/0/0/CPU0:XR_ROUTER#RP/0/0/CPU0:May 27 00:51:15.567 : config[65784]: %MGBL-CONFIG-6-DB_COMMIT : Configuration committed by user 'cisco'. Use 'show configuration commit changes 1000000174' to view the changes.
+RP/0/0/CPU0:May 27 00:51:15.999 : config[65784]: %MGBL-SYS-5-CONFIG_I : Configured from console by console on vty100 (0.0.0.0)
+RP/0/0/CPU0:May 27 00:51:16.441 : s2FailDetect.tcl[65782]: EEM policy detected a possible Node S2 problem, COSTING OUT the node
+ 
+RP/0/0/CPU0:XR_ROUTER#
+RP/0/0/CPU0:XR_ROUTER#sh run | inc max-metric router-lsa
+Building configuration...
+ max-metric router-lsa include-stub
+RP/0/0/CPU0:XR_ROUTER#
+

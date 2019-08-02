@@ -1,0 +1,257 @@
+{\rtf1\adeflang1025\ansi\ansicpg1252\uc1\adeff0\deff0\stshfdbch0\stshfloch0\stshfhich0\stshfbi0\deflang1033\deflangfe1033{\fonttbl{\f0\froman\fcharset0\fprq2{\*\panose 02020603050405020304}Times New Roman;}{\f2\fmodern\fcharset0\fprq1{\*\panose 02070309020205020404}Courier New;}{\f37\froman\fcharset238\fprq2 Times New Roman CE;}
+{\f38\froman\fcharset204\fprq2 Times New Roman Cyr;}{\f40\froman\fcharset161\fprq2 Times New Roman Greek;}{\f41\froman\fcharset162\fprq2 Times New Roman Tur;}{\f42\fbidi \froman\fcharset177\fprq2 Times New Roman (Hebrew);}
+{\f43\fbidi \froman\fcharset178\fprq2 Times New Roman (Arabic);}{\f44\froman\fcharset186\fprq2 Times New Roman Baltic;}{\f45\froman\fcharset163\fprq2 Times New Roman (Vietnamese);}{\f57\fmodern\fcharset238\fprq1 Courier New CE;}
+{\f58\fmodern\fcharset204\fprq1 Courier New Cyr;}{\f60\fmodern\fcharset161\fprq1 Courier New Greek;}{\f61\fmodern\fcharset162\fprq1 Courier New Tur;}{\f62\fbidi \fmodern\fcharset177\fprq1 Courier New (Hebrew);}
+{\f63\fbidi \fmodern\fcharset178\fprq1 Courier New (Arabic);}{\f64\fmodern\fcharset186\fprq1 Courier New Baltic;}{\f65\fmodern\fcharset163\fprq1 Courier New (Vietnamese);}}{\colortbl;\red0\green0\blue0;\red0\green0\blue255;\red0\green255\blue255;
+\red0\green255\blue0;\red255\green0\blue255;\red255\green0\blue0;\red255\green255\blue0;\red255\green255\blue255;\red0\green0\blue128;\red0\green128\blue128;\red0\green128\blue0;\red128\green0\blue128;\red128\green0\blue0;\red128\green128\blue0;
+\red128\green128\blue128;\red192\green192\blue192;}{\stylesheet{\ql \li0\ri0\widctlpar\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0 \rtlch\fcs1 \af0\afs24\alang1025 \ltrch\fcs0 \fs24\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 
+\snext0 Normal;}{\*\cs10 \additive \ssemihidden Default Paragraph Font;}{\*
+\ts11\tsrowd\trftsWidthB3\trpaddl108\trpaddr108\trpaddfl3\trpaddft3\trpaddfb3\trpaddfr3\trcbpat1\trcfpat1\tblind0\tblindtype3\tscellwidthfts0\tsvertalt\tsbrdrt\tsbrdrl\tsbrdrb\tsbrdrr\tsbrdrdgl\tsbrdrdgr\tsbrdrh\tsbrdrv 
+\ql \li0\ri0\widctlpar\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0 \rtlch\fcs1 \af0\afs20 \ltrch\fcs0 \fs20\lang1024\langfe1024\cgrid\langnp1024\langfenp1024 \snext11 \ssemihidden Normal Table;}}
+{\*\latentstyles\lsdstimax156\lsdlockeddef0}{\*\listtable{\list\listtemplateid2038470972\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\leveltext\leveltemplateid67698703
+\'02\'00.;}{\levelnumbers\'01;}\rtlch\fcs1 \af0 \ltrch\fcs0 \hres0\chhres0 \fi-360\li720\jclisttab\tx720\lin720 }{\listlevel\levelnfc4\levelnfcn4\leveljc0\leveljcn0\levelfollow0\levelstartat1\lvltentative\levelspace360\levelindent0{\leveltext
+\leveltemplateid67698713\'02\'01.;}{\levelnumbers\'01;}\rtlch\fcs1 \af0 \ltrch\fcs0 \hres0\chhres0 \fi-360\li1440\jclisttab\tx1440\lin1440 }{\listlevel\levelnfc2\levelnfcn2\leveljc2\leveljcn2\levelfollow0\levelstartat1\lvltentative\levelspace360
+\levelindent0{\leveltext\leveltemplateid67698715\'02\'02.;}{\levelnumbers\'01;}\rtlch\fcs1 \af0 \ltrch\fcs0 \hres0\chhres0 \fi-180\li2160\jclisttab\tx2160\lin2160 }{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\lvltentative
+\levelspace360\levelindent0{\leveltext\leveltemplateid67698703\'02\'03.;}{\levelnumbers\'01;}\rtlch\fcs1 \af0 \ltrch\fcs0 \hres0\chhres0 \fi-360\li2880\jclisttab\tx2880\lin2880 }{\listlevel\levelnfc4\levelnfcn4\leveljc0\leveljcn0\levelfollow0
+\levelstartat1\lvltentative\levelspace360\levelindent0{\leveltext\leveltemplateid67698713\'02\'04.;}{\levelnumbers\'01;}\rtlch\fcs1 \af0 \ltrch\fcs0 \hres0\chhres0 \fi-360\li3600\jclisttab\tx3600\lin3600 }{\listlevel\levelnfc2\levelnfcn2\leveljc2
+\leveljcn2\levelfollow0\levelstartat1\lvltentative\levelspace360\levelindent0{\leveltext\leveltemplateid67698715\'02\'05.;}{\levelnumbers\'01;}\rtlch\fcs1 \af0 \ltrch\fcs0 \hres0\chhres0 \fi-180\li4320\jclisttab\tx4320\lin4320 }{\listlevel\levelnfc0
+\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\lvltentative\levelspace360\levelindent0{\leveltext\leveltemplateid67698703\'02\'06.;}{\levelnumbers\'01;}\rtlch\fcs1 \af0 \ltrch\fcs0 \hres0\chhres0 \fi-360\li5040\jclisttab\tx5040\lin5040 }
+{\listlevel\levelnfc4\levelnfcn4\leveljc0\leveljcn0\levelfollow0\levelstartat1\lvltentative\levelspace360\levelindent0{\leveltext\leveltemplateid67698713\'02\'07.;}{\levelnumbers\'01;}\rtlch\fcs1 \af0 \ltrch\fcs0 \hres0\chhres0 \fi-360\li5760
+\jclisttab\tx5760\lin5760 }{\listlevel\levelnfc2\levelnfcn2\leveljc2\leveljcn2\levelfollow0\levelstartat1\lvltentative\levelspace360\levelindent0{\leveltext\leveltemplateid67698715\'02\'08.;}{\levelnumbers\'01;}\rtlch\fcs1 \af0 \ltrch\fcs0 \hres0\chhres0 
+\fi-180\li6480\jclisttab\tx6480\lin6480 }{\listname ;}\listid1280914553}}{\*\listoverridetable{\listoverride\listid1280914553\listoverridecount0\ls1}}{\*\rsidtbl \rsid1273347\rsid2049299\rsid2822607\rsid4223112\rsid5056350\rsid9461627\rsid10552690
+\rsid12025618\rsid12205544\rsid13793659\rsid14091223\rsid14166127\rsid15467188}{\*\generator Microsoft Word 11.0.0000;}{\info{\title EEM Fabric Detection Script Details}{\author Cisco Systems, Inc.}{\operator Cisco Systems, Inc.}
+{\creatim\yr2010\mo4\dy19\hr9\min26}{\revtim\yr2010\mo6\dy17\hr14\min49}{\version3}{\edmins7}{\nofpages4}{\nofwords1280}{\nofchars7302}{\*\company Cisco Systems, Inc.}{\nofcharsws8565}{\vern24613}{\*\password 00000000}}{\*\xmlnstbl {\xmlns1 http://schemas
+.microsoft.com/office/word/2003/wordml}}\paperw12240\paperh15840\margl432\margr432\margt1008\margb1008\gutter0\ltrsect 
+\widowctrl\ftnbj\aenddoc\donotembedsysfont1\donotembedlingdata0\grfdocevents0\validatexml1\showplaceholdtext0\ignoremixedcontent0\saveinvalidxml0\showxmlerrors1\noxlattoyen\expshrtn\noultrlspc\dntblnsbdb\nospaceforul\formshade\horzdoc\dgmargin\dghspace180
+\dgvspace180\dghorigin1800\dgvorigin1440\dghshow1\dgvshow1
+\jexpand\viewkind4\viewscale100\pgbrdrhead\pgbrdrfoot\splytwnine\ftnlytwnine\htmautsp\nolnhtadjtbl\useltbaln\alntblind\lytcalctblwd\lyttblrtgr\lnbrkrule\nobrkwrptbl\snaptogridincell\allowfieldendsel\wrppunct
+\asianbrkrule\rsidroot2822607\newtblstyruls\nogrowautofit \fet0{\*\wgrffmtfilter 013f}\ilfomacatclnup0\ltrpar \sectd \ltrsect\linex0\endnhere\sectlinegrid360\sectdefaultcl\sectrsid12025618\sftnbj {\*\pnseclvl1\pnucrm\pnstart1\pnindent720\pnhang 
+{\pntxta .}}{\*\pnseclvl2\pnucltr\pnstart1\pnindent720\pnhang {\pntxta .}}{\*\pnseclvl3\pndec\pnstart1\pnindent720\pnhang {\pntxta .}}{\*\pnseclvl4\pnlcltr\pnstart1\pnindent720\pnhang {\pntxta )}}{\*\pnseclvl5\pndec\pnstart1\pnindent720\pnhang {\pntxtb (}
+{\pntxta )}}{\*\pnseclvl6\pnlcltr\pnstart1\pnindent720\pnhang {\pntxtb (}{\pntxta )}}{\*\pnseclvl7\pnlcrm\pnstart1\pnindent720\pnhang {\pntxtb (}{\pntxta )}}{\*\pnseclvl8\pnlcltr\pnstart1\pnindent720\pnhang {\pntxtb (}{\pntxta )}}{\*\pnseclvl9
+\pnlcrm\pnstart1\pnindent720\pnhang {\pntxtb (}{\pntxta )}}\pard\plain \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0\pararsid2822607 \rtlch\fcs1 \af0\afs24\alang1025 \ltrch\fcs0 
+\fs24\lang1033\langfe1033\cgrid\langnp1033\langfenp1033 {\rtlch\fcs1 \af0\afs28 \ltrch\fcs0 \b\fs28\insrsid2822607\charrsid2822607 EEM Fabric Detection Script Details}{\rtlch\fcs1 \af0\afs28 \ltrch\fcs0 \b\fs28\insrsid15467188\charrsid2822607 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid2822607 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid12025618 
+The contents below will show how to register the eem fab_detect.tcl policy on a node.  I have not been able to reproduce the same syslog and error on a CRS node, however, I can generate a syslog message with the EEM policy trigger.  With this user generat
+ed syslog message the appropriate fabric card location is not correct.  As you will see below since the syslog message was generated from the node rp location the syslog message beginning attribute is the }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid2049299 
+\'93}{\rtlch\fcs1 \af0 \ltrch\fcs0 \b\insrsid2049299\charrsid2049299 RP/0/RP1/CPU0}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid2049299 \'94 instead of the \'93}{\rtlch\fcs1 \af0 \ltrch\fcs0 \b\insrsid2049299\charrsid2049299 SP/F0/SM#/SP}{\rtlch\fcs1 \af0 
+\ltrch\fcs0 \insrsid2049299 \'94.  The EEM policy script will function correctly by extracting the fabric/node location attribute and perform the card shutdown.}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid12025618 
+\par }{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid2049299 
+\par The EEM script once registered will wait for the following syslog message pattern to be generated:
+\par 
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid2049299 sysmgr.*sfe_drvr.*abnormally terminated.*restart scheduled}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid2049299  
+\par 
+\par If the triggered event occurs the following steps execute within the script:
+\par 
+\par {\listtext\pard\plain\ltrpar \rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid2049299 \hich\af0\dbch\af0\loch\f0 1.\tab}}\pard \ltrpar\ql \fi-360\li720\ri0\widctlpar\jclisttab\tx720\wrapdefault\aspalpha\aspnum\faauto\ls1\adjustright\rin0\lin720\itap0\pararsid2049299 
+{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid2049299 Opens the output log file (eem_fabric_detect.log)
+\par {\listtext\pard\plain\ltrpar \rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid2049299 \hich\af0\dbch\af0\loch\f0 2.\tab}Places a timestamp at the beginning of the log file.
+\par {\listtext\pard\plain\ltrpar \rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid2049299 \hich\af0\dbch\af0\loch\f0 3.\tab}Opens a connection to the node cli
+\par {\listtext\pard\plain\ltrpar \rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid2049299 \hich\af0\dbch\af0\loch\f0 4.\tab}Extracts the syslog message and parses the message for the card location attribute. Then chops off the SP/ characters.
+\par {\listtext\pard\plain\ltrpar \rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid2049299 \hich\af0\dbch\af0\loch\f0 5.\tab}Enters admin mo}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid14091223 de and retrieves the output for: }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 
+\f2\fs20\insrsid2049299 show controllers fabric plane all}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid2049299\charrsid2049299 
+\par {\listtext\pard\plain\ltrpar \rtlch\fcs1 \af0\afs20 \ltrch\fcs0 \f2\fs20\insrsid2049299 \hich\af2\dbch\af0\loch\f2 6.\tab}}{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid2049299 Enters config terminal and shuts down the fabric card: hw-mod shut loc <
+}{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid14091223 xx/xx/xx>}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid2049299\charrsid14091223 
+\par {\listtext\pard\plain\ltrpar \rtlch\fcs1 \af0\afs20 \ltrch\fcs0 \f2\fs20\insrsid14091223 \hich\af2\dbch\af0\loch\f2 7.\tab}}{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid14091223 Exits the cli connection.}{\rtlch\fcs1 \af0 \ltrch\fcs0 
+\insrsid14091223\charrsid14091223 
+\par {\listtext\pard\plain\ltrpar \rtlch\fcs1 \af0\afs20 \ltrch\fcs0 \f2\fs20\insrsid4223112 \hich\af2\dbch\af0\loch\f2 8.\tab}}{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid4223112 *Disabled per Gaurav* }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 
+\f2\fs20\insrsid14091223 Generates the email below and sends to the _email_to recipients.}{\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid14091223\charrsid9461627 
+\par {\listtext\pard\plain\ltrpar \rtlch\fcs1 \af0\afs20 \ltrch\fcs0 \f2\fs20\insrsid9461627 \hich\af2\dbch\af0\loch\f2 9.\tab}}{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid9461627 Closes the output log file with a ending timestamp}{\rtlch\fcs1 \af0 
+\ltrch\fcs0 \insrsid9461627\charrsid14091223 
+\par {\listtext\pard\plain\ltrpar \rtlch\fcs1 \af0\afs20 \ltrch\fcs0 \f2\fs20\insrsid14091223 \hich\af2\dbch\af0\loch\f2 10.\tab}}{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid14091223 Lastly, generates the syslog message below.}{\rtlch\fcs1 \af0 
+\ltrch\fcs0 \insrsid14091223\charrsid14091223 
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0\pararsid14091223 {\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid14091223 
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid1273347 
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\faauto\rin0\lin0\itap0\pararsid1273347 {\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \b\f2\fs20\insrsid1273347\charrsid1273347 Configure the EEM environment vars:
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid1273347 
+\par RP/0/RP1/CPU0:PSL-CRS2(config)#event manager environment _storage_location harddisk:/eem
+\par RP/0/RP1/CPU0:PSL-CRS2(config)#event manager environment _output_log eem_fabric_detect.log
+\par RP/0/RP1/CPU0:PSL-CRS2(config)#commit
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid4223112 
+\par The _storage_location variable will hold the \lquote harddisk:/eem\rquote  storage location on the node where the eem_fabric_detect.log file is stored.  The _output_log variable holds the value \lquote eem_fabric_detect.log\rquote 
+ and this file is where the EEM script will write information data to.
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0\pararsid14091223 {\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid1273347 
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \b\f2\fs20\insrsid4223112 Example }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \b\f2\fs20\insrsid4223112\charrsid4223112 Environment vars for the email generation (currently disabled):
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid4223112 
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\faauto\rin0\lin0\itap0\pararsid4223112 {\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid4223112 RP/0/RP1/CPU0:PSL-CRS2(config)#event manager environment _email_server 9.3.3.249
+\par RP/0/RP1/CPU0:PSL-CRS2(config)#event manager environment _email_from ssearch@cisco.com
+\par RP/0/RP1/CPU0:PSL-CRS2(config)#event manager environment _email_to ssearch@cisco.com
+\par RP/0/RP1/CPU0:PSL-CRS2(config)#event manager environment _domainname cisco.com
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0\pararsid14091223 {\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid4223112 
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \b\f2\fs20\insrsid4223112\charrsid4223112 Confi}{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \b\f2\fs20\insrsid14166127 gure the AAA line}{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \b\f2\fs20\insrsid13793659 s}{\rtlch\fcs1 \af2\afs20 
+\ltrch\fcs0 \b\f2\fs20\insrsid14166127  and set the EEM user directory:}{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \b\f2\fs20\insrsid4223112\charrsid4223112 
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid4223112 
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\faauto\rin0\lin0\itap0\pararsid13793659 {\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid13793659 aaa authorization exec eem-user local
+\par aaa authorization commands eem-user none
+\par aaa authorization eventmanager default local
+\par aaa authorization eventmanager eem-user local
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0\pararsid13793659 {\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid13793659 aaa authentication login eem-user local}{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 
+\f2\fs20\insrsid13793659 
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0\pararsid14091223 {\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid14166127 event manager directory user policy harddisk:/eem
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0\pararsid2822607 {\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid2822607 
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0\pararsid13793659 {\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \b\f2\fs20\insrsid13793659 Configure the eem-user username:}{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 
+\b\f2\fs20\insrsid13793659\charrsid4223112 
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid13793659 
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\faauto\rin0\lin0\itap0\pararsid13793659 {\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid13793659 username eem-user
+\par  group root-system
+\par  group cisco-support
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid13793659 
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0\pararsid13793659 {\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \b\f2\fs20\insrsid13793659 Configure the line template and vty-pool:}{\rtlch\fcs1 \af2\afs20 
+\ltrch\fcs0 \b\f2\fs20\insrsid13793659\charrsid4223112 
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid13793659 
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\faauto\rin0\lin0\itap0\pararsid13793659 {\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid13793659 line template eem-user
+\par  authorization exec eem-user
+\par  authorization commands eem-user
+\par !
+\par vty-pool }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid13793659 fm}{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid13793659  100 110 line-template eem-user
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\aspalpha\aspnum\faauto\adjustright\rin0\lin0\itap0\pararsid2822607 {\rtlch\fcs1 \af0 \ltrch\fcs0 \insrsid13793659 
+\par 
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\faauto\rin0\lin0\itap0\pararsid2822607 {\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \b\f2\fs20\insrsid2822607\charrsid2822607 Register the EEM policy script fab_detect.tcl:
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid2822607 
+\par RP/0/RP1/CPU0:PSL-CRS2#conf t
+\par RP/0/RP1/CPU0:PSL-CRS2(config)#event manager policy fab_detect.tcl username }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid13793659 eem-user}{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid2822607  type user
+\par RP/0/RP1/CPU0:PSL-CRS2(config)#commit
+\par 
+\par You should see the following "Policy fab_detect.tcl registered successfully":
+\par 
+\par RP/0/RP1/CPU0:Apr  9 18:36:35.488 UTC0: eem_script_dir[174]: %HA-HA_EEM-6-EEMSD_POLICY_REG_SUCC : Policy 'fab_detect.tcl' registered successfully, by user cisco, with persist time 3600 and type 1
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid4223112 
+\par 
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\faauto\rin0\lin0\itap0\pararsid4223112 {\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \b\f2\fs20\insrsid4223112\charrsid4223112 To un-register the EEM policy you issue the \lquote no\rquote  command:
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid4223112 
+\par no event manager poli}{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid13793659 cy fab_detect.tcl username eem-user}{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid4223112  type user
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\faauto\rin0\lin0\itap0\pararsid2822607 {\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid4223112 
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid2822607 
+\par 
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \b\f2\fs20\insrsid12025618\charrsid12025618 *Optional: }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \b\f2\fs20\insrsid2822607\charrsid12025618 Verify the EEM policy is registered:
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid2822607 
+\par RP/0/RP1/CPU0:PSL-CRS2#sh event mana pol regis
+\par No.  Type    Event Type          Time Registered           Name
+\par 1    user    syslog              Fri Apr  9 18:36:35 2010  fab_detect.tcl
+\par  pattern \{sysmgr.*sfe_drvr.*abnormally terminated.*restart scheduled\}
+\par  nice 0 priority normal maxrun_sec 20 maxrun_nsec 0
+\par persist_time}{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid13793659 : 3600 seconds,  username: eem-user}{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid2822607 
+\par 
+\par 
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \b\f2\fs20\insrsid2822607\charrsid12025618 Next generate the triggered EEM syslog message}{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \b\f2\fs20\insrsid12025618  by echoing a test message and redirecting it to the /dev/syslog}
+{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \b\f2\fs20\insrsid2822607\charrsid12025618 :
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid2822607 
+\par RP/0/RP1/CPU0:PSL-CRS2#run echo "test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled End of test" > /dev/syslog
+\par 
+\par Following syslog is displayed to the terminal:
+\par 
+\par RP/0/RP1/CPU0:PSL-CRS2#RP/0/RP1/CPU0:Apr  9 18:37:59.720 UTC0: syslog_dev[83]: syslog_dev: test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled End of test
+\par  
+\par 
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \b\f2\fs20\insrsid2822607\charrsid12025618 Below is the syslog message the EEM fab_detect.tcl script policy generates at the end of the script}{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \b\f2\fs20\insrsid14091223  execution}{
+\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \b\f2\fs20\insrsid2822607\charrsid12025618 :
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid2822607 
+\par RP/0/RP1/CPU0:PSL-CRS2#RP/0/RP1/CPU0:Apr  9 18:38:06.668 UTC0: fab_detect.tcl[65807]: EEM policy fab_detect detected a Fabric Error and has SHUTDOWN CARD: 0/RP1/CPU0
+\par  
+\par 
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \b\f2\fs20\insrsid2822607\charrsid14091223 Below is the EEM fab_detect.tcl script output log details:
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid2822607 
+\par RP/0/RP1/CPU0:PSL-CRS2#dir harddisk:/eem
+\par Directory of harddisk:/eem
+\par  
+\par 63570048    -rwx  6011        Fri Apr  9 18:23:02 2010  fab_detect.tcl
+\par 63570144    -rwx  1912        Fri Apr  9 18:38:06 2010  eem_fabric_detect.log
+\par  
+\par 59894611968 bytes total (59890253824 bytes free)
+\par RP/0/RP1/CPU0:PSL-CRS2#
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid5056350 
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\faauto\rin0\lin0\itap0\pararsid5056350 {\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid5056350 RP/0/RP0/CPU0:PSL-CRS2#more harddisk:/eem/eem_fabric_detect.log
+\par Thu Apr 15 20:26:10.789 UTC
+\par *Timestamp = 20:25:57 UTC Thu Apr 15 2010
+\par Cisco Fabric Error Detection Script
+\par Designed for: IOX Embedded Event Manager (EEM)
+\par by: Scott Search (ssearch@cisco.com)
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid5056350\charrsid5056350  
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\lang1043\langfe1033\langnp1043\insrsid5056350\charrsid5056350 Node: PSL-CRS2
+\par SYSLOG MSG:
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid5056350 RP/0/RP0/CPU0: syslog_dev[85]: syslog_dev: test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled End of test
+\par  
+\par Suspect location: 0/RP0/CPU0
+\par  
+\par Show controllers fabric plane all CHECK:
+\par Id: 0 - Admin: UP - Oper: UP
+\par Id: 1 - Admin: UP - Oper: UP
+\par Id: 2 - Admin: UP - Oper: UP
+\par Id: 3 - Admin: UP - Oper: UP
+\par  
+\par  
+\par **Node: PSL-CRS2 Fabric Error Detection**
+\par The PSL-CRS2 node experienced the following syslog:
+\par RP/0/RP0/CPU0: syslog_dev[85]: syslog_dev: test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled End of test
+\par  
+\par  
+\par The fab_detect eem policy script has shutdown the following card location:
+\par 0/RP0/CPU0
+\par  
+\par Fabric Plane All Output (before card shutdown):
+\par Thu Apr 15 20:26:00.410 UTC
+\par   Flags: P - plane admin down,       p - plane oper down
+\par          C - card admin down,        c - card  oper down
+\par          L - link port admin down,   l - linkport oper down
+\par          A - asic admin down,        a - asic oper down
+\par          B - bundle port admin Down, b - bundle port oper down
+\par          I - bundle admin down,      i - bundle oper down
+\par          N - node admin down,        n - node down
+\par          o - other end of link down  d - data down
+\par          f - failed component downstream
+\par          m - plane multicast down,   s - link port permanently shutdown
+\par          t - no barrier input        O - Out-Of-Service oper down
+\par          T - topology mismatch down
+\par  
+\par  Plane  Admin   Oper   up->dn
+\par  Id     State   State  counter
+\par  -----------------------------
+\par  0      UP      UP       0
+\par  1      UP      UP       0
+\par  2      UP      UP       0
+\par  3      UP      UP       0
+\par RP/0/RP0/CPU0:PSL-CRS2(admin)#
+\par  
+\par  
+\par *Timestamp = 20:26:01 UTC Thu Apr 15 2010
+\par 
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\faauto\rin0\lin0\itap0\pararsid2822607 {\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid2822607 
+\par 
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \b\f2\fs20\insrsid5056350 Email generated if the email option is enabled:
+\par }{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid2822607 
+\par Date: 09 Apr 2010 18:38:06 UTC
+\par From: ssearch@cisco.com
+\par To: ssearch@cisco.com
+\par Cc:
+\par Subject: **Node PSL-CRS2 Fabric Error Detection**
+\par  
+\par The PSL-CRS2 node experienced the following syslog:
+\par RP/0/RP1/CPU0: syslog_dev[83]: syslog_dev: test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled End of test
+\par  
+\par  
+\par The fab_detect eem policy script has shutdown the following card:
+\par 0/RP1/CPU0
+\par  
+\par Fabric Plane All Output (before card shutdown):
+\par   Flags: P - plane admin down,       p - plane oper down
+\par          C - card admin down,        c - card  oper down
+\par          L - link port admin down,   l - linkport oper down
+\par          A - asic admin down,        a - asic oper down
+\par          B - bundle port admin Down, b - bundle port oper down
+\par          I - bundle admin down,      i - bundle oper down
+\par          N - node admin down,        n - node down
+\par          o - other end of link down  d - data down
+\par          f - failed component downstream
+\par          m - plane multicast down,   s - link port permanently shutdown
+\par          t - no barrier input
+\par  
+\par  Plane  Admin   Oper
+\par  Id     State   State
+\par  --------------------
+\par  0      UP      UP
+\par  1      UP      UP
+\par  2      UP      UP
+\par  3      UP      UP
+\par }\pard \ltrpar\ql \li0\ri0\widctlpar\wrapdefault\faauto\rin0\lin0\itap0\pararsid14091223 {\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 \f2\fs20\insrsid2822607 RP/0/RP1/CPU0:PSL-CRS2(admin)#}{\rtlch\fcs1 \af2\afs20 \ltrch\fcs0 
+\f2\fs20\insrsid2822607\charrsid14091223 
+\par }}

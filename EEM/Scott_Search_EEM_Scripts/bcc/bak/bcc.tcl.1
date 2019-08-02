@@ -1,0 +1,146 @@
+::cisco::eem::event_register_timer cron name bcc_v1_0 cron_entry "0,5,10,15,20,25,30,35,40,45,50,55 * * * *" maxrun_sec 240
+  
+namespace import ::cisco::eem::*
+namespace import ::cisco::lib::*
+  
+###########################################
+# PROCEDURES
+###########################################
+proc get_bundle_members {bundle retval} {
+  global FH  ;# Global write output FileHandle
+  global flags
+  set kont 0
+  set iface ""
+  set state ""
+  set bw ""
+  set bw_totals ""
+ 
+  foreach line [split $retval "\n"] {
+    # Trim up the line remove extra space/tabs etc:
+    regsub -all {[ \r\t\n]+} $line " " line
+    # Remove any leading white space:
+    regsub -all {^[ ]} $line "" line
+  
+    if {$line == ""} { set kont 0 }
+    if {$kont == 2} { set kont 3 }
+    if {[regexp "^Port" $line]} { set kont [expr $kont + 1]}
+    if {$kont == 1 && [regexp "^------" $line]} { set kont [expr $kont + 1] }
+    if {$kont == 3 && $line != ""} {
+      set iface [lindex [split $line " "] 0]
+      set state [lindex [split $line " "] 1]
+      regsub -all {[a-zA-Z]} $state "" state
+      set bw    [lindex [split $line " "] 4]
+      if {$bw != ""} { lappend bw_totals $bw }
+      # If state is not equal to 4 then flag this:
+      if {$state != 4} {lappend flags "$bundle|$iface|Member state not equal to 4 ($state)"}
+      set iface2 $iface
+      # Change the TenGig member 'Te' to 'ten':
+      regsub -all {^(Te)} $iface2 "ten" iface2
+      lappend members2 $iface2
+      lappend members $iface
+      lappend members_check "$iface|$bw"
+  
+      puts $FH "iface: $iface"
+      puts $FH "state: $state"
+      puts $FH "bw: $bw"
+    }
+  }
+  
+  # Only need to perform the next section if the bundle type is POS:
+  if {[regexp -nocase "pos" $bundle]} {
+    puts $FH "Processing the POS bundle, calling on determine_num_entries proc"
+    ;#    # Verify the members bandwidths:
+    ;#    ($ingress_total_entries, $egress_total_entries, $highest_member) = determine_num_entries(\@member_check, \@bw_totals);
+  }
+}
+   
+###########################################
+# MAIN/main
+###########################################
+   
+###########################################
+# Globals:
+global flags members members2
+ 
+ 
+set flags         ""
+set output_file   "eem_bcc.log"
+set bundle        "bundle-eth1001"
+ 
+# Open the output file:
+if [catch {open harddisk:/eem/$output_file w} result] {
+    error $result
+}
+set FH $result
+ 
+###########################################
+# Node Connection
+if [catch {cli_open} result] {
+  error $result $errorInfo
+} else {
+  array set cli $result
+}
+ 
+# Find all the active Bundle interfaces:
+if [catch {cli_exec $cli(fd) "show ipv4 inter brief | inc Bundle| inc Up"} result] {
+  error $result $errorInfo
+}
+set retval $result
+ 
+# Process the output and extract the Bundle interfaces:
+foreach line [split $retval "\n"] {
+  # Trim up the line remove extra space/tabs etc:
+  regsub -all {[ \r\t\n]+} $line " " line
+  # Remove any leading white space:
+  regsub -all {^[ ]} $line "" line
+  
+  if [regexp {(^Bundle-\w+) *} $line - iface] {
+    lappend bundles $iface
+  }
+}
+  
+# Next get the 'show bundle $bundle' data:
+if {[string length $bundles]!=0} {
+  foreach bundle [split $bundles " "] {
+    if [catch {cli_exec $cli(fd) "show bundle $bundle"} result] {
+      error $result $errorInfo
+    }
+    set bundle_data $result
+  
+    # Get the current time:
+    set time_now [clock seconds]
+    set time_now [clock format $time_now -format "%T %Z %a %b %d %Y"]
+    puts $FH "**Timestamp = $time_now"
+ 
+    puts $FH "Processing Bundle: $bundle"
+   
+    # Call the get_bundle_members proc to extract the bundle member data:
+    get_bundle_members $bundle $bundle_data
+  }
+}
+ 
+# Close CLI
+cli_close $cli(fd) $cli(tty_id)
+# End of Node Connection
+###########################################
+ 
+ 
+###########################################
+# Check for flagged events:
+if {[string length $flags]!=0} {
+  # Issues/Flags found
+  puts $FH "Flagged event(s) found:"
+  set kont 0
+  set flags_length [llength $flags]
+  while {$kont < $flags_length} {
+    set msg [lindex $flags $kont]
+    puts $FH "FLAG $kont: $msg"
+    set kont [expr $kont + 1]
+  }
+} else {
+  # No issues/flags found
+  puts $FH "No flags or errors encountered.  Node  **PASSED**  all BCC checks!"
+}
+ 
+close $FH
+################### End of Script ##########################################

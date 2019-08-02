@@ -1,0 +1,53 @@
+#!/usr/bin/tclsh
+
+puts ""
+
+set peers ""
+set peer ""
+
+set syslogs "RP/0/RP0/CPU0:Sep 10 10:40:13.083 EDT: bgp\[1045\]: %ROUTING-BGP-3-NBR_NSR_DISABLED : NSR disabled on neighbor 201.11.23.41 due to TCP retransmissions
+RP/0/RP0/CPU0:Sep 10 10:40:13.083 EDT: bgp\[1045\]: %ROUTING-BGP-3-NBR_NSR_DISABLED : NSR disabled on neighbor 201.11.23.41 due to TCP retransmissions
+RP/0/RP0/CPU0:Sep 10 10:40:13.083 EDT: bgp\[1045\]: %ROUTING-BGP-3-NBR_NSR_DISABLED : NSR disabled on neighbor 201.11.23.41 due to TCP retransmissions
+RP/0/RP0/CPU0:Sep 10 10:40:13.083 EDT: bgp\[1045\]: %ROUTING-BGP-3-NBR_NSR_DISABLED : NSR disabled on neighbor 201.11.23.41 due to TCP retransmissions
+RP/0/RP0/CPU0:Sep 10 10:40:13.083 EDT: bgp\[1045\]: %ROUTING-BGP-3-NBR_NSR_DISABLED : NSR disabled on neighbor 88.11.23.41 due to TCP retransmissions
+RP/0/RP0/CPU0:Sep 10 10:40:13.083 EDT: bgp\[1045\]: %ROUTING-BGP-3-NBR_NSR_DISABLED : NSR disabled on neighbor 88.11.23.41 due to TCP retransmissions
+RP/0/RP0/CPU0:Sep 10 10:40:13.083 EDT: bgp\[1045\]: %ROUTING-BGP-3-NBR_NSR_DISABLED : NSR disabled on neighbor 88.11.23.41 due to TCP retransmissions
+RP/0/RP0/CPU0:Sep 10 10:40:13.083 EDT: bgp\[1045\]: %ROUTING-BGP-3-NBR_NSR_DISABLED : NSR disabled on neighbor 99.11.23.41 due to TCP retransmissions
+RP/0/RP0/CPU0:Sep 10 10:40:13.083 EDT: bgp\[1045\]: %ROUTING-BGP-3-NBR_NSR_DISABLED : NSR disabled on neighbor 99.11.23.41 due to TCP retransmissions
+RP/0/RP0/CPU0:Sep 10 10:40:13.083 EDT: bgp\[1045\]: %ROUTING-BGP-3-NBR_NSR_DISABLED : NSR disabled on neighbor 99.11.23.41 due to TCP retransmissions
+RP/0/RP0/CPU0:Sep 10 10:40:13.083 EDT: bgp\[1045\]: %ROUTING-BGP-3-NBR_NSR_DISABLED : NSR disabled on neighbor 201.11.23.41 due to TCP retransmissions"
+
+foreach line [split $syslogs "\n"] {
+  regsub -all {[ \r\t\n]+} $line " " line
+  regsub -all {^[ ]} $line "" line
+  regsub -all {[ ]$} $line "" line
+
+  if {[regexp "ROUTING-BGP-3-NBR_NSR_DISABLED : NSR disabled on neighbor" $line]} {
+    regexp { neighbor (\d+\.\d+\.\d+\.\d+)} $line - peer
+    lappend peers $peer
+  }
+}
+
+puts "Before Unique:"
+foreach line [split $peers " "] {
+  puts "peer: $line"
+}
+
+
+set peers2 [lsort -unique $peers]
+
+puts "\nAfter Unique:"
+foreach line [split $peers2 " "] {
+  puts "peer: $line"
+
+#  set s "Count, the number,, of commas."
+  puts [expr {[llength [split $peers "$line"]] - 1}]
+}
+
+puts ""
+
+
+#set s "Count, the number,, of commas."
+#puts [expr {[llength [split $s ","]] - 1}]
+
+puts ""

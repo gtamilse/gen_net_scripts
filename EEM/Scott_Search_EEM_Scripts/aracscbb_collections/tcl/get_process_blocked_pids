@@ -1,0 +1,46 @@
+#!/usr/bin/tclsh
+
+set output "RP/0/7/CPU0:auttx306me1#show processes blocked location 0/1/cpu0 | inc g_spa
+  175    110691  20         g_spa_1 Reply    0:00:04:0758   12297  mqueue
+  174  49135716  22         g_spa_0 Reply    0:00:00:0986   12297  mqueue
+  11  111111  22         not_needed Reply    0:00:00:0986   12297  mqueue
+  22  222222  22         not_needed Reply    0:00:00:0986   12297  mqueue
+  33  333333  22         not_needed Reply    0:00:00:0986   12297  mqueue
+  88  888888  22         spa_192_jacket_v2 Reply    0:00:00:0986   12297  mqueue"
+
+
+# PID: 110691
+# PID: 49135716
+# PID: 888888
+
+
+puts ""
+
+foreach line [split $output "\n"] {
+  regsub -all {[ \r\t\n]+} $line " " line
+  regsub -all {^[ ]} $line "" line
+  regsub -all {[ ]$} $line "" line
+
+# g_spa_<> and spa_192_jacket_v2 
+
+
+  if {[regexp {^\d+ \d+ \d+ .*} $line] && [regexp {g_spa_|spa_192_jacket_v2} $line]} {
+    set jid [lindex $line 0]
+    set pid [lindex $line 1]
+    lappend jids $jid
+    lappend pids $pid
+  }
+}
+
+foreach pid [split $pids " "] {
+  puts "PID: $pid"
+}
+puts ""
+
+foreach jid [split $jids " "] {
+  puts "JID: $jid"
+}
+puts ""
+
+exit
+

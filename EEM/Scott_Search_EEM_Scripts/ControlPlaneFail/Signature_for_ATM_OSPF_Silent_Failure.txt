@@ -1,0 +1,79 @@
+Primary Triggers
+================
+                                                                                                                                           
+RP/0/8/CPU0::Sep 16 00:08:06.890 : mpls_ldp[337]: %ROUTING-LDP-5-NBR_CHANGE : Neighbor 165.87.242.176:0, DOWN (IP address removed)                                                    
+RP/0/8/CPU0::Sep 16 00:08:06.891 : ospf[361]: %ROUTING-OSPF-5-ADJCHG : Process 50, Nbr 165.87.242.176 on ATM0/12/0/0.210 in area 0.0.0.54 from FULL to DOWN, Neighbor Down: interface down or detached,vrf default vrfid 0x60000000                                                                                                                                         
+RP/0/8/CPU0::Sep 16 00:08:06.894 : ospf[361]: %ROUTING-OSPF-5-ADJCHG : Process 50, Nbr 165.87.242.97 on ATM0/12/0/0.211 in area 0.0.0.54 from FULL to DOWN, Neighbor Down: interface down or detached,vrf default vrfid 0x60000000                                                                                                                                          
+RP/0/8/CPU0::Sep 16 00:08:06.895 : mpls_ldp[337]: %ROUTING-LDP-5-NBR_CHANGE : Neighbor 165.87.242.97:0, DOWN (IP address removed)                                                     
+RP/0/8/CPU0::Sep 16 00:08:06.898 : ospf[361]: %ROUTING-OSPF-5-ADJCHG : Process 50, Nbr 32.119.158.24 on ATM0/12/0/1.210 in area 0.0.0.54 from FULL to DOWN, Neighbor Down: interface down or detached,vrf default vrfid 0x60000000                                                                                                                                          
+RP/0/8/CPU0::Sep 16 00:08:06.903 : ospf[361]: %ROUTING-OSPF-5-ADJCHG : Process 50, Nbr 32.119.158.84 on ATM0/12/0/1.211 in area 0.0.0.54 from FULL to DOWN, Neighbor Down: interface down or detached,vrf default vrfid 0x60000000                                                                                                                                          
+RP/0/8/CPU0::Sep 16 00:08:06.906 : mpls_ldp[337]: %ROUTING-LDP-5-NBR_CHANGE : Neighbor 32.119.158.24:0, DOWN (IP address removed)                                                     
+RP/0/8/CPU0::Sep 16 00:08:06.914 : mpls_ldp[337]: %ROUTING-LDP-5-NBR_CHANGE : Neighbor 32.119.158.84:0, DOWN (IP address removed)                                                     
+RP/0/8/CPU0::Sep 16 00:08:06.958 : pim[371]: %ROUTING-IPV4_PIM-5-INTCHG : PIM interface AT0/12/0/0.210 DOWN                                                                           
+RP/0/8/CPU0::Sep 16 00:08:06.961 : pim[371]: %ROUTING-IPV4_PIM-5-NBRCHG : PIM neighbor 32.119.247.161 DOWN on AT0/12/0/0.210 - interface state changed                                
+RP/0/8/CPU0::Sep 16 00:08:06.967 : pim[371]: %ROUTING-IPV4_PIM-5-NBRCHG : PIM neighbor 32.119.247.162 DOWN on AT0/12/0/0.210 - interface state changed                                
+RP/0/8/CPU0::Sep 16 00:08:06.971 : pim[371]: %ROUTING-IPV4_PIM-5-INTCHG : PIM interface AT0/12/0/0.211 DOWN                                                                           
+RP/0/8/CPU0::Sep 16 00:08:06.976 : pim[371]: %ROUTING-IPV4_PIM-5-NBRCHG : PIM neighbor 32.119.247.173 DOWN on AT0/12/0/0.211 - interface state changed                                
+RP/0/8/CPU0::Sep 16 00:08:06.980 : pim[371]: %ROUTING-IPV4_PIM-5-NBRCHG : PIM neighbor 32.119.247.174 DOWN on AT0/12/0/0.211 - interface state changed                                
+RP/0/8/CPU0::Sep 16 00:08:06.985 : pim[371]: %ROUTING-IPV4_PIM-5-INTCHG : PIM interface AT0/12/0/1.210 DOWN                                                                           
+RP/0/8/CPU0::Sep 16 00:08:06.988 : pim[371]: %ROUTING-IPV4_PIM-5-NBRCHG : PIM neighbor 32.119.247.169 DOWN on AT0/12/0/1.210 - interface state changed                                
+RP/0/8/CPU0::Sep 16 00:08:06.992 : pim[371]: %ROUTING-IPV4_PIM-5-NBRCHG : PIM neighbor 32.119.247.170 DOWN on AT0/12/0/1.210 - interface state changed                                
+RP/0/8/CPU0::Sep 16 00:08:06.995 : pim[371]: %ROUTING-IPV4_PIM-5-INTCHG : PIM interface AT0/12/0/1.211 DOWN                                                                           
+RP/0/8/CPU0::Sep 16 00:08:06.999 : pim[371]: %ROUTING-IPV4_PIM-5-NBRCHG : PIM neighbor 32.119.247.177 DOWN on AT0/12/0/1.211 - interface state changed                                
+RP/0/8/CPU0::Sep 16 00:08:07.003 : pim[371]: %ROUTING-IPV4_PIM-5-NBRCHG : PIM neighbor 32.119.247.178 DOWN on AT0/12/0/1.211 - interface state changed                                
+
+With the above trigger, our suspect card is 0/12/CPU0
+-----------------------------------------------------
+Affected Day is                             Sep 16
+--------------------------------------------------
+Affected Time is                            00:08 - (00:05) which will make it 00:03
+
+
+Confirmation steps
+==================
+
+1) ALL the interfaces corresponding to the L3 Protocols in above primary trigger should be up/up
+------------------------------------------------------------------------------------------------
+RP/0/8/CPU0:PLWRSW1002CR1#show interfaces description | i 0/12/
+AT0/12/0/0         up          up          ATM 0/12/0/0 Y to WRSWPLD2 S1/2 P2.1
+AT0/12/0/0.210     up          up          ATM 0/12/0/0.210 pvc to WRSWPLD2P03-L243 Switch1.202 (PVCID 9395263) <--!!!
+AT0/12/0/0.211     up          up          ATM 0/12/0/0.211 pvc to WRSWPLD2P04-L096 Switch1.204 pvc # 10392509  <--!!!
+AT0/12/0/1         up          up          PROV ATM 0/12/0/1 Y to WRSWPLD3 S1/2 P2.2
+AT0/12/0/1.210     up          up          ATM 0/12/0/1.210 pvc to WRSWPLD3P11-L374 Switch1.202                 <--!!!
+AT0/12/0/1.211     up          up          ATM0/12/0/1.211 pvc to WRSWPLD3P03-L448 Switch1.202 (PVC ID 10608684)<--!!!
+AT0/12/0/2         admin-down  admin-down  
+AT0/12/0/3         admin-down  admin-down  
+RP/0/8/CPU0:PLWRSW1002CR1#
+
+
+
+2) Then grep for the string in qsm trace "informing qsm that node" on the Affected LC
+-------------------------------------------------------------------------------------
+RP/0/8/CPU0:PLWRSW1002CR1#show qsm trace location 0/12/CPU0 | i "informing qsm that node"
+Sep 16 00:03:06.731 qsm_critical 0/12/CPU0 t1  qsm_node_is_down: pid=28702 informing qsm that node(node0_8_CPU0) is down 
+Sep 16 00:03:08.525 qsm_critical 0/12/CPU0 t1  qsm_node_is_down: pid=28702 informing qsm that node(node0_7_CPU0) is down  
+
+The time stamps should be the Affected Day and Time
+---------------------------------------------------
+
+3) Then grep of the string "received_dbdump_request_message. received from node:" from both the RPs of the XR12K at the affected time
+-------------------------------------------------------------------------------------------------------------------------------------
+RP/0/8/CPU0:PLWRSW1002CR1#show qsm trace loc 0/8/CPU0 | i Sep 16 00:
+Sep 16 00:03:06.739 qsm_normal 0/8/CPU0 t1  received_dbdump_request_message. received from node: (9/6/20501)
+RP/0/8/CPU0:PLWRSW1002CR1#show qsm trace loc 0/7/CPU0 | i Sep 16 00:
+Sep 16 00:03:08.532 qsm_normal 0/7/CPU0 t8  received_dbdump_request_message. received from node: (9/6/20501)
+
+4) Then grep for the string in arm trace "Close producer 'ipv4_ma <affected LC>', reason 0" followed by 
+   "Notify consumers about IP address of" from the command below
+    From the active RP at the affected day we should see ALL the interfaces having this message.
+------------------------------------------------------------------------------------------------------------------ 
+
+RP/0/8/CPU0:PLWRSW1002CR1#show arm trace location 0/8/CPU0 | be Sep 16 
+Mon Sep 19 18:19:58.561 GMT
+Sep 16 00:03:06.754 ipv4_arm/prod 0/8/CPU0 t1  Close producer 'ipv4_ma 0/12/CPU0', reason 0
+Sep 16 00:08:06.860 ipv4_arm/cons 0/8/CPU0 t1  Notify consumers about IP address of ATM0/12/0/0.210 changed to 0.0.0.0
+Sep 16 00:08:06.860 ipv4_arm/cons 0/8/CPU0 t1  Notify consumers about IP address of ATM0/12/0/0.211 changed to 0.0.0.0
+Sep 16 00:08:06.860 ipv4_arm/cons 0/8/CPU0 t1  Notify consumers about IP address of ATM0/12/0/1.210 changed to 0.0.0.0
+Sep 16 00:08:06.860 ipv4_arm/cons 0/8/CPU0 t1  Notify consumers about IP address of ATM0/12/0/1.211 changed to 0.0.0.0
+Sep 16 00:08:06.860 ipv4_arm/prod 0/8/CPU0 t1  Start purge data from the producer 'ipv4_ma 0/12/CPU0' reason 1, del virt iface 0
+

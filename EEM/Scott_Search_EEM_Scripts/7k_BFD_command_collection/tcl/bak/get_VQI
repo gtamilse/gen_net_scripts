@@ -1,0 +1,57 @@
+#!/usr/bin/tclsh
+
+set show_module "
+module-1# show hardware internal qengine inst 0 voq-status non-empty
+ 
++-------------------------------------------------------------------------------
+| VOQ Status for Queue Driver
+| Inst 0, ports 1-8
+ 
+-------- --- ------ ------ -------- ------- ------ ------ ------ --------
+               OS             SF       SF                               
+VQI:CCOS THR SF CNT SF CNT BYTE CNT PKT CNT  HEAD   TAIL   CNT   BYTE CNT
+-------- --- ------ ------ -------- ------- ------ ------ ------ --------
+  231:0    0      1      1       8f       1   5378   5378      1        2
+  290:3    0      1      1      5b4       1   4faa   4faa      1       16
+  298:3    0      1      1      532       1   7a56   7a56      1       14
+ 
+"
+
+set VQI ""
+
+foreach line [split $show_module "\n"] {
+  regsub -all {[ \r\t\n]+} $line " " line
+  regsub -all {^[ ]} $line "" line
+  regsub -all {[ ]$} $line "" line
+
+  if {regexp {^\d+\:\d+ \d+ \d+} $show_module} {
+    regexp {^(\d+)\:\d+ \d+ \d+} $show_module - VQI
+
+    puts "VQI: $VQI"
+  }
+}
+
+
+
+#  if {![regexp {CPU0$} $first_column] && ![regexp {CPU0} $line]} {
+#    puts "first_column: $first_column"
+#    lappend node_name $first_column
+#
+#    regexp {^\d+\/\d+\/(\d+)} $first_column - spa
+#
+# puts "spa: $spa"
+#
+#    regexp {(\d+)\/(\d+)\/CPU0} $first_column - chassis slot
+#
+#    set node_name "node"
+#    append node_name $chassis
+#    append node_name "_"
+#    append node_name $slot
+#    append node_name "_cpu0"
+#
+#    puts "node_name: $node_name"
+#  }
+
+
+exit
+

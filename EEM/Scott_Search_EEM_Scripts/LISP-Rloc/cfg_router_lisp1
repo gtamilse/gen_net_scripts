@@ -1,0 +1,30 @@
+router lisp 1
+ locator-table vrf cust1-rloc
+ eid-table vrf cust1-eid instance-id 101
+  ipv4 route-export site-registration
+  ipv6 route-export site-registration
+  exit
+ !
+ eid-table vrf cust1-eid-orange instance-id 201
+  ipv4 route-export site-registration
+  ipv6 route-export site-registration
+  exit
+ !
+ site 0000
+  authentication-key vpn-1-key
+  eid-prefix instance-id 101 0.0.0.0/0 route-tag 100 accept-more-specifics
+  eid-prefix instance-id 101 ::/0 accept-more-specifics
+  exit
+ !
+ site p1c1m2
+  authentication-key P1C1CPE2
+  eid-prefix instance-id 201 0.0.0.0/0 route-tag 100 accept-more-specifics
+  eid-prefix instance-id 201 192.168.22.0/24 route-tag 200
+  exit
+ !
+ ipv4 map-server
+ ipv4 map-resolver
+ ipv6 map-server
+ ipv6 map-resolver
+ exit
+end

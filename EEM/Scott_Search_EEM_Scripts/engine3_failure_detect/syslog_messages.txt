@@ -1,0 +1,10 @@
+Engine 3 syslog error:
+
+LC/0/12/CPU0:Apr 22 02:11:10.790 : rx_xbma[77]: %L2-E3INGRESSQ-4-INTERRUPT :  PLIM error: reg 0x2000
+
+
+
+
+Sample EEM syslog output message:
+
+12:28:26 PM RP/1/RP0/CPU0:Apr 22 13:02:18.865 UTC: fab_detect.tcl[65826]: EEM policy fab_detect detected a Fabric Error and has SHUTDOWN CARD: 1/RP0/CPU0

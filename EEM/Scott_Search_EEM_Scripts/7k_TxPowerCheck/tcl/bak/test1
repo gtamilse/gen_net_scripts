@@ -1,0 +1,51 @@
+#!/usr/bin/tclsh
+
+#set syslogs "NAME: \"TenGigE7/2/0/19\", DESCR: \"10GBASE-LR\"  "
+
+
+set syslogs "NAME: \"TenGigE7/2/0/19\", DESCR: \"10GBASE-LR\"
+PID: XFP10GLR-192SR-L , VID: V01, SN: ONT1710002N"
+
+puts ""
+
+foreach line [split $syslogs "\n"] {
+  regsub -all {[ \r\t\n]+} $line " " line
+  regsub -all {^[ ]} $line "" line
+  regsub -all {[ ]$} $line "" line
+
+  if {[regexp {^NAME: \"\w+\d+\/\d+\/\d+\/\d+\"} $line]} {
+    #regexp {^NAME: \"(\w+\d+\/\d+\/\d+\/\d+)\".* DESCR: \"(.*)\"} $line - iface
+    regexp {^NAME: \"(\w+\d+\/\d+\/\d+\/\d+)\".* DESCR: \"(.*)\"} $line - iface description
+    puts "iface: $iface" 
+    puts "description: $description"
+  }
+
+  if {[regexp {^PID: .* \, VID:} $line]} {
+    regexp {^PID: (.*) \, VID:} $line - pid
+    puts "pid: $pid"
+  }
+
+}
+
+puts ""
+
+
+#  if {[regexp {^ipv4 address \d+\.\d+\.\d+\.\d+} $line]} {
+#    regexp {^ipv4 address (\d+\.\d+\.\d+\.\d+) \d+\.\d+} $line - IPv4
+#  }
+
+#if {$IPv4 != ""} {
+#  regexp {(\d+\.\d+\.\d+\.)(\d+)} $IPv4 - IPv4_cut last_octet 
+#
+#  set up [expr $last_octet + 1]
+#  set down [expr $last_octet - 1]
+#   
+#  set IPv4_up $IPv4_cut
+#  append IPv4_up $up
+#  set IPv4_down $IPv4_cut
+#  append IPv4_down $down
+#
+#  puts "IPv4_up: $IPv4_up"
+#  puts "IPv4_down: $IPv4_down"
+#}
+

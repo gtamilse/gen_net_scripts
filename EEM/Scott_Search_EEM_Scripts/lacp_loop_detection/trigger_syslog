@@ -1,0 +1,7 @@
+run echo "bgp[1046]: %ROUTING-BGP-5-ADJCHANGE : neighbor 12.0.3.2 Down - Interface flap (VRF: 13979:32545)" > /dev/syslog
+
+
+run echo "BM-DISTRIB[1135]: %L2-BM-4-SELECTION : Selection Logic for bundle Bundle-Ether1003: Member Te0/5/0/3 (0x01380420) is in LACP loopback" > /dev/syslog
+
+
+

@@ -1,0 +1,54 @@
+#!/usr/bin/tclsh
+
+set cmds ""
+lappend cmds "show tech-support"
+lappend cmds "show redundancy"
+lappend cmds "show fabric errors "
+lappend cmds "show fabric drops"
+lappend cmds "show fabric channel-counters"
+lappend cmds "remote command standby-rp show log"
+lappend cmds "remote command module 1 show log"
+lappend cmds "remote command module 2 show log"
+
+lappend cmds "remote command switch show fabric resync"
+lappend cmds "remote command switch show platform hardware earl status"
+lappend cmds "remote command switch show platform hardware earl statistics"
+lappend cmds "remote command switch show platform hardware earl interrupt throttle status"
+lappend cmds "remote command switch show platform software earl reset history"
+lappend cmds "remote command switch show platform software earl reset counter"
+lappend cmds "remote command switch show platform software earl reset data"
+
+lappend cmds "remote command switch test platform firmware me_argos register read all 0 231"
+lappend cmds "remote command switch test platform firmware me_krypton register read all 0  769"
+lappend cmds "remote command switch test platform firmware ssantaana register read 0 all"
+lappend cmds "remote command switch test platform firmware ssantaana register read 1 all"
+lappend cmds "remote command switch test platform firmware telesto register read 0 0 1756"
+lappend cmds "remote command switch test platform firmware scruz fpoe regs dump 0 1 1"
+lappend cmds "remote command switch test platform firmware scruz dump chico 0  1 0"
+
+lappend cmds "remote command switch test platform firmware kailash reg lprint 0 0x180 0x199 25 1 "
+lappend cmds "remote command switch test platform firmware kailash reg lprint 0 0x1a0 0x1b9 25 1 "
+lappend cmds "remote command switch test platform firmware kailash reg mprint 0 0x152 3 1"
+lappend cmds "remote command switch test platform firmware kailash reg mprint 0 0x420 31 1 "
+lappend cmds "remote command switch test platform firmware kailash reg lprint 0 0x440 0x449 15 1"
+
+lappend cmds "show logging"
+lappend cmds "show diagnostic events module <active RSP>"
+lappend cmds "show diagnostic result module <active RSP> detail"
+
+
+lappend cmds "show diagnostic events module <Standby RSP>"
+lappend cmds "show diagnostic result module <Standby RSP> detail"
+
+puts ""
+
+foreach line [split $cmds "\n"] {
+  if {$line == ""} { continue }
+  puts "CMD:  $line"
+}
+
+puts ""
+
+exit
+
+

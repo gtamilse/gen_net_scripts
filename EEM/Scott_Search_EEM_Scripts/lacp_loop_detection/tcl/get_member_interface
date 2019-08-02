@@ -1,0 +1,43 @@
+#!/usr/bin/tclsh
+
+puts ""
+
+set member ""
+set members ""
+
+set syslogs "RP/0/RP0/CPU0:Jan  5 19:17:14.633 : BM-DISTRIB\[1135\]: %L2-BM-4-SELECTION : Selection Logic for bundle Bundle-POS3131: Member PO0/3/3/3 (0x01380420) is in LACP loopback
+RP/0/RP0/CPU0:Jan  5 19:17:14.633 : TM-DISTRIB\[1135\]: %L2-BM-4-SELECTION : test 123
+RP/0/RP0/CPU0:Jan  5 19:17:14.633 : TM-DISTRIB\[1135\]: %L2-BM-4-SELECTION : test 123
+RP/0/RP0/CPU0:Jan  5 19:17:14.633 : TM-DISTRIB\[1135\]: %L2-BM-4-SELECTION : test 123
+RP/0/RP0/CPU0:Jan  5 19:17:14.633 : TM-DISTRIB\[1135\]: %L2-BM-4-SELECTION : test 123
+RP/0/RP0/CPU0:Jan  5 19:17:14.633 : TM-DISTRIB\[1135\]: %L2-BM-4-SELECTION : test 123"
+
+
+foreach line [split $syslogs "\n"] {
+  regsub -all {[ \r\t\n]+} $line " " line
+  regsub -all {^[ ]} $line "" line
+  regsub -all {[ ]$} $line "" line
+
+#   if {[regexp "ROUTING-BGP-3-NBR_NSR_DISABLED : NSR disabled on neighbor" $line]} { }
+
+  if {[regexp "BM-DISTRIB.*L2-BM-4-SELECTION : .* is in LACP loopback" $line]} {
+    regexp { Member (\w+\d+\/\d+\/\d+\/\d+)} $line - member
+    lappend members $member
+  }
+}
+
+puts "Before Unique:"
+foreach line [split $members " "] {
+  puts "member: $line"
+}
+
+
+set members [lsort -unique $members]
+
+puts "\nAfter Unique:"
+foreach line [split $members " "] {
+  puts "member: $line"
+}
+
+puts ""
+

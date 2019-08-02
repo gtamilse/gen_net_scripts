@@ -1,0 +1,197 @@
+1. Select VRFs configured on the router:
+=========================================
+
+RP/0/8/CPU0:rcmva303me1#show run | i vrf 13979
+Building configuration...
+vrf 13979:2640
+vrf 13979:3623
+vrf 13979:4662
+vrf 13979:4759
+vrf 13979:4894
+vrf 13979:6253
+vrf 13979:6605
+ vrf 13979:4759				<<<< vrf statements being repeated. Please ignore statements starting on second colums. They are repeat.
+ vrf 13979:4759
+ vrf 13979:4759
+ vrf 13979:49422
+
+
+2. For each VRF lsook for eBGP neighbors that are in OpenSent state:
+=====================================================================
+
+RP/0/7/CPU0:rcmva303me1#show bgp vrf 13979:32545 summary 
+
+BGP VRF 13979:32545, state: Active
+BGP Route Distinguisher: 13979:159119
+VRF ID: 0x60000010
+BGP router identifier 12.123.67.140, local AS number 13979
+Non-stop routing is enabled
+BGP table state: Active
+Table ID: 0xe0000010   RD version: 1030172
+BGP main routing table version 1030204
+BGP NSR Initial initsync version 17814 (Reached)
+
+BGP is operating in STANDALONE mode.
+
+
+Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+Speaker         1030204    1030204    1030204    1030204     1030204     1030204
+
+Neighbor        Spk    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
+10.242.3.34       0 40200      26     105        0    0    0 00:00:00 Idle
+10.242.3.38       0 40201     231     233  1030204    0    0 01:53:25          3
+10.242.3.42       0 40202     240     240  1030204    0    0 01:57:29          3
+10.242.3.46       0 40203      26     105        0    0    0 00:00:00 Idle
+10.242.3.54       0 40205     232     233  1030204    0    0 01:53:28          3
+10.242.3.66       0 40208     232     234  1030204    0    0 01:53:52          3
+10.242.3.74       0 40210      26     105        0    0    0 00:00:00 Idle
+10.242.3.78       0 40211     240     240  1030204    0    0 01:57:29          3
+10.242.3.90       0 40214     231     233  1030204    0    0 01:53:20          3
+10.242.3.106      0 40218     232     233  1030204    0    0 01:53:30          3
+10.242.3.114      0 40220     231     233  1030204    0    0 01:53:20          3
+10.242.3.130      0 40224     231     233  1030204    0    0 01:53:25          3
+10.242.3.138      0 40226     231     232  1030204    0    0 01:53:02          3
+10.242.3.146      0 40228     232     234  1030204    0    0 01:53:53          3
+10.242.3.154      0 40230     241     240  1030204    0    0 01:57:28          3
+10.242.3.158      0 40231     230     232  1030204    0    0 01:52:53          3
+10.242.3.170      0 40234     230     232  1030204    0    0 01:52:55          3
+10.242.3.178      0 40236      27     108        0    0    0 00:00:00 OpenSent
+10.242.3.182      0 40237     240     239  1030204    0    0 01:57:25          3
+10.242.3.198      0 40241     231     233  1030204    0    0 01:53:21          3
+10.242.3.202      0 40242     235     233  1030204    0    0 01:53:19          3
+10.242.5.6        0 40321     241     240  1030204    0    0 01:57:28          3
+10.242.5.14       0 40323      27     108        0    0    0 00:00:00 OpenSent
+10.242.5.22       0 40325      26     104        0    0    0 00:00:00 OpenSent
+10.242.5.34       0 40328      26     104        0    0    0 00:00:00 OpenSent
+10.242.5.38       0 40329     231     233  1030204    0    0 01:53:24          3
+
+3. Collect the details of neighbor state for the neighbor in OpenSent state:
+=============================================================================
+RP/0/7/CPU0:rcmva303me1#sho bgp vrf 13979:32545 neighbors 10.242.89.238
+
+
+BGP neighbor is 10.242.89.238, vrf 13979:32545
+ Remote AS 45755, local AS 13979, external link
+ Description: customer 7-ELEVEN
+ Remote router ID 0.0.0.0
+  BGP state = OpenSent
+  NSR State: None
+  Last read 00:00:00, Last read before reset 00:00:00
+  Hold time is 180, keepalive interval is 60 seconds
+  Configured hold time: 180, keepalive: 60, min acceptable hold time: 9
+  Last write 00:01:45, attempted 29, written 29
+  Second last write 00:02:28, attempted 21, written 21
+  Last write before reset 00:00:00, attempted 0, written 0
+  Second last write before reset 00:00:00, attempted 0, written 0
+  Last write pulse rcvd  Sep  9 09:57:40.840 last full not set pulse count 142
+  Last write pulse rcvd before reset 00:00:00
+  Socket not armed for io, armed for read, armed for write
+  Last write thread event before reset 00:00:00, second last 00:00:00
+  Last KA expiry before reset 00:00:00, second last 00:00:00
+  Last KA error before reset 00:00:00, KA not sent 00:00:00
+  Last KA start before reset 00:00:00, second last 00:00:00
+  Precedence: internet
+  Non-stop routing is enabled
+  Graceful restart is enabled
+  Restart time is 120 seconds
+  Stale path timeout time is 360 seconds
+  Enforcing first AS is enabled
+  Received 31 messages, 1 notifications, 0 in queue
+  Sent 124 messages, 61 notifications, 0 in queue
+  Minimum time between advertisement runs is 0 secs
+
+ For Address Family: IPv4 Unicast
+  BGP neighbor version 0
+  Update group: 0.1 Filter-group: 0.0  No Refresh request being processed
+  Community attribute sent to this neighbor
+  AF-dependent capabilities:
+    Outbound Route Filter (ORF) type (128) Prefix:
+      Receive-mode: advertised
+    Graceful Restart capability advertised
+      Local restart time is 120, RIB purge time is 600 seconds
+      Maximum stalepath time is 360 seconds
+  Route refresh request: received 0, sent 0
+  Policy for incoming advertisements is CUST_FACE
+  Policy for outgoing advertisements is policy_nbr_restrictive_routing
+  0 accepted prefixes, 0 are bestpaths
+  Cumulative no. of prefixes denied: 0. 
+  Prefix advertised 0, suppressed 0, withdrawn 0
+  Maximum prefixes allowed 20000
+  Threshold for warning message 75%, restart interval 0 min
+  An EoR was not received during read-only mode
+  Last ack version 0, Last synced ack version 0
+  Outstanding version objects: current 0, max 0
+  Additional-paths operation: None
+
+ Connections established 0; dropped 0
+  Local host: 10.242.89.237, Local port: 33971
+  Foreign host: 10.242.89.238, Foreign port: 179
+  Last reset 00:02:28, due to BGP Notification sent: finite state machine error
+  Time since last notification sent to neighbor: 00:02:28
+  Error Code: finite state machine error
+  Notification data sent:
+    None
+  Time since last notification received from neighbor: 02:14:25
+  Error Code: unsupported optional parameter
+  Notification data received:
+    None
+
+
+
+4. Gather config for neighbors in OpenSent state:
+==================================================
+RP/0/8/CPU0:rcmva303me1#show run router bgp 13979 vrf 13979:32545 nei 10.242.3.178
+router bgp 13979
+ vrf 13979:32545
+  neighbor 10.242.3.178
+   remote-as 40236
+   use neighbor-group REST_ROUTE
+   description customer 7-ELEVEN
+   address-family ipv4 unicast
+   !
+  !
+ !
+!
+
+RP/0/8/CPU0:rcmva303me1#
+
+5. Delete/un-configure the neighbor in OpenSent state:
+=======================================================
+
+RP/0/0/CPU0:sandbox#conf
+Mon Sep 10 21:43:52.383 UTC
+RP/0/0/CPU0:sandbox(config)#router bgp 13979
+RP/0/0/CPU0:sandbox(config-bgp)#vrf 13979:32545
+RP/0/0/CPU0:sandbox(config-bgp-vrf)#exit  
+RP/0/0/CPU0:sandbox(config-bgp)#vrf 13979:32545
+RP/0/0/CPU0:sandbox(config-bgp-vrf)#no neighbor 10.242.3.178
+RP/0/0/CPU0:sandbox(config-bgp-vrf)#commit
+Mon Sep 10 21:44:55.780 UTC
+RP/0/0/CPU0:sandbox(config-bgp-vrf)#
+
+
+6. Wait for 10 seconds
+======================
+
+7. Reconfigure the neighbor
+==========================
+
+RP/0/0/CPU0:sandbox(config-bgp)#vrf 13979:32545
+RP/0/0/CPU0:sandbox(config-bgp-vrf)#  neighbor 10.242.3.178
+RP/0/0/CPU0:sandbox(config-bgp-vrf-nbr)#   remote-as 40236
+RP/0/0/CPU0:sandbox(config-bgp-vrf-nbr)#   use neighbor-group REST_ROUTE
+RP/0/0/CPU0:sandbox(config-bgp-vrf-nbr)#   description customer 7-ELEVEN
+RP/0/0/CPU0:sandbox(config-bgp-vrf-nbr)#   address-family ipv4 unicast
+RP/0/0/CPU0:sandbox(config-bgp-vrf-nbr-af)#commit
+
+8. Check the status of neighbor that was re-configured.
+========================================================
+
+RP/0/8/CPU0:rcmva303me1#show bgp vrf 13979:32545 nei 10.242.3.178 | i BGP state
+  BGP state = Established, up for 1d08h						<<<<< Should be Estblished
+RP/0/8/CPU0:rcmva303me1#
+
+
+If in step 8, neighbor state does not show "Established" then please try steps 5 - 7 again.
+Neighbor should come to establish state after three tries. If not, then please send an alert email
+to tier-3/AS.

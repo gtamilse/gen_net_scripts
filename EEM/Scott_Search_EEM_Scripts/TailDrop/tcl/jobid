@@ -1,0 +1,48 @@
+#!/usr/bin/tclsh
+
+set result "show packet-memory inuse summary location 0/4/CPU0
+
+Wed Feb  7 16:42:51.037 UTC
+Display inuse packets:
+
+ ProcId   JobId Count  Percentage Process
+  98364     167     2       0.00% pkg/bin/fabio_svr
+ 131180     127   288       0.66% pkg/bin/bfd_agent
+ 295074   65698 43470      99.34% pkg/bin/rex_controller
+Total packets inuse = 43760"
+
+
+proc get_JobID {output} {
+  set JobIDs ""
+  set ID ""
+  set good 0
+
+  foreach line [split $output "\n"] {
+    regsub -all {[ \r\t\n]+} $line " " line
+    regsub -all {^[ ]} $line "" line
+    regsub -all {[ ]$} $line "" line
+
+    if {[regexp "ProcId JobId Count" $line]} {
+      set good 1
+    }
+
+    if {$good ne 0} {
+      regexp {^\d+ (\d+) \d+ \d+} $line - ID
+      lappend JobIDs $ID
+    }
+  }
+  set JobIDs [lsort -unique $JobIDs]
+
+  return $JobIDs
+} ;# get_JobID
+
+
+puts ""
+
+set jobIDs [get_JobID $result]
+
+puts "jobIDs: $jobIDs"
+puts ""
+
+
+

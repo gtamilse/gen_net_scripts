@@ -1,0 +1,39 @@
+router bgp 65000
+ bgp asnotation dot
+ bgp log-neighbor-changes
+ neighbor 10.101.101.2 remote-as 2
+ neighbor 10.101.101.2 shutdown
+ neighbor 10.101.101.2 send-community both
+ !
+ address-family vpnv4
+  neighbor 10.101.101.2 activate
+  neighbor 10.101.101.2 send-community both
+  neighbor 10.101.101.2 inter-as-hybrid
+ exit-address-family
+ !
+ address-family ipv4 vrf cust1-eid
+  redistribute lisp route-map set-site-communities
+  neighbor 10.10.11.2 remote-as 65001
+  neighbor 10.10.11.2 activate
+  neighbor 10.10.11.2 route-map bgp-drop-all in
+ exit-address-family
+ !
+ address-family ipv6 vrf cust1-eid
+  redistribute lisp route-map set-site-communities
+  neighbor 10.10.11.2 remote-as 65001
+  neighbor 10.10.11.2 activate
+  neighbor 10.10.11.2 route-map bgp-drop-all in
+ exit-address-family
+ !
+ address-family ipv4 vrf cust1-eid-orange
+  redistribute lisp route-map set-site-communities
+  neighbor 10.10.21.2 remote-as 65001
+  neighbor 10.10.21.2 activate
+  neighbor 10.10.21.2 route-map bgp-drop-all in
+ exit-address-family
+ !
+ address-family ipv4 vrf cust1-rloc
+  neighbor 10.10.1.2 remote-as 65001
+  neighbor 10.10.1.2 activate
+ exit-address-family
+end

@@ -1,0 +1,113 @@
+RP/1/RP0/CPU0:JC22CRS#dir harddisk:/eem
+Thu May 13 04:12:34.609 UTC
+                                                                                                                              
+Directory of harddisk:/eem
+ 
+2087387232  -rwx  49874       Wed Apr  7 21:27:32 2010  bcc.tcl
+2087387296  -rwx  22063       Fri Apr 16 22:21:47 2010  eem_bcc.log
+2087387392  -rwx  8943        Thu May 13 04:11:11 2010  fab_detect.tcl
+2087387648  -rwx  540         Wed May  5 23:34:12 2010  image_info
+ 
+39929724928 bytes total (39241019392 bytes free)
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#run echo "test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, re$
+Thu May 13 04:12:46.138 UTC
+RP/1/RP0/CPU0:May 13 04:12:46.229 : syslog_dev[83]: syslog_dev: test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled End of test
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#RP/1/RP0/CPU0:May 13 04:13:04.907 : fab_detect.tcl[65824]: EEM policy fab_detect detected a Fabric Error and has SHUTDOWN CARD: 1/RP0/CPU0
+ 
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#dir harddisk:/eem
+Thu May 13 04:13:14.815 UTC
+                                                                                                                              
+Directory of harddisk:/eem
+ 
+2087387232  -rwx  49874       Wed Apr  7 21:27:32 2010  bcc.tcl
+2087387296  -rwx  22063       Fri Apr 16 22:21:47 2010  eem_bcc.log
+2087387392  -rwx  8943        Thu May 13 04:11:11 2010  fab_detect.tcl
+2087387488  -rwx  2110        Thu May 13 04:13:04 2010  eem_fabric_detect.log
+2087387584  -rwx  42          Thu May 13 04:12:56 2010  fab_detect_run_flag
+2087387648  -rwx  540         Wed May  5 23:34:12 2010  image_info
+ 
+39929724928 bytes total (39241011200 bytes free)
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#more harddisk:/eem/eem_fabric_detect.log
+Thu May 13 04:13:31.571 UTC
+*Timestamp = 04:12:48 EDT Thu May 13 2010
+Cisco Fabric Error Detection Script
+Designed for: IOX Embedded Event Manager (EEM)
+by: Scott Search (ssearch@cisco.com)
+ 
+Node: JC22CRS
+SYSLOG MSG:
+RP/1/RP0/CPU0: syslog_dev[83]: syslog_dev: test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled End of test
+ 
+Suspect location: 1/RP0/CPU0
+ 
+Show controllers fabric plane all CHECK:
+Id: 0 - Admin: UP - Oper: UP
+Id: 1 - Admin: UP - Oper: UP
+Id: 2 - Admin: UP - Oper: UP
+Id: 3 - Admin: UP - Oper: UP
+Id: 4 - Admin: UP - Oper: UP
+Id: 5 - Admin: UP - Oper: UP
+Id: 6 - Admin: UP - Oper: UP
+Id: 7 - Admin: UP - Oper: UP
+ 
+ 
+**Node: JC22CRS Fabric Error Detection**
+The JC22CRS node experienced the following syslog:
+RP/1/RP0/CPU0: syslog_dev[83]: syslog_dev: test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled End of test
+ 
+ 
+The fab_detect eem policy script has shutdown the following card location:
+1/RP0/CPU0
+ 
+Fabric Plane All Output (before card shutdown):
+  Flags: P - plane admin down,       p - plane oper down
+         C - card admin down,        c - card  oper down
+         L - link port admin down,   l - linkport oper down
+         A - asic admin down,        a - asic oper down
+         B - bundle port admin Down, b - bundle port oper down
+         I - bundle admin down,      i - bundle oper down
+         N - node admin down,        n - node down
+         o - other end of link down  d - data down
+         f - failed component downstream
+         m - plane multicast down,   s - link port permanently shutdown
+         t - no barrier input
+ 
+ Plane  Admin   Oper
+ Id     State   State
+ --------------------
+ 0      UP      UP
+ 1      UP      UP
+ 2      UP      UP
+ 3      UP      UP
+ 4      UP      UP
+ 5      UP      UP
+ 6      UP      UP
+ 7      UP      UP
+RP/1/RP0/CPU0:JC22CRS(admin)#
+ 
+ 
+ 
+ 
+The harddisk:/eem/fab_detect_run_flag file exists. Be sure to delete the file in order to
+Activate the EEM fab_detect script.
+ 
+ 
+*Timestamp = 04:13:03 EDT Thu May 13 2010
+RP/1/RP0/CPU0:JC22CRS#

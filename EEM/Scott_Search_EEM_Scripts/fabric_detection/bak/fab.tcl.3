@@ -1,0 +1,185 @@
+::cisco::eem::event_register_syslog pattern "sysmgr.*sfe_drvr.*abnormally terminated.*restart scheduled"
+
+
+# sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled
+
+# ::cisco::eem::event_register_syslog pattern "PLATFORM-I2C-2-VOLTAGE_SUPPLY_FAILED.*S2CC voltage.*not within thres" maxrun 120
+
+
+# ::cisco::eem::event_register_syslog pattern "PKT_INFRA-LINK-5-CHANGED.*Inter.*Bundle-POS12.*Administratively Down"
+# ::cisco::eem::event_register_syslog pattern "PKT_INFRA-LINK-3-UPDOWN.*Inter.*Bundle-POS12.*changed state to Down"
+
+# ::cisco::eem::event_register_syslog pattern "PLATFORM-I2C-2-VOLTAGE_SUPPLY_FAILED.*S2CC voltage.*not within thres" maxrun 120
+
+
+# ::cisco::eem::event_register_syslog pattern "PKT_INFRA-LINK-5-CHANGED.*Inter.*Bundle-POS12.*Administratively Down"
+# ::cisco::eem::event_register_syslog pattern "PKT_INFRA-LINK-3-UPDOWN.*Inter.*Bundle-POS12.*changed state to Down"
+
+
+# ::cisco::eem::event_register_syslog tag 1 pattern "sfe_drvr.*FABRIC-FABRIC_SRVR-3-ERR_DRV_INIT.*Init.*fabric.*failed:  Waiting.*fabric mother.*powered up"
+# ::cisco::eem::event_register_syslog tag 2 pattern "PLATFORM-I2C-2-VOLTAGE_SUPPLY_FAILED.*S2CC voltage.*not within thres"
+# ::cisco::eem::trigger {
+#   ::cisco::eem::correlate event 1 and event 2
+#     ::cisco::eem::attribute tag 1 occurs 1
+#     ::cisco::eem::attribute tag 2 occurs 1
+# }
+
+
+
+namespace import ::cisco::eem::*
+namespace import ::cisco::lib::*
+
+###########################################
+# These vars below should be set via the
+# event environment:
+set _email_server 9.3.3.249
+set _domainname "cisco.com"
+set _email_from "ssearch@cisco.com"
+set _email_to "ssearch@cisco.com"
+set _storage_location "harddisk:/eem"
+set _output_log "eem_fabric_detect.log"
+
+###########################################
+# Procedures
+###########################################
+proc process_fabric_plane_all {retval} {
+  global FH
+  set ID ""
+  set admin ""
+  set oper ""
+  set down_plane ""
+  set kont 0
+
+  foreach line [split $retval "\n"] {
+    # Trim up the line remove extra space/tabs etc:
+    regsub -all {[ \r\t\n]+} $line " " line
+    # Remove any leading white space:
+    regsub -all {^[ ]} $line "" line
+    # Remove any ending white space:
+    regsub -all {[ ]$} $line "" line
+
+    if {[regexp {^\d+ \w+ \w+} $line]} {
+      incr kont
+      regexp {^(\d+) (\w+) (\w+)$} $line - ID admin oper
+      puts $FH "Id: $ID - Admin: $admin - Oper: $oper"
+      # Check to see if the Oper status is DOWN:
+      if {[regexp -nocase "down" $oper]  && ![regexp -nocase "down" $admin]} {
+        lappend down_plane $ID
+      }
+    }
+  }
+  return $down_plane
+}
+
+
+###########################################
+# MAIN/main
+###########################################
+   
+###########################################
+# Globals:
+global FH
+# Arrays:
+array set if_needed {}
+
+
+# Open the output file (for write):
+if [catch {open $_storage_location/$_output_log w} result] {
+    error $result
+}
+set FH $result
+
+set date [clock format [clock sec] -format "%T %Z %a %b %d %Y"]
+puts $FH "*Timestamp = $date"
+puts $FH "Cisco Fabric Error Detection Script"
+puts $FH "Designed for: IOX Embedded Event Manager (EEM)"
+puts $FH "by: Scott Search (ssearch@cisco.com)\n\n"
+ 
+###########################################
+# Open Node Connection
+if [catch {cli_open} result] {
+  error $result $errorInfo
+} else {
+  array set cli $result
+}
+
+# Set node hostname:
+set node [info hostname]
+puts $FH "Node: $node"
+
+
+
+set junk ""
+set location ""
+set nodename ""
+
+array set arr_einfo [event_reqinfo]
+set syslog_msg $arr_einfo(msg)
+
+regexp {^(.*?):.*} $syslog_msg junk location
+regexp {^\w+/(.*?)} $location - nodename
+
+
+puts $FH "SYSLOG MSG: $syslog_msg"
+puts $FH "nodename: $nodename"
+
+
+
+# Enter Admin mode:
+if [catch {cli_exec $cli(fd) "admin"} result] {
+  error $result $errorInfo
+}
+
+# Gather the 'admin show controllers fabric plane all' info
+if [catch {cli_exec $cli(fd) "show controllers fabric plane all"} result] {
+  error $result $errorInfo
+}
+# Remove trailing router prompt
+regexp {\n*(.*\n)([^\n]*)$} $result junk fab_plane_all
+
+set down_plane [process_fabric_plane_all $fab_plane_all]
+puts $FH "\nDown Fabric Plane: $down_plane\n"
+
+# Exit Admin mode:
+if [catch {cli_exec $cli(fd) "exit"} result] {
+  error $result $errorInfo
+}
+
+
+# Exit Admin mode:
+if [catch {cli_exec $cli(fd) "exit"} result] {
+  error $result $errorInfo
+}
+
+###########################################
+# Close Node Connection
+cli_close $cli(fd) $cli(tty_id)
+
+
+###########################################
+# Craft up the email message:
+#action_syslog msg "Sending Fabric Error Detection to $_email_to"
+set email [format "Mailservername: %s" "$_email_server"]
+set email [format "%s\nFrom: %s" "$email" "$_email_from"]
+set email [format "%s\nTo: %s" "$email" "$_email_to"]
+set email [format "%s\nCc: %s" "$email" ""]
+set email [format "%s\nSubject: %s\n" "$email" "Node $node Fabric Error Detection"]
+set email [format "%s\n\n%s" "$email" "Fabric Plane All Output:"]
+set email [format "%s\n%s\n\n" "$email" "$fab_plane_all"]
+set email [format "%s\n%s\n\n" "$email" "SYSLOG MSG: $syslog_msg"]
+set email [format "%s\n%s" "$email" "Extracted nodename: $nodename"]
+
+
+if [catch {smtp_send_email $email} result] {
+  puts "smtp_send_email: $result"
+}
+
+puts $FH "EMAIL DATA BELOW SENT TO: $_email_to\n"
+puts $FH $email
+
+set date [clock format [clock sec] -format "%T %Z %a %b %d %Y"]
+puts $FH "*Timestamp = $date"
+ 
+close $FH
+
+action_syslog msg "Fabric Error Detection - Completed"

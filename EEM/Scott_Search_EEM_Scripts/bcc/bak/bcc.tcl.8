@@ -1,0 +1,666 @@
+::cisco::eem::event_register_timer cron name bcc_v1_0 cron_entry "0,10,20,30,40,50 * * * *" maxrun_sec 300
+
+namespace import ::cisco::eem::*
+namespace import ::cisco::lib::*
+
+###########################################
+# Below set the default vars:
+###########################################
+set storage_location   "harddisk:/eem"
+set output_file        "eem_bcc.log"
+
+ 
+
+###########################################
+# PROCEDURES
+###########################################
+proc get_xr_version {retval} {
+  set version ""
+
+  foreach line [split $retval "\n"] {
+    # Trim up the line remove extra space/tabs etc:
+    regsub -all {[ \r\t\n]+} $line " " line
+    # Remove any leading white space:
+    regsub -all {^[ ]} $line "" line
+
+    if {[regexp "^Cisco IOS XR" $line]} {
+      regexp {.* (\d+.\d+.\d+)} $line - version
+    }
+  }
+  return $version
+}
+
+proc get_bundle_members {bundle retval} {
+  global FH flags members members2
+  set members ""
+  set members2 ""
+  set members_bw ""
+  set kont 0
+  set iface ""
+  set iface2 ""
+  set state ""
+  set bw ""
+  set bw_totals ""
+
+  foreach line [split $retval "\n"] {
+    # Trim up the line remove extra space/tabs etc:
+    regsub -all {[ \r\t\n]+} $line " " line
+    # Remove any leading white space:
+    regsub -all {^[ ]} $line "" line
+  
+    if {$line == ""} { set kont 0 }
+    if {$kont == 2} { set kont 3 }
+    if {[regexp "^Port" $line]} { set kont [expr $kont + 1]}
+    if {$kont == 1 && [regexp "^------" $line]} { set kont [expr $kont + 1] }
+    if {$kont == 3 && $line != ""} {
+      set iface [lindex [split $line " "] 0]
+      set state [lindex [split $line " "] 1]
+      regsub -all {[a-zA-Z]} $state "" state
+      set bw    [lindex [split $line " "] 4]
+      if {$bw != ""} { lappend bw_totals $bw }
+      # If state is not equal to 4 then flag this:
+      if {$state != 4} {
+        puts $FH "FLAG: $bundle|$iface|Member state not equal to 4 ($state)"
+        lappend flags "FLAG: $bundle|$iface|Member state not equal to 4 ($state)"
+      }
+      set iface2 $iface
+      # Change the TenGig member 'Te' to 'ten':
+      regsub -all {^(Te)} $iface2 "ten" iface2
+      lappend members2 $iface2
+      lappend members $iface
+      lappend members_bw "$iface|$bw"
+  
+      puts $FH "iface: $iface"
+      puts $FH "state: $state"
+      puts $FH "bw: $bw"
+    }
+  }
+  
+  # Only need to perform the next section if the bundle type is POS:
+  if {[regexp -nocase "pos" $bundle]} {
+    puts $FH "POS bundle detected, need to determine egress/ingress entries"
+    determine_num_entries $members_bw $bw_totals
+  }
+}
+
+proc determine_num_entries {members_bw bw_totals} {
+  global ingress_total_entries egress_total_entries highest_member FH
+  set ingress_total_entries 0
+  set egress_total_entries 0
+  set highest_bw 0
+  set num_high_keys 0
+  set num_not_high_keys 0
+  set high_key 0
+  set highest_member ""
+  set sorted_bw ""
+  set sorted_bw_num 0
+
+  set sorted_bw [lsort -unique $bw_totals]  ;# Unique list of BW totals
+  set sorted_bw_num [llength $sorted_bw]    ;# Number of unique BW totals
+
+  if {$sorted_bw_num > 1} {
+    # If $sorted_bw_num is greater than 1 then there are mismatched Bandwidth members. This
+    # will also change the Ingress HW Asic collection and Ingress HW programming
+    # validation. The highest bandwidth member will be the Ingress HW data we collect and
+    # verify since all 'sponge_queue' and 'uidb_index' will be based off the highest
+    # BW member.
+    puts $FH "POS bundle with more than one bandwidth"
+
+    # Find the highest BW value:
+    foreach key [split $sorted_bw " "] {
+      if {$key > $high_key} { set high_key $key }
+    }
+    set highest_bw $high_key
+
+    # Get the number of high_keys (number of high BW values):
+    foreach val [split $bw_totals " "] {
+      if {$val == $high_key} { set num_high_keys [expr $num_high_keys + 1] }
+    }
+    set total_entries [expr $num_high_keys * 4]
+
+    # Next update the total_entries with the number of BW's not equal to $high_key:
+    foreach val [split $bw_totals " "] {
+      if {$val != $high_key} { set num_not_high_keys [expr $num_not_high_keys + 1] }
+    }
+    set total_entries [expr $total_entries + $num_not_high_keys]
+    set egress_total_entries $total_entries
+
+    foreach val [split $members_bw " "] {
+      regexp {(.*)\|(\d+)} $val - mem bw
+      if {$bw == $highest_bw} { set highest_member $mem }
+    }
+  } else {
+    # Else no mismatched members.  Next  determine if the members are oc768 and if so set the
+    # ingress num_entries multiply by 4 and egress multiply by 2:
+    set bw0 [lindex $bw_totals 0]
+
+    if {$bw0 >= 39000000} {
+      # Only oc768 members, need to multiply by 4 and 2
+      set num [llength $bw_totals]
+      set ingress_total_entries [expr $num * 4]
+      set egress_total_entries [expr $num * 2]
+    }
+  }
+}
+
+proc determine_xr_location {members} {
+  global bundle_member_locations FH
+  set chassis 0
+  set slot 0
+  set subslot 0
+  set port 0
+  set iface ""
+  set locale ""
+
+  foreach iface [split $members " "] {
+    regexp {.*(\d+)\/(\d+)\/(\d+)\/(\d+)} $iface - chassis slot subslot port
+    set locale "$chassis/$slot/cpu0"
+    lappend bundle_member_locations $locale
+    puts $FH "iface: $iface Location: $locale"
+  }
+}
+
+proc determine_xr_location2 {member} {
+  global FH
+  set mem_locations ""
+  set chassis 0
+  set slot 0
+  set subslot 0
+  set port 0
+  set iface ""
+  set locale ""
+
+  foreach iface [split $members " "] {
+    regexp {.*(\d+)\/(\d+)\/(\d+)\/(\d+)} $iface - chassis slot subslot port
+    set locale "$chassis/$slot/cpu0"
+    lappend mem_locations $locale
+    puts $FH "iface: $iface Location: $locale"
+  }
+  return $mem_locations
+}
+
+proc iir_interface_process {members location retval} {
+  global FH flags num_bundle_members
+  set iir_member_id ""
+  set kont 0
+  set partial ""
+  set numerical ""
+  set result 0
+  set flag ""
+  set id ""
+
+  foreach line [split $retval "\n"] {
+    # Trim up the line remove extra space/tabs etc:
+    regsub -all {[ \r\t\n]+} $line " " line
+    # Remove any leading white space:
+    regsub -all {^[ ]} $line "" line
+    # Remove any ending white space:
+    regsub -all {[ ]$} $line "" line
+
+    foreach member [split $members " "] {
+      regexp {^\w+(\d+\/\d+\/\d+\/\d+)} $member - numerical
+      set line2 $line
+      # Remove the alpha characters at the beginning of the line to match with the member id:
+      regsub -all {^\D+} $line2 "" line2
+      if {[regexp "^$numerical" $line2]} {
+        set kont [expr $kont + 1]
+        set flag [lindex [split $line " "] 2]
+        set id [lindex [split $line " "] end]
+        lappend iir_member_id $id
+        # Extract the member location to verify the CL flag exists:
+        regexp {^\w+(\d+\/\d+)} $line - partial
+        set partial "$partial/cpu0"
+        if {$partial == $location} {
+          if {![regexp "CL" $flag]} {
+            puts $FH "FLAG: Bundle member $member IIR flag not set to CL ($flag)"
+            lappend flags "FLAG: Bundle member $member IIR flag not set to CL ($flag)"
+            set result 1
+          } else { puts $FH "IIR flags good ($flag)" }
+        }
+      }
+    }
+  }
+  # $kont should equal the number of member ids
+  if {$kont != $num_bundle_members} {
+    puts $FH "FLAG: IIR int verify found discrepency in bundle member count ($kont:$num_bundle_members)"
+    lappend flags "FLAG: IIR int verify found discrepency in bundle member count ($kont:$num_bundle_members)"
+    set result 1
+  }
+
+  set iir_member_id [lsort -unique $iir_member_id]
+  set num_iir_ids [llength $iir_member_id]
+  if {$num_iir_ids != $num_bundle_members} {
+    puts $FH "FLAG: IIR int verify found duplicate IDs"
+    lappend flags "FLAG: IIR int verify found duplicate IDs"
+    set result 1
+  } else { puts $FH "IIR interface IDs good" }
+  if {!$result} { puts $FH "IIR interface check passed for location: $location" }
+}
+
+proc get_mtu {retval} {
+  set mtu 0
+  foreach line [split $retval "\n"] {
+    # Trim up the line remove extra space/tabs etc:
+    regsub -all {[ \r\t\n]+} $line " " line
+    # Remove any leading white space:
+    regsub -all {^[ ]} $line "" line
+ 
+    if {[regexp "^MTU" $line]} {
+      regexp {^MTU (\d+) .*} $line - mtu
+    }
+  }
+  return $mtu
+}
+
+proc verify_iir_bundle_ids {retval} {
+  global FH flags members num_bundle_members
+  set kont 0
+  set result 0
+  set numerical ""
+  set partial ""
+  set iir_member_id ""
+  set id ""
+
+  foreach line [split $retval "\n"] {
+    # Trim up the line remove extra space/tabs etc:
+    regsub -all {[ \r\t\n]+} $line " " line
+    # Remove any leading white space:
+    regsub -all {^[ ]} $line "" line
+    # Remove any ending white space:
+    regsub -all {[ ]$} $line "" line
+
+    foreach member [split $members " "] {
+      regexp {^\w+(\d+\/\d+\/\d+\/\d+)} $member - numerical
+      set line2 $line
+      # Remove the alpha characters at the beginning of the line to match with the member id:
+      regsub -all {^\D+} $line2 "" line2
+      if {[regexp "^$numerical" $line2]} {
+        set kont [expr $kont + 1]
+        set id [lindex [split $line " "] end]
+        lappend iir_member_id $id
+      }
+    }
+  }
+  # $kont should equal the number of member ids
+  if {$kont != $num_bundle_members} {
+    set msg "FLAG: Load balance hw entries found discrepency in bundle member count ($kont:$num_bundle_members)"
+    puts $FH $msg
+    lappend flags $msg
+    set result 1
+  }
+
+  set iir_member_id [lsort -unique $iir_member_id]
+  set num_iir_ids [llength $iir_member_id]
+  if {$num_iir_ids != $num_bundle_members} {
+    set msg "FLAG: Load balance hw entries found duplicate IDs"
+    puts $FH $msg
+    lappend flags $msg
+    set result 1
+  } else { puts $FH "Load balance hw entries Passed" }
+}
+
+proc ingress_hardware_info {location retval} {
+  global location_egress_uidb location_egress_fabricq
+  global FH flags platform_mgr
+  set egress_uidb ""
+  set egress_uidb_decimal ""
+  set egress_fabq ""
+  set egress_fabq_decimal ""
+ 
+  foreach line [split $retval "\n"] {
+    # Trim up the line remove extra space/tabs etc:
+    regsub -all {[ \r\t\n]+} $line " " line
+    # Remove any leading white space:
+    regsub -all {^[ ]} $line "" line
+    # Remove any ending white space:
+    regsub -all {[ ]$} $line "" line
+ 
+    if {[regexp {^egress_uidb_index} $line]} {
+      set egress_uidb [lindex [split $line " "] end]
+      puts $FH "egress_uidb: $egress_uidb"
+      if {$egress_uidb} {
+        # Convert hex to decimal:
+        set egress_uidb_decimal [expr $egress_uidb]
+        puts $FH "egress_uidb_decimal: $egress_uidb_decimal"
+        set location_egress_uidb($location) "$egress_uidb:$egress_uidb_decimal"
+      }
+    }
+    if {$platform_mgr == "hfrpm"} {
+      # If xr_version is 3.6.x and below do the following:
+      if {[regexp {^sponge queue} $line]} {
+        set egress_fabq [lindex [split $line " "] end]
+        puts $FH "egress_fabq: $egress_fabq"
+        if {$egress_fabq} {
+          # Convert hex to decimal:
+          set egress_fabq_decimal [expr $egress_fabq]
+          puts $FH "egress_fabq_decimal: $egress_fabq_decimal"
+          set location_egress_fabricq($location) "$egress_fabq:$egress_fabq_decimal"
+        }
+      }
+    } elseif {$platform_mgr == "pm"} {
+      # If xr_version is greater than 3.6.x then do the following:
+      if {[regexp {^fabricq queue} $line]} {
+        set egress_fabq [lindex [split $line " "] end]
+        puts $FH "egress_fabq: $egress_fabq"
+        if {$egress_fabq} {
+          # Convert hex to decimal:
+          set egress_fabq_decimal [expr $egress_fabq]
+          puts $FH "egress_fabq_decimal: $egress_fabq_decimal"
+          set location_egress_fabricq($location) "$egress_fabq:$egress_fabq_decimal"
+        }
+      }
+    } else {
+      # Need to flag this
+      set msg "**ERROR: Cannot capture the fabricq_queue or sponge_queue due to xr version is unknown"
+      puts $FH $msg
+      lappend flags $msg
+    }
+  }
+}
+
+
+   
+###########################################
+# MAIN/main
+###########################################
+   
+###########################################
+# Globals:
+global FH flags members members2 ingress_total_entries egress_total_entries highest_member
+global num_bundle_members modified_num_bundle_members bundle_member_locations xr_version
+global platform_mgr
+# Arrays:
+global location_egress_uidb location_egress_fabricq
+array set location_egress_uidb {}
+array set location_egress_fabricq {}
+
+set flags                    ""
+set retval                   ""
+set vers_first               ""
+set vers_second              ""
+set xr_version               ""
+set bundle_int               ""
+set members                  ""
+set members2                 ""
+set highest_member           ""
+set bundle_member_locations  ""
+set ingress_total_entries    0
+set egress_total_entries     0
+
+
+# Open the output file (for write):
+if [catch {open $storage_location/$output_file w} result] {
+    error $result
+}
+set FH $result
+puts $FH "Cisco Bundle Consistency Checker (BCC)"
+puts $FH "Designed for: Embedded Event Manager (EEM)"
+puts $FH "by: Scott Search (ssearch@cisco.com)\n"
+ 
+###########################################
+# Node Connection
+if [catch {cli_open} result] {
+  error $result $errorInfo
+} else {
+  array set cli $result
+}
+
+# Get the XR version
+if [catch {cli_exec $cli(fd) "show version | i Version"} result] {
+  error $result $errorInfo
+}
+set retval $result
+set xr_version [get_xr_version $retval]
+# ssearch: qsim xr version is always 0.0.0, setting it to 3.8.2
+set xr_version "3.8.2"
+puts $FH "XR version detected: $xr_version"
+# Determine the hfrpm/pm command to run
+if {$xr_version} {
+  regexp {(\d+).(\d+)} $xr_version - vers_first vers_second
+  if {$vers_first <= 3 && $vers_second <= 6} {
+    set platform_mgr "hfrpm"
+  } else {
+    set platform_mgr "pm"
+  }
+}
+ 
+# Find all the active Bundle interfaces:
+if [catch {cli_exec $cli(fd) "show ipv4 inter brief | inc Bundle| inc Up"} result] {
+  error $result $errorInfo
+}
+set retval $result
+ 
+# Process the output and extract the Bundle interfaces:
+foreach line [split $retval "\n"] {
+  # Trim up the line remove extra space/tabs etc:
+  regsub -all {[ \r\t\n]+} $line " " line
+  # Remove any leading white space:
+  regsub -all {^[ ]} $line "" line
+  
+  if [regexp {(^Bundle-\w+) *} $line - iface] {
+    lappend bundles $iface
+  }
+}
+  
+# Next get the 'show bundle $bundle' data:
+if {[string length $bundles]!=0} {
+  foreach bundle_int [split $bundles " "] {
+
+
+    array unset location_egress_uidb
+    array unset location_egress_fabricq
+    set bundle_member_locations ""
+    set iir_member_id ""
+    set bundles ""
+
+    if [catch {cli_exec $cli(fd) "show bundle $bundle_int"} result] {
+      error $result $errorInfo
+    }
+    set bundle_data $result
+ 
+    puts $FH "\n--------------------------------------------"
+    puts $FH "Processing Bundle: $bundle_int"
+ 
+    ###############################################################
+    # Step 1: Gathering Bundle Info and States
+    ###############################################################
+    puts $FH "****Step 1: Gathering bundle info and states"
+    set time_now [clock seconds]
+    set time_now [clock format $time_now -format "%T %Z %a %b %d %Y"]
+    puts $FH "*Timestamp = $time_now"
+
+    # Call the get_bundle_members proc to extract the bundle member data:
+    get_bundle_members $bundle_int $bundle_data
+
+    puts $FH "highest_member: $highest_member"
+    puts $FH "ingress_total_entries: $ingress_total_entries"
+    puts $FH "egress_total_entries: $egress_total_entries"
+
+    set num_bundle_members [llength $members]
+    if {$ingress_total_entries} {
+      # If the $ingress_total_entries exists then the modified_num_bundle_members will be updated accordingly:
+      set modified_num_bundle_members $egress_total_entries
+      puts $FH "total (1) Bundle Members for $bundle_int = $num_bundle_members (entries (i/e):\
+                $ingress_total_entries/$egress_total_entries"
+    } elseif {$egress_total_entries} {
+      set modified_num_bundle_members $egress_total_entries
+      puts $FH "total (2) Bundle Members for $bundle_int = $num_bundle_members (entries: $modified_num_bundle_members)"
+    } else {
+      set modified_num_bundle_members $num_bundle_members
+      puts $FH "total (3) Bundle Members for $bundle_int = $num_bundle_members (entries: $modified_num_bundle_members)"
+    }
+
+    ###############################################################
+    # Step 2: Gather interface details and lacp counters
+    ###############################################################
+    puts $FH "\n****Step 2: Gather interface details and lacp counters"
+    set time_now [clock seconds]
+    set time_now [clock format $time_now -format "%T %Z %a %b %d %Y"]
+    puts $FH "*Timestamp = $time_now"
+
+    # Currently on HOLD
+    puts $FH "Currently on HOLD"
+
+    ###############################################################
+    # Step 3: Verify iir interface details
+    ###############################################################
+    puts $FH "\n****Step 3: Verify IIR interface details"
+    set time_now [clock seconds]
+    set time_now [clock format $time_now -format "%T %Z %a %b %d %Y"]
+    puts $FH "*Timestamp = $time_now"
+
+    # Next need to determine XR LC locations
+    determine_xr_location $members
+    set bundle_member_locations [lsort -unique $bundle_member_locations]
+    set bundle_member_locations2 $bundle_member_locations
+
+    foreach location [split $bundle_member_locations " "] {
+      set cmd "show iir interface name $bundle_int location $location"
+      puts $FH $cmd
+      # Run cmd on node:
+      if [catch {cli_exec $cli(fd) $cmd} result] {
+        error $result $errorInfo
+      }
+      set retval $result
+      # Process the cmd output:
+      iir_interface_process $members $location $retval
+    }
+
+    ###############################################################
+    # Step 4: Verify bundle and member links MTU is the same
+    ###############################################################
+    puts $FH "\n****Step 4: Verify bundle and member links MTU is the same"
+    set time_now [clock seconds]
+    set time_now [clock format $time_now -format "%T %Z %a %b %d %Y"]
+    puts $FH "*Timestamp = $time_now"
+    set pass 0
+
+    # Get the bundle interface mtu:
+    set cmd "show inter $bundle_int | includ MTU"
+    puts $FH $cmd
+    if [catch {cli_exec $cli(fd) $cmd} result] {
+      error $result $errorInfo
+    }
+    set retval $result
+    set main_mtu [get_mtu $retval]
+    puts $FH "Main bundle $bundle_int mtu: $main_mtu"
+
+    # Process each bundle member and verify the MTU's are the same:
+    foreach iface [split $members2 " "] {
+      set cmd "show inter $iface | includ MTU"
+      puts $FH $cmd
+      if [catch {cli_exec $cli(fd) $cmd} result] {
+        error $result $errorInfo
+      }
+      set retval $result
+      set member_mtu [get_mtu $retval]
+      puts $FH "Member $iface mtu: $member_mtu"
+
+      if {$member_mtu != $main_mtu} {
+        set msg "FLAG: Bundle $bundle_int ($main_mtu) member $iface ($member_mtu) MTU mismatched"
+        puts $FH $msg
+        lappend flags $msg
+        set pass 1
+      }
+    }
+    if {!$pass} {puts $FH "MTU check Passed"}
+
+    ###############################################################
+    # Step 5: Determine order of load balance entries in hardware
+    ###############################################################
+    puts $FH "\n****Step 5: Determine order of load balance entries in hardware"
+    set time_now [clock seconds]
+    set time_now [clock format $time_now -format "%T %Z %a %b %d %Y"]
+    puts $FH "*Timestamp = $time_now"
+
+    set cmd "show iir interfaces name $bundle_int"
+    puts $FH $cmd
+    if [catch {cli_exec $cli(fd) $cmd} result] {
+      error $result $errorInfo
+    }
+    set retval $result
+
+    verify_iir_bundle_ids $retval
+
+    ###############################################################
+    # Step 6: Collect Ingress hardware ASIC allocation info
+    ###############################################################
+    puts $FH "\n****Step 6: Collect Ingress hardware ASIC allocation info"
+    set time_now [clock seconds]
+    set time_now [clock format $time_now -format "%T %Z %a %b %d %Y"]
+    puts $FH "*Timestamp = $time_now"
+
+    if {$highest_member} {
+      # If the $highest_member var exists then grab the location for this one member:
+      set bundle_member_locations [determine_xr_location2 $highest_member]
+    }
+
+    foreach location [split $bundle_member_locations " "] {
+      # Determine which xr command to run due to the XR version:
+      set cmd = "show controllers $platform_mgr inter $bundle_int loc $location";
+
+      puts $FH $cmd
+      if [catch {cli_exec $cli(fd) $cmd} result] {
+        error $result $errorInfo
+      }
+      set retval $result
+
+      ingress_hardware_info $location $retval
+    }
+    set location_egress_count [array size location_egress_uidb]
+ 
+    if {$location_egress_count > 0} {
+      # Array exists and egress_uidb/sponge queue/fabricq queue data collected successfully
+      puts $FH "Collection of ingress hardare ASIC allocation information PASSED"
+    } elseif {
+      # Array does not exist and no egress_uidb/sponge queue/fabricq queue data collected
+      set msg "**ERROR: Collection of ingress hardware ASIC allocation information FAILED. **"
+      puts $FH $msg
+      lappend flags $msg
+    }
+
+    ###############################################################
+    # Step 7: Validate the ingress hardware programming information
+    ###############################################################
+    puts $FH "\n****Step 7: Validate the ingress hardware programming information"
+    set time_now [clock seconds]
+    set time_now [clock format $time_now -format "%T %Z %a %b %d %Y"]
+    puts $FH "*Timestamp = $time_now"
+
+
+
+
+
+  }  ;# Close curly for the foreach of bundles
+}  ;# Close curly for checking for bundle interfaces exist
+ 
+# Close CLI
+cli_close $cli(fd) $cli(tty_id)
+# End of Node Connection
+###########################################
+ 
+ 
+###########################################
+# Check for flagged events:
+puts $FH "\n=============Script Completed, Checking Flagged Events================"
+if {[string length $flags]!=0} {
+  # Issues/Flags found
+  puts $FH "\n*******************************"
+  puts $FH "Flagged event(s) found:"
+  puts $FH "*******************************"
+  set kont 0
+  set flags_length [llength $flags]
+  while {$kont < $flags_length} {
+    set msg [lindex $flags $kont]
+    puts $FH "FLAG $kont: $msg"
+    set kont [expr $kont + 1]
+  }
+  set msg "Cisco BCC checker failed for node: <node> **Sending syslog trap**"
+  puts $FH $msg
+} else {
+  # No issues/flags found
+  puts $FH "No flags or errors encountered.  Node  **PASSED**  all BCC checks!"
+}
+ 
+close $FH
+################### End of Script ##########################################

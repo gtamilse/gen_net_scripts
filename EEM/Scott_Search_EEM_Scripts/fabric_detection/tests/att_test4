@@ -1,0 +1,265 @@
+Real test on AT&T Lab router jc22crs.  In this test the syslog message was generated on the
+fabric card F0/SM7/SP.  Comments start with "ssearch:" below:
+
+
+
+ssearch: Contents of the harddisk:/eem before kicking off the syslog message:
+
+RP/1/RP0/CPU0:JC22CRS#dir harddisk:/eem
+Thu May 13 22:55:21.822 UTC
+                                                                                                                             
+Directory of harddisk:/eem
+ 
+2087387232  -rwx  49874       Wed Apr  7 21:27:32 2010  bcc.tcl
+2087387296  -rwx  22063       Fri Apr 16 22:21:47 2010  eem_bcc.log
+2087387392  -rwx  8943        Thu May 13 04:11:11 2010  fab_detect.tcl
+2087387648  -rwx  540         Wed May  5 23:34:12 2010  image_info
+ 
+39929724928 bytes total (39240982528 bytes free)
+RP/1/RP0/CPU0:JC22CRS#
+
+ssearch: Fabric plane status before generating the syslog:
+
+RP/1/RP0/CPU0:JC22CRS#admin
+Thu May 13 22:55:28.641 UTC
+RP/1/RP0/CPU0:JC22CRS(admin)#sh controller fabric plan all
+Thu May 13 22:55:38.408 UTC
+  Flags: P - plane admin down,       p - plane oper down
+         C - card admin down,        c - card  oper down
+         L - link port admin down,   l - linkport oper down
+         A - asic admin down,        a - asic oper down
+         B - bundle port admin Down, b - bundle port oper down
+         I - bundle admin down,      i - bundle oper down
+         N - node admin down,        n - node down
+         o - other end of link down  d - data down
+         f - failed component downstream
+         m - plane multicast down,   s - link port permanently shutdown
+         t - no barrier input
+ 
+ Plane  Admin   Oper
+ Id     State   State
+ --------------------
+ 0      UP      UP
+ 1      UP      UP
+ 2      UP      UP
+ 3      UP      UP
+ 4      UP      UP
+ 5      UP      UP
+ 6      UP      UP
+ 7      UP      UP
+RP/1/RP0/CPU0:JC22CRS(admin)#exit
+RP/1/RP0/CPU0:JC22CRS#run attach F0/SM7/SP
+Thu May 13 22:55:49.085 UTC
+ 
+attach: Starting session 1 to node F0/SM7/SP
+ 
+#
+
+ssearch: Generating the syslog message now:
+
+# echo "sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled" > /dev/syslog
+# SP/F0/SM7/SP:May 13 22:57:32.016 : syslog_dev[74]: syslog_dev: sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled
+ex
+Terminating attach to node F0/SM7/SP..
+RP/1/RP0/CPU0:JC22CRS#
+
+
+ssearch: Log messages regarding the fabric card shutdown:
+
+RP/1/RP0/CPU0:JC22CRS#RP/1/RP0/CPU0:May 13 22:57:48.323 : config[65832]: %MGBL-CONFIG-6-DB_COMMIT_ADMIN : Configuration committed by user 'eem-user'. Use 'show configuration commit changes 2000000001' to view the changes.
+SC/F0/SC0/CPU0:May 13 22:57:49.023 : fsdb_server[126]: %FABRIC-FSDB-3-ERR_BUNDLE_LINK : 1 link down in bundle F0/SM7/FM/1 on plane 1
+SC/F0/SC0/CPU0:May 13 22:57:49.064 : fsdb_server[126]: %FABRIC-FSDB-3-ERR_BUNDLE_LINK : 1 link down in bundle F0/SM7/FM/0 on plane 1
+SC/F0/SC0/CPU0:May 13 22:57:49.834 : fsdb_server[126]: %FABRIC-FSDB-3-ERR_BUNDLE_STATE : Bundle F0/SM7/FM/0 on plane 1 is down
+SC/F0/SC0/CPU0:May 13 22:57:49.911 : fsdb_server[126]: %FABRIC-FSDB-3-ERR_BUNDLE_STATE : Bundle F0/SM7/FM/1 on plane 1 is down
+RP/1/RP0/CPU0:May 13 22:57:49.986 : fsdb_aserver[195]: %FABRIC-FSDB-1-PLANE_UPDOWN : Plane 1 state changed to MCAST_DOWN;
+RP/1/RP0/CPU0:May 13 22:57:50.619 : fsdb_aserver[195]: %FABRIC-FSDB-1-PLANE_UPDOWN : Plane 1 state changed to DOWN;
+SC/F0/SC0/CPU0:May 13 22:57:50.912 : shelfmgr[158]: %PLATFORM-SHELFMGR-3-SHUTDOWN_RESET : Node F0/SM7/SP is reset due to admin shut/no shut request
+SC/F0/SC0/CPU0:May 13 22:57:50.979 : invmgr[131]: %PLATFORM-INV-6-NODE_STATE_CHANGE : Node: F0/SM7/SP, state: ADMIN DOWN
+SP/0/SM1/SP:May 13 22:57:51.157 : sfe_drvr[112]: %FABRIC-FABRIC_DRVR-7-ERRRATE_EXCEED_DEBUG : Multicast High Priority Request Barrier Timeout
+SP/0/SM1/SP:May 13 22:57:51.158 : sfe_drvr[112]: %FABRIC-FABRIC_DRVR-7-ERRRATE_EXCEED_DEBUG : Multicast High Priority Request Barrier Timeout
+SP/0/SM1/SP:May 13 22:57:51.160 : sfe_drvr[112]: %FABRIC-FABRIC_DRVR-7-ERRRATE_EXCEED_DEBUG : Multicast High Priority Request Barrier Timeout
+SP/0/SM1/SP:May 13 22:57:51.161 : sfe_drvr[112]: %FABRIC-FABRIC_DRVR-7-ERRRATE_EXCEED_DEBUG : Multicast High Priority Request Barrier Timeout
+SP/1/SM1/SP:May 13 22:57:51.158 : sfe_drvr[112]: %FABRIC-FABRIC_DRVR-7-ERRRATE_EXCEED_DEBUG : Multicast High Priority Request Barrier Timeout
+SP/1/SM1/SP:May 13 22:57:51.160 : sfe_drvr[112]: %FABRIC-FABRIC_DRVR-7-ERRRATE_EXCEED_DEBUG : Multicast High Priority Request Barrier Timeout
+SP/1/SM1/SP:May 13 22:57:51.161 : sfe_drvr[112]: %FABRIC-FABRIC_DRVR-7-ERRRATE_EXCEED_DEBUG : Multicast High Priority Request Barrier Timeout
+SP/1/SM1/SP:May 13 22:57:51.163 : sfe_drvr[112]: %FABRIC-FABRIC_DRVR-7-ERRRATE_EXCEED_DEBUG : Multicast High Priority Request Barrier Timeout
+SC/F0/SC0/CPU0:May 13 22:57:51.989 : fsdb_server[126]: %FABRIC-FSDB-3-ERR_BUNDLE_LINK : 1 link down in bundle F0/SM6/FM/1 on plane 1
+SC/F0/SC0/CPU0:May 13 22:57:52.007 : fsdb_server[126]: %FABRIC-FSDB-3-ERR_BUNDLE_LINK : 1 link down in bundle F0/SM8/FM/1 on plane 1
+SC/F0/SC0/CPU0:May 13 22:57:52.046 : fsdb_server[126]: %FABRIC-FSDB-3-ERR_BUNDLE_LINK : 1 link down in bundle F0/SM6/FM/0 on plane 1
+SC/F0/SC0/CPU0:May 13 22:57:52.075 : fsdb_server[126]: %FABRIC-FSDB-3-ERR_BUNDLE_LINK : 1 link down in bundle F0/SM8/FM/0 on plane 1
+SC/F0/SC0/CPU0:May 13 22:57:52.338 : fsdb_server[126]: %FABRIC-FSDB-3-ERR_BUNDLE_STATE : Bundle F0/SM6/FM/0 on plane 1 is down
+SC/F0/SC0/CPU0:May 13 22:57:52.358 : fsdb_server[126]: %FABRIC-FSDB-3-ERR_BUNDLE_STATE : Bundle F0/SM6/FM/1 on plane 1 is down
+SC/F0/SC0/CPU0:May 13 22:57:52.699 : fsdb_server[126]: %FABRIC-FSDB-3-ERR_BUNDLE_STATE : Bundle F0/SM8/FM/1 on plane 1 is down
+SC/F0/SC0/CPU0:May 13 22:57:52.710 : fsdb_server[126]: %FABRIC-FSDB-3-ERR_BUNDLE_STATE : Bundle F0/SM8/FM/0 on plane 1 is down
+RP/0/RP0/CPU0:May 13 22:57:53.447 : fsdb_server[196]: %FABRIC-FSDB-4-ERR_DEST_CONN : Node (0/RP0/CPU0) is not reachable on plane 1
+RP/1/RP0/CPU0:May 13 22:57:53.490 : fsdb_server[196]: %FABRIC-FSDB-4-ERR_DEST_CONN : Node (1/2/CPU0) is not reachable on plane 1
+RP/1/RP0/CPU0:May 13 22:57:54.388 : config[65832]: %MGBL-SYS-5-CONFIG_I : Configured from console by console on vty100 (192.168.116.8)
+ 
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#RP/1/RP0/CPU0:May 13 22:57:57.396 : fab_detect.tcl[65752]: EEM policy fab_detect detected a Fabric Error and has SHUTDOWN CARD: F0/SM7/SP
+ 
+
+ssearch: Directory contents of harddisk:/eem after the eem script was triggered:
+
+RP/1/RP0/CPU0:JC22CRS#dir harddisk:/eem
+Thu May 13 22:58:01.677 UTC
+                                                                                                                             
+Directory of harddisk:/eem
+ 
+2087387232  -rwx  49874       Wed Apr  7 21:27:32 2010  bcc.tcl
+2087387296  -rwx  22063       Fri Apr 16 22:21:47 2010  eem_bcc.log
+2087387392  -rwx  8943        Thu May 13 04:11:11 2010  fab_detect.tcl
+2087387488  -rwx  2070        Thu May 13 22:57:57 2010  eem_fabric_detect.log
+2087387584  -rwx  42          Thu May 13 22:57:41 2010  fab_detect_run_flag
+2087387648  -rwx  540         Wed May  5 23:34:12 2010  image_info
+ 
+39929724928 bytes total (39240974336 bytes free)
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+
+ssearch:  Contents of the eem fab_detect.tcl script after the scripted kicked off:
+
+RP/1/RP0/CPU0:JC22CRS#more harddisk:/eem/eem_fabric_detect.log
+Thu May 13 22:58:20.747 UTC
+*Timestamp = 22:57:34 EDT Thu May 13 2010
+Cisco Fabric Error Detection Script
+Designed for: IOX Embedded Event Manager (EEM)
+by: Scott Search (ssearch@cisco.com)
+ 
+Node: JC22CRS
+SYSLOG MSG:
+SP/F0/SM7/SP: syslog_dev[74]: syslog_dev: sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled
+ 
+Suspect location: F0/SM7/SP
+ 
+Show controllers fabric plane all CHECK:
+Id: 0 - Admin: UP - Oper: UP
+Id: 1 - Admin: UP - Oper: UP
+Id: 2 - Admin: UP - Oper: UP
+Id: 3 - Admin: UP - Oper: UP
+Id: 4 - Admin: UP - Oper: UP
+Id: 5 - Admin: UP - Oper: UP
+Id: 6 - Admin: UP - Oper: UP
+Id: 7 - Admin: UP - Oper: UP
+ 
+ 
+**Node: JC22CRS Fabric Error Detection**
+The JC22CRS node experienced the following syslog:
+SP/F0/SM7/SP: syslog_dev[74]: syslog_dev: sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled
+ 
+ 
+The fab_detect eem policy script has shutdown the following card location:
+F0/SM7/SP
+ 
+Fabric Plane All Output (before card shutdown):
+  Flags: P - plane admin down,       p - plane oper down
+         C - card admin down,        c - card  oper down
+         L - link port admin down,   l - linkport oper down
+         A - asic admin down,        a - asic oper down
+         B - bundle port admin Down, b - bundle port oper down
+         I - bundle admin down,      i - bundle oper down
+         N - node admin down,        n - node down
+         o - other end of link down  d - data down
+         f - failed component downstream
+         m - plane multicast down,   s - link port permanently shutdown
+         t - no barrier input
+ 
+ Plane  Admin   Oper
+ Id     State   State
+ --------------------
+ 0      UP      UP
+ 1      UP      UP
+ 2      UP      UP
+ 3      UP      UP
+ 4      UP      UP
+ --More-- 
+ 5      UP      UP
+ 6      UP      UP
+ 7      UP      UP
+RP/1/RP0/CPU0:JC22CRS(admin)#
+ 
+ 
+ 
+ 
+The harddisk:/eem/fab_detect_run_flag file exists. Be sure to delete the file in order to
+Activate the EEM fab_detect script.
+ 
+ 
+*Timestamp = 22:57:55 EDT Thu May 13 2010
+  
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#admin
+Thu May 13 22:58:35.188 UTC
+
+ssearch: Show fabric plane details after script run:
+
+RP/1/RP0/CPU0:JC22CRS(admin)#sh controller fabric pla all
+Thu May 13 22:58:44.540 UTC
+  Flags: P - plane admin down,       p - plane oper down
+         C - card admin down,        c - card  oper down
+         L - link port admin down,   l - linkport oper down
+         A - asic admin down,        a - asic oper down
+         B - bundle port admin Down, b - bundle port oper down
+         I - bundle admin down,      i - bundle oper down
+         N - node admin down,        n - node down
+         o - other end of link down  d - data down
+         f - failed component downstream
+         m - plane multicast down,   s - link port permanently shutdown
+         t - no barrier input
+ 
+ Plane  Admin   Oper
+ Id     State   State
+ --------------------
+ 0      UP      UP
+ 1      UP      DOWN
+ 2      UP      UP
+ 3      UP      UP
+ 4      UP      UP
+ 5      UP      UP
+ 6      UP      UP
+ 7      UP      UP
+RP/1/RP0/CPU0:JC22CRS(admin)#
+RP/1/RP0/CPU0:JC22CRS(admin)#
+RP/1/RP0/CPU0:JC22CRS(admin)#exit
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#run attach F0/SM4/SP
+Thu May 13 22:59:16.509 UTC
+ 
+attach: Starting session 1 to node F0/SM4/SP
+#
+
+ssearch:  Generating the same syslog on another fabric card to show how the eem script will
+not proceed due to the fabric run flag file exists:
+
+# echo "sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled" > /dev/syslog
+# SP/F0/SM4/SP:May 13 23:00:13.478 : syslog_dev[74]: syslog_dev: sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled
+ 
+# exit
+Terminating attach to node F0/SM4/SP..
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+
+ssearch:  Syslog from the eem script indicating the fab_detect_run_flag file exists, thus preventing
+the script running out of control:
+
+RP/1/RP0/CPU0:JC22CRS#RP/1/RP0/CPU0:May 13 23:00:25.060 : fab_detect.tcl[65831]: EEM policy fab_detect detected Fabric Error on card F0/SM4/SP yet harddisk:/eem/fab_detect_run_flag exists No Action Taken!
+ 
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#admin
+Thu May 13 23:01:15.827 UTC
+
+ssearch:  Furthing indication that the eem script performed the appropriate task of shutting down the
+suspect fabric card:
+
+RP/1/RP0/CPU0:JC22CRS(admin)#sh run | in hw-mod
+Thu May 13 23:01:24.048 UTC
+Building configuration...
+hw-module reset auto disable location F0/SC1/CPU0
+hw-module shutdown location F0/SM7/SP
+RP/1/RP0/CPU0:JC22CRS(admin)#
+

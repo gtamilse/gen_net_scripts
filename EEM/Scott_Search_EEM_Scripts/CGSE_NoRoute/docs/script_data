@@ -1,0 +1,23 @@
+If below syslog is seen 2 times in a 2 minute period trigger EEM script
+
+
+LC/0/7/CPU0:Jul 20 18:37:03.718 : plim_services_80ge[288]: %PLATFORM-PLIM_SERVICES-7-GENERIC_ERROR : HA: XLP 1: Fail String: HA datapath test failed  0x0
+
+
+
+
+Script steps:
+------------------------------
+Step 1: Determine CGSE slot location
+Step 2: Login to router VTY
+Step 3: Run the 'show run | inc service cgn cgse' command
+Step 4: Parse out the 'cgsex' specific interfaces
+Step 5: Run the 'show run service cgn cgsex' command. Find IPv4 and IPv6 ServiceApp interfaces 
+Step 6: Collect the IPv4 and IPv6 addresses from the ServiceApp interfaces
+Step 7: Collect the static routes and parse out the static routes for each matchig ServiceApp
+Step 8: Finally remove the static IPv4/IPv6 addresses
+
+
+
+
+

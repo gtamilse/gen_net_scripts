@@ -1,0 +1,450 @@
+RP/1/RP0/CPU0:JC22CRS#more harddisk:/eem/eem_bcc.log
+Mon Mar 29 21:11:39.235 UTC
+*Timestamp = 21:10:02 EDT Mon Mar 29 2010
+Cisco Bundle Consistency Checker (BCC)
+Designed for: Embedded Event Manager (EEM)
+by: Scott Search (ssearch@cisco.com)
+ 
+XR version detected: 3.6.3
+ 
+--------------------------------------------
+Processing Bundle: Bundle-Ether2002
+****Step 1: Gathering bundle info and states
+*Timestamp = 21:10:21 EDT Mon Mar 29 2010
+iface: Te0/5/0/0
+state: 4
+bw: 10000000
+iface: Te0/5/0/1
+state: 4
+bw: 10000000
+highest_member:
+ingress_total_entries: 0
+egress_total_entries: 0
+total (3) Bundle Members for Bundle-Ether2002 = 2 (entries: 2)
+ 
+****Step 2: Gather interface details and lacp counters
+*Timestamp = 21:10:23 EDT Mon Mar 29 2010
+Currently on HOLD
+ 
+****Step 3: Verify IIR interface details
+*Timestamp = 21:10:23 EDT Mon Mar 29 2010
+iface: Te0/5/0/0 Location: 0/5/cpu0
+iface: Te0/5/0/1 Location: 0/5/cpu0
+show iir interface name Bundle-Ether2002 location 0/5/cpu0
+IIR flags good (CL|BW|ST|CR)
+IIR flags good (CL|BW|ST|CR)
+IIR interface IDs good
+IIR interface check passed for location: 0/5/cpu0
+ 
+****Step 4: Verify bundle and member links MTU is the same
+*Timestamp = 21:10:23 EDT Mon Mar 29 2010
+show inter Bundle-Ether2002 | includ MTU
+Main bundle Bundle-Ether2002 mtu: 9212
+show inter ten0/5/0/0 | includ MTU
+Member ten0/5/0/0 mtu: 9212
+show inter ten0/5/0/1 | includ MTU
+Member ten0/5/0/1 mtu: 9212
+MTU check Passed
+ 
+****Step 5: Determine order of load balance entries in hardware
+*Timestamp = 21:10:27 EDT Mon Mar 29 2010
+show iir interfaces name Bundle-Ether2002
+Load balance hw entries Passed
+ 
+****Step 6: Collect Ingress hardware ASIC allocation info
+*Timestamp = 21:10:28 EDT Mon Mar 29 2010
+show controllers hfrpm inter Bundle-Ether2002 loc 0/5/cpu0
+egress_uidb: 0x9
+egress_uidb_decimal: 9
+egress_fabq: 0x409
+egress_fabq_decimal: 1033
+Collection of ingress hardare ASIC allocation information PASSED
+ 
+****Step 7: Validate the ingress hardware programming information
+*Timestamp = 21:10:29 EDT Mon Mar 29 2010
+show cef mpls adj Bundle-Ether2002 hardware ingress detail location 0/5/cpu0 | beg local
+Num entries found: 2  Equals expected: 2
+Validate ingress HW next_ptr (0x208) and tlu4 (0x3000208) equal - PASSED
+Ingress HW sponge_queue 1033 EQUALS egress_fabq 1033 - GOOD
+Ingress HW uidb_index 0x9 EQUALS egress_uidb_index 0x9 - GOOD
+Ingress HW sponge_queue 1033 EQUALS egress_fabq 1033 - GOOD
+Ingress HW uidb_index 0x9 EQUALS egress_uidb_index 0x9 - GOOD
+Validate ingress HW programming PASSED
+ 
+****Step 8: Collect the Egress hardware ASIC allocation information
+*Timestamp = 21:10:31 EDT Mon Mar 29 2010
+iface: ten0/5/0/0 Location: 0/5/cpu0
+show controllers hfrpm interface ten0/5/0/0 location 0/5/cpu0
+egressq: 0x9
+egressq_decimal: 9
+location_egressq(0/5/cpu0): 9
+iface: ten0/5/0/1 Location: 0/5/cpu0
+show controllers hfrpm interface ten0/5/0/1 location 0/5/cpu0
+egressq: 0xb
+egressq_decimal: 11
+location_egressq(0/5/cpu0): 9 11
+ 
+****Step 9: Validate L2 load balance hardware info
+*Timestamp = 21:10:32 EDT Mon Mar 29 2010
+show cef ipv4 adjacency Bundle-Ether2002 hardware egress detail location 0/5/cpu0 | beg local
+Validate L2 HW Info - Location: 0/5/cpu0 egressqs: 9 11
+Validate egress entries found: 2  Expected: 2
+Validate egress L2 HW next_ptr (0xc02) and tlu4 (0x3000c02) equal - PASSED
+Validate L2 HW Info - default_sharqs found: 9 11
+Validate L2 load balance hw info for default_sharq is GOOD.
+Validate Egress L2 hardware info location: 0/5/cpu0 - PASSED
+ 
+--------------------------------------------
+Processing Bundle: Bundle-Ether2011
+****Step 1: Gathering bundle info and states
+*Timestamp = 21:10:34 EDT Mon Mar 29 2010
+iface: Te1/2/0/0
+state: 4
+bw: 10000000
+iface: Te1/2/1/0
+state: 4
+bw: 10000000
+highest_member:
+ingress_total_entries: 0
+egress_total_entries: 0
+total (3) Bundle Members for Bundle-Ether2011 = 2 (entries: 2)
+ 
+****Step 2: Gather interface details and lacp counters
+*Timestamp = 21:10:35 EDT Mon Mar 29 2010
+Currently on HOLD
+ 
+****Step 3: Verify IIR interface details
+*Timestamp = 21:10:35 EDT Mon Mar 29 2010
+iface: Te1/2/0/0 Location: 1/2/cpu0
+iface: Te1/2/1/0 Location: 1/2/cpu0
+show iir interface name Bundle-Ether2011 location 1/2/cpu0
+IIR flags good (CL|BW|ST|CR)
+IIR flags good (CL|BW|ST|CR)
+IIR interface IDs good
+IIR interface check passed for location: 1/2/cpu0
+ 
+****Step 4: Verify bundle and member links MTU is the same
+*Timestamp = 21:10:37 EDT Mon Mar 29 2010
+show inter Bundle-Ether2011 | includ MTU
+Main bundle Bundle-Ether2011 mtu: 9188
+show inter ten1/2/0/0 | includ MTU
+Member ten1/2/0/0 mtu: 9188
+show inter ten1/2/1/0 | includ MTU
+Member ten1/2/1/0 mtu: 9188
+MTU check Passed
+ 
+****Step 5: Determine order of load balance entries in hardware
+*Timestamp = 21:10:41 EDT Mon Mar 29 2010
+show iir interfaces name Bundle-Ether2011
+Load balance hw entries Passed
+ 
+****Step 6: Collect Ingress hardware ASIC allocation info
+*Timestamp = 21:10:42 EDT Mon Mar 29 2010
+show controllers hfrpm inter Bundle-Ether2011 loc 1/2/cpu0
+egress_uidb: 0x6
+egress_uidb_decimal: 6
+egress_fabq: 0x406
+egress_fabq_decimal: 1030
+Collection of ingress hardare ASIC allocation information PASSED
+ 
+****Step 7: Validate the ingress hardware programming information
+*Timestamp = 21:10:43 EDT Mon Mar 29 2010
+show cef mpls adj Bundle-Ether2011 hardware ingress detail location 1/2/cpu0 | beg local
+Num entries found: 2  Equals expected: 2
+Validate ingress HW next_ptr (0xc06) and tlu4 (0x3000c06) equal - PASSED
+Ingress HW sponge_queue 1030 EQUALS egress_fabq 1030 - GOOD
+Ingress HW uidb_index 0x6 EQUALS egress_uidb_index 0x6 - GOOD
+Ingress HW sponge_queue 1030 EQUALS egress_fabq 1030 - GOOD
+Ingress HW uidb_index 0x6 EQUALS egress_uidb_index 0x6 - GOOD
+Validate ingress HW programming PASSED
+ 
+****Step 8: Collect the Egress hardware ASIC allocation information
+*Timestamp = 21:10:44 EDT Mon Mar 29 2010
+iface: ten1/2/0/0 Location: 1/2/cpu0
+show controllers hfrpm interface ten1/2/0/0 location 1/2/cpu0
+egressq: 0x11
+egressq_decimal: 17
+location_egressq(1/2/cpu0): 17
+iface: ten1/2/1/0 Location: 1/2/cpu0
+show controllers hfrpm interface ten1/2/1/0 location 1/2/cpu0
+egressq: 0xf
+egressq_decimal: 15
+location_egressq(1/2/cpu0): 15 17
+ 
+****Step 9: Validate L2 load balance hardware info
+*Timestamp = 21:10:46 EDT Mon Mar 29 2010
+show cef ipv4 adjacency Bundle-Ether2011 hardware egress detail location 1/2/cpu0 | beg local
+Validate L2 HW Info - Location: 1/2/cpu0 egressqs: 15 17
+Validate egress entries found: 2  Expected: 2
+Validate egress L2 HW next_ptr (0xc02) and tlu4 (0x3000c02) equal - PASSED
+Validate L2 HW Info - default_sharqs found: 15 17
+Validate L2 load balance hw info for default_sharq is GOOD.
+Validate Egress L2 hardware info location: 1/2/cpu0 - PASSED
+ 
+--------------------------------------------
+Processing Bundle: Bundle-Ether22
+****Step 1: Gathering bundle info and states
+*Timestamp = 21:10:48 EDT Mon Mar 29 2010
+iface: Te1/4/0/0
+state: 4
+bw: 10000000
+highest_member:
+ingress_total_entries: 0
+egress_total_entries: 0
+total (3) Bundle Members for Bundle-Ether22 = 1 (entries: 1)
+ 
+****Step 2: Gather interface details and lacp counters
+*Timestamp = 21:10:49 EDT Mon Mar 29 2010
+Currently on HOLD
+ 
+****Step 3: Verify IIR interface details
+*Timestamp = 21:10:49 EDT Mon Mar 29 2010
+iface: Te1/4/0/0 Location: 1/4/cpu0
+show iir interface name Bundle-Ether22 location 1/4/cpu0
+IIR flags good (CL|BW|ST|CR)
+IIR interface IDs good
+IIR interface check passed for location: 1/4/cpu0
+ 
+****Step 4: Verify bundle and member links MTU is the same
+*Timestamp = 21:10:49 EDT Mon Mar 29 2010
+show inter Bundle-Ether22 | includ MTU
+Main bundle Bundle-Ether22 mtu: 9212
+show inter ten1/4/0/0 | includ MTU
+Member ten1/4/0/0 mtu: 9212
+MTU check Passed
+ 
+****Step 5: Determine order of load balance entries in hardware
+*Timestamp = 21:10:52 EDT Mon Mar 29 2010
+show iir interfaces name Bundle-Ether22
+Load balance hw entries Passed
+ 
+****Step 6: Collect Ingress hardware ASIC allocation info
+*Timestamp = 21:10:53 EDT Mon Mar 29 2010
+show controllers hfrpm inter Bundle-Ether22 loc 1/4/cpu0
+egress_uidb: 0xd
+egress_uidb_decimal: 13
+egress_fabq: 0x40d
+egress_fabq_decimal: 1037
+Collection of ingress hardare ASIC allocation information PASSED
+ 
+****Step 7: Validate the ingress hardware programming information
+*Timestamp = 21:10:54 EDT Mon Mar 29 2010
+show cef mpls adj Bundle-Ether22 hardware ingress detail location 1/4/cpu0 | beg local
+**WARN: Ingress hardware programming validation failed, no command output detected! **
+**WARN: Bundle-Ether22 Validate ingress HW programming FAILED**
+ 
+****Step 8: Collect the Egress hardware ASIC allocation information
+*Timestamp = 21:10:56 EDT Mon Mar 29 2010
+iface: ten1/4/0/0 Location: 1/4/cpu0
+show controllers hfrpm interface ten1/4/0/0 location 1/4/cpu0
+egressq: 0x1f
+egressq_decimal: 31
+location_egressq(1/4/cpu0): 31
+ 
+****Step 9: Validate L2 load balance hardware info
+*Timestamp = 21:10:57 EDT Mon Mar 29 2010
+show cef ipv4 adjacency Bundle-Ether22 hardware egress detail location 1/4/cpu0 | beg local
+Validate L2 HW Info - Location: 1/4/cpu0 egressqs: 31
+Validate L2 HW Info - default_sharqs found:
+**WARN: Egress L2 hardware programming validation failed, no command output detected! **
+**WARN: Bundle-Ether22 Validate Egress L2 hardware info location: 1/4/cpu0 - FAILED **
+ 
+--------------------------------------------
+Processing Bundle: Bundle-POS3001
+****Step 1: Gathering bundle info and states
+*Timestamp = 21:10:58 EDT Mon Mar 29 2010
+iface: PO0/14/0/0
+state: 4
+bw: 39813120
+iface: PO0/10/0/0
+state: 4
+bw: 9953280
+POS bundle detected, need to determine egress/ingress entries
+POS bundle with more than one bandwidth
+highest_member: PO0/14/0/0
+ingress_total_entries: 0
+egress_total_entries: 5
+total (2) Bundle Members for Bundle-POS3001 = 2 (entries: 5)
+ 
+****Step 2: Gather interface details and lacp counters
+*Timestamp = 21:10:59 EDT Mon Mar 29 2010
+Currently on HOLD
+ 
+****Step 3: Verify IIR interface details
+*Timestamp = 21:10:59 EDT Mon Mar 29 2010
+iface: PO0/14/0/0 Location: 0/14/cpu0
+iface: PO0/10/0/0 Location: 0/10/cpu0
+show iir interface name Bundle-POS3001 location 0/10/cpu0
+IIR flags good (CL|BW|ST|CR)
+IIR interface IDs good
+IIR interface check passed for location: 0/10/cpu0
+show iir interface name Bundle-POS3001 location 0/14/cpu0
+IIR flags good (CL|BW|ST|CR)
+IIR interface IDs good
+IIR interface check passed for location: 0/14/cpu0
+ 
+****Step 4: Verify bundle and member links MTU is the same
+*Timestamp = 21:11:01 EDT Mon Mar 29 2010
+show inter Bundle-POS3001 | includ MTU
+Main bundle Bundle-POS3001 mtu: 9216
+show inter PO0/14/0/0 | includ MTU
+Member PO0/14/0/0 mtu: 9216
+show inter PO0/10/0/0 | includ MTU
+Member PO0/10/0/0 mtu: 9216
+MTU check Passed
+ 
+****Step 5: Determine order of load balance entries in hardware
+*Timestamp = 21:11:05 EDT Mon Mar 29 2010
+show iir interfaces name Bundle-POS3001
+Load balance hw entries Passed
+ 
+****Step 6: Collect Ingress hardware ASIC allocation info
+*Timestamp = 21:11:06 EDT Mon Mar 29 2010
+iface: PO0/14/0/0 Location: 0/14/cpu0
+show controllers hfrpm inter Bundle-POS3001 loc 0/14/cpu0
+egress_uidb: 0x2
+egress_uidb_decimal: 2
+egress_fabq: 0x402
+egress_fabq_decimal: 1026
+Collection of ingress hardare ASIC allocation information PASSED
+ 
+****Step 7: Validate the ingress hardware programming information
+*Timestamp = 21:11:07 EDT Mon Mar 29 2010
+show cef mpls adj Bundle-POS3001 hardware ingress detail location 0/10/cpu0 | beg local
+Num entries found: 5  Equals expected: 5
+Validate ingress HW next_ptr (0x1200) and tlu4 (0x3001200) equal - PASSED
+Ingress HW sponge_queue 1026 EQUALS egress_fabq 1026 - GOOD
+Ingress HW uidb_index 0x2 EQUALS egress_uidb_index 0x2 - GOOD
+Ingress HW sponge_queue 1026 EQUALS egress_fabq 1026 - GOOD
+Ingress HW uidb_index 0x2 EQUALS egress_uidb_index 0x2 - GOOD
+Ingress HW sponge_queue 1026 EQUALS egress_fabq 1026 - GOOD
+Ingress HW uidb_index 0x2 EQUALS egress_uidb_index 0x2 - GOOD
+Ingress HW sponge_queue 1026 EQUALS egress_fabq 1026 - GOOD
+Ingress HW uidb_index 0x2 EQUALS egress_uidb_index 0x2 - GOOD
+show cef mpls adj Bundle-POS3001 hardware ingress detail location 0/14/cpu0 | beg local
+Num entries found: 5  Equals expected: 5
+Validate ingress HW next_ptr (0x1200) and tlu4 (0x3001200) equal - PASSED
+Ingress HW sponge_queue 1026 EQUALS egress_fabq 1026 - GOOD
+Ingress HW uidb_index 0x2 EQUALS egress_uidb_index 0x2 - GOOD
+Ingress HW sponge_queue 1026 EQUALS egress_fabq 1026 - GOOD
+Ingress HW uidb_index 0x2 EQUALS egress_uidb_index 0x2 - GOOD
+Ingress HW sponge_queue 1026 EQUALS egress_fabq 1026 - GOOD
+Ingress HW uidb_index 0x2 EQUALS egress_uidb_index 0x2 - GOOD
+Ingress HW sponge_queue 1026 EQUALS egress_fabq 1026 - GOOD
+Ingress HW uidb_index 0x2 EQUALS egress_uidb_index 0x2 - GOOD
+Validate ingress HW programming PASSED
+ 
+****Step 8: Collect the Egress hardware ASIC allocation information
+*Timestamp = 21:11:12 EDT Mon Mar 29 2010
+iface: PO0/14/0/0 Location: 0/14/cpu0
+show controllers hfrpm interface PO0/14/0/0 location 0/14/cpu0
+egressq: 0x9
+egressq_decimal: 9
+location_egressq(0/14/cpu0): 9
+iface: PO0/10/0/0 Location: 0/10/cpu0
+show controllers hfrpm interface PO0/10/0/0 location 0/10/cpu0
+egressq: 0xb
+egressq_decimal: 11
+location_egressq(0/10/cpu0): 11
+ 
+****Step 9: Validate L2 load balance hardware info
+*Timestamp = 21:11:14 EDT Mon Mar 29 2010
+show cef ipv4 adjacency Bundle-POS3001 hardware egress detail location 0/10/cpu0 | beg local
+Validate L2 HW Info - Location: 0/10/cpu0 egressqs: 11
+Validate egress entries found: 5  Expected: 5
+Validate egress L2 HW next_ptr (0xc00) and tlu4 (0x3000c00) equal - PASSED
+Validate L2 HW Info - default_sharqs found: 11
+Validate L2 load balance hw info for default_sharq is GOOD.
+Validate Egress L2 hardware info location: 0/10/cpu0 - PASSED
+show cef ipv4 adjacency Bundle-POS3001 hardware egress detail location 0/14/cpu0 | beg local
+Validate L2 HW Info - Location: 0/14/cpu0 egressqs: 9
+Validate egress entries found: 5  Expected: 5
+Validate egress L2 HW next_ptr (0xc00) and tlu4 (0x3000c00) equal - PASSED
+Validate L2 HW Info - default_sharqs found: 9
+Validate L2 load balance hw info for default_sharq is GOOD.
+Validate Egress L2 hardware info location: 0/14/cpu0 - PASSED
+ 
+--------------------------------------------
+Processing Bundle: Bundle-POS5001
+****Step 1: Gathering bundle info and states
+*Timestamp = 21:11:18 EDT Mon Mar 29 2010
+iface: PO0/3/0/0
+state: 4
+bw: 39813120
+POS bundle detected, need to determine egress/ingress entries
+highest_member:
+ingress_total_entries: 4
+egress_total_entries: 2
+total (1) Bundle Members for Bundle-POS5001 = 1 (entries (i/e): 4/2
+ 
+****Step 2: Gather interface details and lacp counters
+*Timestamp = 21:11:18 EDT Mon Mar 29 2010
+Currently on HOLD
+ 
+****Step 3: Verify IIR interface details
+*Timestamp = 21:11:18 EDT Mon Mar 29 2010
+iface: PO0/3/0/0 Location: 0/3/cpu0
+show iir interface name Bundle-POS5001 location 0/3/cpu0
+IIR flags good (CL|BW|ST|CR)
+IIR interface IDs good
+IIR interface check passed for location: 0/3/cpu0
+ 
+****Step 4: Verify bundle and member links MTU is the same
+*Timestamp = 21:11:19 EDT Mon Mar 29 2010
+show inter Bundle-POS5001 | includ MTU
+Main bundle Bundle-POS5001 mtu: 9216
+show inter PO0/3/0/0 | includ MTU
+Member PO0/3/0/0 mtu: 9216
+MTU check Passed
+ 
+****Step 5: Determine order of load balance entries in hardware
+*Timestamp = 21:11:22 EDT Mon Mar 29 2010
+show iir interfaces name Bundle-POS5001
+Load balance hw entries Passed
+ 
+****Step 6: Collect Ingress hardware ASIC allocation info
+*Timestamp = 21:11:23 EDT Mon Mar 29 2010
+show controllers hfrpm inter Bundle-POS5001 loc 0/3/cpu0
+egress_uidb: 0x2
+egress_uidb_decimal: 2
+egress_fabq: 0x402
+egress_fabq_decimal: 1026
+Collection of ingress hardare ASIC allocation information PASSED
+ 
+****Step 7: Validate the ingress hardware programming information
+*Timestamp = 21:11:24 EDT Mon Mar 29 2010
+show cef mpls adj Bundle-POS5001 hardware ingress detail location 0/3/cpu0 | beg local
+Num entries found: 4  Equals expected: 4
+Validate ingress HW next_ptr (0xe00) and tlu4 (0x3000e00) equal - PASSED
+Ingress HW sponge_queue 1026 EQUALS egress_fabq 1026 - GOOD
+Ingress HW uidb_index 0x2 EQUALS egress_uidb_index 0x2 - GOOD
+Ingress HW sponge_queue 1026 EQUALS egress_fabq 1026 - GOOD
+Ingress HW uidb_index 0x2 EQUALS egress_uidb_index 0x2 - GOOD
+Ingress HW sponge_queue 1026 EQUALS egress_fabq 1026 - GOOD
+Ingress HW uidb_index 0x2 EQUALS egress_uidb_index 0x2 - GOOD
+Ingress HW sponge_queue 1026 EQUALS egress_fabq 1026 - GOOD
+Ingress HW uidb_index 0x2 EQUALS egress_uidb_index 0x2 - GOOD
+Validate ingress HW programming PASSED
+ 
+****Step 8: Collect the Egress hardware ASIC allocation information
+*Timestamp = 21:11:27 EDT Mon Mar 29 2010
+iface: PO0/3/0/0 Location: 0/3/cpu0
+show controllers hfrpm interface PO0/3/0/0 location 0/3/cpu0
+egressq: 0x9
+egressq_decimal: 9
+location_egressq(0/3/cpu0): 9
+ 
+****Step 9: Validate L2 load balance hardware info
+*Timestamp = 21:11:28 EDT Mon Mar 29 2010
+show cef ipv4 adjacency Bundle-POS5001 hardware egress detail location 0/3/cpu0 | beg local
+Validate L2 HW Info - Location: 0/3/cpu0 egressqs: 9
+Validate egress entries found: 2  Expected: 2
+Validate egress L2 HW next_ptr (0xc04) and tlu4 (0x3000c04) equal - PASSED
+Validate L2 HW Info - default_sharqs found: 9
+Validate L2 load balance hw info for default_sharq is GOOD.
+Validate Egress L2 hardware info location: 0/3/cpu0 - PASSED
+ 
+=============Script Completed, Checking Flagged Events================
+Cisco BCC checker: No flags or errors encountered.  Node  **PASSED**
+*Timestamp = 21:11:30 EDT Mon Mar 29 2010
+RP/1/RP0/CPU0:JC22CRS#

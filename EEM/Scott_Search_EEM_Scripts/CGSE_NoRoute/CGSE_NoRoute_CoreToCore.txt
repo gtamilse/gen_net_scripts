@@ -1,0 +1,533 @@
+::cisco::eem::event_register_syslog occurs 2 period 120 pattern "plim_services_.*: HA: XLP .*: Fail String: Cores .* not responding" maxrun 900
+
+#------------------------------------------------------------------
+# CGSE_NoRoute_CoreToCore EEM Script
+#
+# July 2015 - Scott Search (ssearch@cisco.com)
+#
+# This EEM script will be triggered off the following syslog message:
+#   "plim_services_80ge[288]: HA: XLP 0: Fail String: Cores 0x400 not responding"
+#
+# The above syslog message must be seen 2 times within a 2 minute period
+#
+#
+# Description:
+#   This EEM script is triggered off the above syslog message.  If the syslog message is seen 2 times within a 2 minute 
+#   period this script will kickoff.  Once the script starts the script will complete the following 8 steps:
+#
+#     Step 1: Determine CGSE slot location
+#     Step 2: Login to router VTY
+#     Step 3: Run the 'show run | inc service cgn cgse' command
+#     Step 4: Parse out the 'cgsex' specific interfaces
+#     Step 5: Run the 'show run service cgn cgsex' command. Find IPv4 and IPv6 ServiceApp interfaces
+#     Step 6: Collect the IPv4 and IPv6 addresses from the ServiceApp interfaces
+#     Step 7: Collect the static routes and parse out the static routes for each matching ServiceApp
+#     Step 8: Finally remove the static IPv4/IPv6 addresses
+#
+#
+# Email Option
+# To activate the email option the following event manager environment variables must be set:
+#   _email_server    _email_from
+#   _email_to        _domainname
+#
+#
+# Copyright (c) 2015 by cisco Systems, Inc.
+# All rights reserved.
+#------------------------------------------------------------------
+#
+namespace import ::cisco::eem::*
+namespace import ::cisco::lib::*
+
+# Set the array arr_einfo to the eem event_reqinfo
+array set arr_einfo [event_reqinfo]
+
+ 
+##########################################################################################
+# Set the pattern the script will filter on (maybe set within the eem environment vars):
+##########################################################################################
+#set pattern "plim_services_80ge: HA: XLP 0: Fail String: Cores 0x400 not responding"
+
+##################################
+# Verify the environment vars:
+##################################
+# Storage location:
+if {![info exists _CGSEnoRoute_storage_location]} {
+  set result "EEM policy error: environment var _CGSEnoRoute_storage_location not set"
+  error $result $errInfo
+}
+
+
+#################################
+# PROCs:
+##################################
+proc get_location {line} {
+  set location ""
+
+  regsub -all {[ \r\t\n]+} $line " " line
+  regsub -all {^[ ]} $line "" line
+  regsub -all {[ ]$} $line "" line
+
+  if {[regexp {^time_sec} $line]} {
+    regexp "\{(.*): .*" $line - msg
+    set location [ lindex [split $msg ":"] 0 ]
+    regsub {^LC\/} $location "" location
+  } else {
+    set location [ lindex [split $line ":"] 0 ]
+    regsub {^LC\/} $location "" location
+  }
+
+  return $location
+} ;# get_location
+
+
+proc get_cgse_ports {syslogs} {
+  set ports ""
+
+  foreach line [split $syslogs "\n"] {
+    regsub -all {[ \r\t\n]+} $line " " line
+    regsub -all {^[ ]} $line "" line
+    regsub -all {[ ]$} $line "" line
+
+    if {[regexp {^service cgn cgse\d+$} $line]} {
+      set cgse [lindex [split $line " "] end]
+      lappend ports $cgse
+    }
+  }
+  set ports [lsort -unique $ports]
+  return $ports
+} ;# get_cgse_ports
+
+
+proc get_ServiceApp_interfaces {syslogs} {
+  set ipv4 0
+  set ipv6 0
+  set IPv4_ServiceApp ""
+  set IPv6_ServiceApp ""
+
+  foreach line [split $syslogs "\n"] {
+    regsub -all {[ \r\t\n]+} $line " " line
+    regsub -all {^[ ]} $line "" line
+    regsub -all {[ ]$} $line "" line
+
+    if {[regexp {^service-location .* 0\/\d+\/CPU0$} $line]} {
+      regexp {^service-location .* 0\/(\d+)\/CPU0$} $line - slot
+    }
+
+    if {[regexp {^address-family ipv4$} $line]} {
+      set ipv4 1
+    }
+    if {[regexp {^address-family ipv6$} $line]} {
+      set ipv6 1 
+    }
+
+    if {[regexp {^interface ServiceApp} $line]} {
+      if {$ipv4 == 1} {
+        regexp {^interface (ServiceApp\d+)$} $line - IPv4_ServiceApp
+        set ipv4 0
+        set ipv6 0
+      }
+
+      if {$ipv6 == 1} {
+        regexp {^interface (ServiceApp\d+)$} $line - IPv6_ServiceApp
+        set ipv4 0
+        set ipv6 0
+      }
+    }
+  }
+  return [list $slot $IPv4_ServiceApp $IPv6_ServiceApp]
+} ;# get_ServiceApp_interfaces
+
+
+proc get_IPv4_address {syslogs} {
+  set IPv4 ""
+
+  foreach line [split $syslogs "\n"] {
+    regsub -all {[ \r\t\n]+} $line " " line
+    regsub -all {^[ ]} $line "" line
+    regsub -all {[ ]$} $line "" line
+
+    if {[regexp {^ipv4 address \d+\.\d+\.\d+\.\d+} $line]} {
+      regexp {^ipv4 address (\d+\.\d+\.\d+\.\d+) \d+\.\d+} $line - IPv4 
+    }
+  }
+  return $IPv4
+} ;# get_IPv4_address
+
+
+proc get_IPv6_address {syslogs} {
+  set IPv6 ""
+
+  foreach line [split $syslogs "\n"] {
+    regsub -all {[ \r\t\n]+} $line " " line
+    regsub -all {^[ ]} $line "" line
+    regsub -all {[ ]$} $line "" line
+
+    if {[regexp {^ipv6 address \w+:\w+:} $line]} {
+      regexp {^ipv6 address (\w+\:\w+\:.*)\/\d+$} $line - IPv6
+    }
+
+#    if {[regexp {^ipv6 address \d+:\d+:\d+:} $line]} {
+#      regexp {^ipv6 address (\d+\:\d+\:\d+\:.*)\/\d+$} $line - IPv6
+#    }
+  }
+  return $IPv6
+} ;# get_IPv6_address
+
+
+proc get_static_routes {syslogs address_up address_down} {
+  set routes ""
+
+  foreach line [split $syslogs "\n"] {
+    regsub -all {[ \r\t\n]+} $line " " line
+    regsub -all {^[ ]} $line "" line
+    regsub -all {[ ]$} $line "" line
+
+    if {[regexp "$address_up" $line]} {
+      lappend routes $line
+    }
+
+    if {[regexp "$address_down" $line]} {
+      lappend routes $line
+    }
+  }
+  return $routes
+} ;# get_static_routes
+
+
+proc send_syslog {msg repeat} {
+  set kont 0
+
+  while {$kont < $repeat} {
+    action_syslog msg $msg
+    incr kont
+  }
+} ;# send_syslog
+
+
+proc send_email {node syslog_msg msg} {
+  global FH
+  global _email_to _email_from
+  global _email_server _domainname
+  global email_subject
+
+  action_syslog msg "Sending CGSE No Route to $_email_to"
+
+  foreach recipient [split $_email_to " "] {
+    set email [format "Mailservername: %s" "$_email_server"]
+    set email [format "%s\nFrom: %s" "$email" "$_email_from"]
+    set email [format "%s\nTo: %s" "$email" "$recipient"]
+    set email [format "%s\nCc: %s" "$email" ""]
+    set email [format "%s\nSubject: %s\n" "$email" $email_subject]
+
+    # Email BODY:
+    set email [format "%s\n%s" "$email" "The $node node CGSE DataPath Error. Removed static entries."]
+    set email [format "%s\n%s\n\n" "$email" "$syslog_msg"]
+    set email [format "%s\n%s" "$email" "$msg"]
+   
+    # Send email message:
+    if [catch {smtp_send_email $email} result] {
+      puts "smtp_send_email: $result"
+    }
+ 
+    puts $FH "EMAIL DATA BELOW SENT TO: $_email_to\n"
+    puts $FH $email
+  }
+} ;# send_email
+
+
+##################################
+# MAIN/main
+##################################
+global FH
+global _email_to _email_from
+global _email_server _domainname
+global email_subject
+global _CGSEnoRoute_storage_location
+
+set repeat 1 
+set locations ""
+
+# Capture the scripts start time:
+set time_now [clock seconds]
+set date_time [clock format $time_now -format "%m-%d-%Y_%H.%M.%S"]
+set date [clock format $time_now -format "%T %Z %a %b %d %Y"]
+
+set filename "CGSEnoRoute.$date_time"
+set output_file "$_CGSEnoRoute_storage_location/$filename"
+
+# Log the nodes hostname to the output log file:
+set node [info hostname]
+set email_subject "** Node $node CGSE DataPath error.  EEM removed static routes **"
+
+# Extract the syslog message the finally kicked off the EEM script:
+set syslog_msg $arr_einfo(msg)
+
+
+########################################################################
+# Step 1: Determine CGSE slot location
+########################################################################
+# Get the location, head and tail values from the triggering syslog_msg
+set location_slot ""
+set location [get_location $syslog_msg]
+regexp {^0\/(\d+)\/CPU0$} $location - location_slot
+
+
+########################################################################
+# Check the run time file for the LC slot
+########################################################################
+set run_flag "$_CGSEnoRoute_storage_location/RunFlag_CGSEnoRoute_Slot_$location_slot"
+
+# If the $run_flag file exists exit from script:
+if [file exists $run_flag] {
+  exit
+}
+
+# Create the $run_flag file
+if [catch {open $run_flag w} result] {
+    error $result
+}
+set RUN $result
+puts $RUN "Timestamp = $date"
+close $RUN
+########################################################################
+# End of run tiem flag check
+########################################################################
+
+
+# Open the output file (for write):
+if [catch {open $output_file w} result] {
+    error $result
+}
+set FH $result
+
+# Timestamp the script start time to the output log file:
+puts $FH "Start Timestamp: $date"
+puts $FH "Node: $node"
+
+puts $FH ""
+puts $FH "location: $location"
+puts $FH "location_slot: $location_slot"
+puts $FH ""
+
+if {$location != ""} {
+  set IPv4_up ""
+  set IPv4_down ""
+  set IPv6_up ""
+  set IPv6_down ""
+
+  ########################################################################
+  # Step 2: Login to router VTY
+  ########################################################################
+  puts $FH "Step 2: Login to router VTY\n"
+  if [catch {cli_open} result] {
+    error $result $errorInfo
+  } else {
+    array set cli $result
+  }
+
+  ########################################################################
+  # Step 3: Run the 'show run | inc service cgn cgse' command
+  ########################################################################
+  puts $FH "Step 3: Run the 'show run | inc service cgn cgse' command\n"
+
+  set cmd "show run | inc \"service cgn cgse\""
+  if [catch {cli_exec $cli(fd) $cmd} result] {
+    error $result $errorInfo
+  }
+  puts $FH "$result\n\n"
+
+
+  ########################################################################
+  # Step 4: Parse out the 'cgsex' specific interfaces
+  ########################################################################
+  puts $FH "Step 4: Parse out the 'cgsex' specific interfaces\n"
+
+  set ports [get_cgse_ports $result]
+
+
+  ########################################################################
+  # Step 5: Run the 'show run service cgn cgsex' command. Find IPv4 and IPv6 ServiceApp interfaces 
+  ########################################################################
+  puts $FH "Step 5: Run the 'show run service cgn cgsex' command. Find IPv4 and IPv6 ServiceApp interfaces\n"
+
+  set IPv4_ServiceApp ""
+  set IPv6_ServiceApp ""
+
+  foreach port $ports {
+    set cmd "show run service cgn $port"
+    if [catch {cli_exec $cli(fd) $cmd} result] {
+      error $result $errorInfo
+    }
+    puts $FH "$result\n\n"
+
+    set elements [get_ServiceApp_interfaces $result]
+    set slot             [lindex $elements 0]
+    set IPv4_ServiceApp  [lindex $elements 1]
+    set IPv6_ServiceApp  [lindex $elements 2]
+
+
+    if {$slot == $location_slot} {
+      break
+    }
+  }
+
+
+  ########################################################################
+  # Step 6: Collect the IPv4 and IPv6 addresses from the ServiceApp interfaces
+  ########################################################################
+  puts $FH "Step 6: Collect the IPv4 and IPv6 addresses from the ServiceApp interfaces\n"
+
+  set IPv4 ""
+  set IPv6 ""
+
+  if {$IPv4_ServiceApp != ""} {
+    set cmd "show run interface $IPv4_ServiceApp"
+    if [catch {cli_exec $cli(fd) $cmd} result] {
+      error $result $errorInfo
+    }
+    puts $FH "$result\n\n"
+    set IPv4 [get_IPv4_address $result]
+
+    if {$IPv4 != ""} {
+      regexp {(\d+\.\d+\.\d+\.)(\d+)} $IPv4 - IPv4_cut last_octet
+
+      set up [expr $last_octet + 1]
+      set down [expr $last_octet - 1]
+  
+      set IPv4_up $IPv4_cut
+      append IPv4_up $up
+      set IPv4_down $IPv4_cut
+      append IPv4_down $down
+    }
+  }
+
+  if {$IPv6_ServiceApp != ""} {
+    set cmd "show run interface $IPv6_ServiceApp"
+    if [catch {cli_exec $cli(fd) $cmd} result] {
+      error $result $errorInfo
+    }
+    puts $FH "$result\n\n"
+    set IPv6 [get_IPv6_address $result]
+
+    if {$IPv6 != ""} {
+      set total_len [string length $IPv6]
+      set lastval [lindex [split $IPv6 ":"] end]
+      set len_last [llength $lastval]
+      set len_last [expr $len_last + 1]
+      set cut_len [expr $total_len - $len_last]
+
+      set IPv6_without_end [string range $IPv6 0 $cut_len]
+      set up [expr $lastval + 1]
+      set down [expr $lastval - 1]
+
+      set IPv6_up $IPv6_without_end
+      append IPv6_up $up
+      set IPv6_down $IPv6_without_end
+      append IPv6_down $down
+    }
+  }
+
+
+  ########################################################################
+  # Step 7: Collect the static routes and parse out the static routes for each matching ServiceApp
+  ########################################################################
+  puts $FH "Step 7: Collect the static routes and parse out the static routes for each matchig ServiceApp\n"
+ 
+  set IPv4_routes ""
+  set IPv6_routes ""
+
+  if {$IPv4_up != "" || $IPv6_up != ""} {
+    set cmd "show run router static"
+    if [catch {cli_exec $cli(fd) $cmd} result] {
+      error $result $errorInfo
+    }
+    puts $FH "$result\n\n"
+  }
+
+  if {$IPv4_up != "" && $IPv4_down != ""} {
+    set IPv4_routes [get_static_routes $result $IPv4_up $IPv4_down] 
+
+    if {$IPv4_routes != ""} {
+      puts $FH "IPv4 static routes found:"
+      foreach line $IPv4_routes {
+        puts $FH $line
+      }
+    }
+  }
+
+  if {$IPv6_up != "" && $IPv6_down != ""} {
+    set IPv6_routes [get_static_routes $result $IPv6_up $IPv6_down] 
+
+    if {$IPv6_routes != ""} {
+      puts $FH "IPv6 static routes found:"
+      foreach line $IPv6_routes {
+        puts $FH $line
+      }
+    }
+  }
+
+
+  ########################################################################
+  # Step 8: Finally remove the static IPv4/IPv6 addresses
+  ########################################################################
+  puts $FH "Step 8: Finally remove the static IPv4/IPv6 addresses\n"
+
+  if {$IPv4_routes != "" || $IPv6_routes != ""} {
+    if [catch {cli_exec $cli(fd) "config"} result] {
+      error $result $errorInfo
+    }
+
+    if [catch {cli_exec $cli(fd) "router static"} result] {
+      error $result $errorInfo
+    }
+
+    if {$IPv4_routes != ""} {
+      if [catch {cli_exec $cli(fd) "address-family ipv4 unicast"} result] {
+        error $result $errorInfo
+      }
+
+      foreach line $IPv4_routes {
+        if [catch {cli_exec $cli(fd) "no $line"} result] {
+          error $result $errorInfo
+        }
+      }
+    } else {
+      puts $FH "\n**WARNING: EEM CGSE NoRoute script found no IPv4 static routes to remove\n"
+    }
+
+    if {$IPv6_routes != ""} {
+      if [catch {cli_exec $cli(fd) "address-family ipv6 unicast"} result] {
+        error $result $errorInfo
+      }
+
+      foreach line $IPv6_routes {
+        if [catch {cli_exec $cli(fd) "no $line"} result] {
+          error $result $errorInfo
+        }
+      }
+    } else {
+      puts $FH "\n**WARNING: EEM CGSE NoRoute script found no IPv6 static routes to remove\n"
+    }
+
+    if [catch {cli_exec $cli(fd) "commit"} result] {
+      error $result $errorInfo
+    }
+    if [catch {cli_exec $cli(fd) "end"} result] {
+      error $result $errorInfo
+    }
+  } else {
+    puts $FH "\n**WARNING: EEM CGSE NoRoute script found no IPv4 or IPv6 static routes to remove\n"
+  }
+}
+
+set msg "EEM script CGSE_NoRoute ($node) COMPLETED.  EEM script captures saved to file:\n$output_file"
+send_syslog $msg $repeat
+
+# Send an email message if all below exists:
+if {[info exists _email_server] && [info exists _domainname] && [info exists _email_from] && [info exists _email_to]} {
+  # Call on the send_email proc to generate an email message
+  send_email $node $syslog_msg $msg
+}
+
+close $FH
+

@@ -1,0 +1,71 @@
+#!/usr/bin/tclsh
+
+puts ""
+
+proc clean_string {line} {
+  # Trim up the line remove extra space/tabs:
+  regsub -all {[ \r\t\n]+} $line " " line
+  # Remove any leading white space:
+  regsub -all {^[ ]} $line "" line
+  # Remove any ending white space:
+  regsub -all {[ ]$} $line "" line
+  
+  return $line
+}
+# clean_string
+
+
+proc get_community {output} {
+  set community "NA"
+  set BestPath 0
+
+  foreach line [split $output "\n"] {
+    set line [clean_string $line]
+  
+    if {$line ne ""} {
+      if {[regexp {available} $line] && [regexp {best} $line]} {
+        set BestPath 1
+      }
+      if {$BestPath == 1} {
+        if {[regexp {^Community: } $line]} {
+          set community [lindex [split $line " "] end]
+        }
+      }
+
+      if {$community ne "NA"} {
+        return $community
+      }
+    }
+  }
+  return $community
+} 
+# get_community
+
+
+set output "MSMR#sh ip bgp vpnv4 vrf cust1-rloc 172.12.12.1
+BGP routing table entry for 991:1:172.12.12.1/32, version 214
+Paths: (2 available, best #1, table cust1-rloc)
+  Advertised to update-groups:
+     15
+  Refresh Epoch 1
+  65001 2 500 65001
+    10.10.1.2 (via vrf cust1-rloc) from 10.10.1.2 (10.200.200.1)
+      Origin IGP, localpref 100, valid, external, best
+      Community: 90
+      mpls labels in/out 29/nolabel
+      rx pathid: 0, tx pathid: 0x0
+    10.10.1.4 (via vrf cust1-rloc) from 10.10.1.4 (10.200.200.2)
+      Origin IGP, localpref 100, valid, external
+      Community: 190
+      mpls labels in/out 29/nolabel
+      rx pathid: 0, tx pathid: 0x0
+MSMR#
+"
+
+
+set community [get_community $output]
+
+puts "community: $community"
+puts ""
+
+

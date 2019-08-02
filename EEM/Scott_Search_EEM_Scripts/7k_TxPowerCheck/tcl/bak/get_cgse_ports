@@ -1,0 +1,41 @@
+#!/usr/bin/tclsh
+
+puts ""
+
+set syslogs "RP/0/RP0/CPU0:rmonc401cts#show run | in cgn
+Building configuration...
+hw-module service cgn location 0/1/CPU0
+hw-module service cgn location 0/6/CPU0
+hw-module service cgn location 0/7/CPU0
+hw-module service cgn location 0/14/CPU0
+hw-module service cgn location 0/15/CPU0
+ service cgn cgse1 service-type tunnel v6rd
+ service cgn cgse2 service-type tunnel v6rd
+ service cgn cgse1 service-type tunnel v6rd
+ service cgn cgse2 service-type tunnel v6rd
+service cgn cgse1
+service cgn cgse2
+"
+
+set ports ""
+
+foreach line [split $syslogs "\n"] {
+  regsub -all {[ \r\t\n]+} $line " " line
+  regsub -all {^[ ]} $line "" line
+  regsub -all {[ ]$} $line "" line
+
+  if {[regexp {^service cgn cgse\d+$} $line]} {
+    set cgse [lindex [split $line " "] end]
+    lappend ports $cgse
+  }
+}
+
+set ports [lsort -unique $ports]
+
+# foreach line [split $ports " "] { }
+
+foreach line $ports {
+  puts "port: $line"
+}
+
+puts ""

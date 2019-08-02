@@ -1,0 +1,249 @@
+RP/0/7/CPU0:brhal305me1#sh install act sum | inc CSCtu27338
+    compactflash:c12k-4.1.2.CSCtu27338-1.0.0
+RP/0/7/CPU0:brhal305me1#
+RP/0/7/CPU0:brhal305me1#sh run | inc event mana
+Building configuration...
+event manager environment _CommitArchive_storage_location disk0:/CommitArchive
+event manager directory user policy disk0:/eem
+event manager policy test2.tcl username eem-user persist-time 3600 type user
+RP/0/7/CPU0:brhal305me1#
+RP/0/7/CPU0:brhal305me1#term mon
+RP/0/7/CPU0:brhal305me1#
+RP/0/7/CPU0:brhal305me1#dir disk0:/CommitArchiveDirectory of disk0:/CommitArchive
+213712992   -rwx  136         Mon Apr  1 14:04:34 2013  test1
+
+4188659712 bytes total (3370557440 bytes free)
+RP/0/7/CPU0:brhal305me1#
+RP/0/7/CPU0:brhal305me1#
+RP/0/7/CPU0:brhal305me1#
+RP/0/7/CPU0:brhal305me1#RP/0/7/CPU0:Apr 17 17:30:51.262 : config[65826]: %MGBL-CONFIG-6-DB_COMMIT : Configuration committed by user 'mr4494'. Use 'show configuration commit changes 1000000187' to view the changes.
+RP/0/7/CPU0:Apr 17 17:30:52.479 : tclsh[65853]: %HA_EM-6-LOG: test2.tcl: (ssearch) EEM UserID: mr4494 --- ChangeID: 1000000187
+RP/0/7/CPU0:Apr 17 17:30:52.481 : tclsh[65853]: %HA_EM-6-LOG: test2.tcl: (ssearch) LogFile: brhal305me1.CommitID_1000000187.17.30.52_Apr_17_2013
+RP/0/7/CPU0:Apr 17 17:30:52.482 : tclsh[65853]: %HA_EM-6-LOG: test2.tcl: (ssearch) output_file: disk0:/CommitArchive/brhal305me1.CommitID_1000000187.17.30.52_Apr_17_2013.mr4494
+
+RP/0/7/CPU0:brhal305me1#
+RP/0/7/CPU0:brhal305me1#
+RP/0/7/CPU0:brhal305me1#
+RP/0/7/CPU0:brhal305me1#RP/0/7/CPU0:Apr 17 17:31:05.782 : config[65826]: %MGBL-SYS-5-CONFIG_I : Configured from console by mr4494 on vty1 (199.37.187.35)
+
+RP/0/7/CPU0:brhal305me1#
+RP/0/7/CPU0:brhal305me1#sh process block
+  Jid       Pid Tid            Name State   TimeInState    Blocked-on
+65548     12300   1             ksh Reply 1355:14:20:0132   12298  devc-conaux
+   62     16402   2       mbus_text Reply    0:00:01:0937   12295  mbus-prp3-b
+   90     16403   1 timesync_client Reply 1355:14:44:0378   12295  mbus-prp3-b
+   59     40998   3       mbi-hello Reply 1355:14:40:0157   12295  mbus-prp3-b
+   59     40998   4       mbi-hello Reply 1355:14:40:0156   12295  mbus-prp3-b
+   59     40998   7       mbi-hello Reply 1355:14:40:0156   12295  mbus-prp3-b
+   59     40998   8       mbi-hello Reply 1355:14:40:0157   12295  mbus-prp3-b
+   59     40998  10       mbi-hello Reply 1355:14:40:0157   12295  mbus-prp3-b
+   56     41000   3      gsr_prp_pm Reply 1355:14:39:0943   12295  mbus-prp3-b
+  355     81968   5           psarb Reply    0:00:00:0162   12295  mbus-prp3-b
+  355     81968   6           psarb Reply 1355:13:54:0344   12295  mbus-prp3-b
+  121    110664   2       backplane Reply 1354:27:11:0316   12295  mbus-prp3-b
+  208    110665   4            fctl Reply 1355:13:48:0916   12295  mbus-prp3-b
+  208    110665   5            fctl Reply 1355:13:48:0917   12295  mbus-prp3-b
+  208    110665   6            fctl Reply 1354:29:09:0709   12295  mbus-prp3-b
+  284    110671   1          kaa-rp Reply 1355:13:51:0639   12295  mbus-prp3-b
+  202    110681   6 envmon_periodic Reply    0:00:02:0052   12295  mbus-prp3-b
+  342    114782   6   parser_server Reply    0:00:00:0000   40987  redfs_svr
+  117    118889   2         attachd Reply    0:00:01:0653   12295  mbus-prp3-b
+  117    118889   3         attachd Reply 1355:13:51:0956   16399  mqueue
+  285    143548   5  kd_mbus_server Reply    0:00:00:0078   12295  mbus-prp3-b
+  295    147658   2         lpts_fm Reply    0:00:00:0064  131203  lpts_pa
+  197    143566   4      eem_server Reply    0:00:34:0050       1  kernel
+65759 560791775   1            exec Reply    0:00:00:0085       1  kernel
+ 1118    164124   8       l2vpn_mgr Reply 1355:04:49:0800  348465  lspv_server
+65826 560910626   1            more Reply    0:00:00:0045   16397  pipe
+ 1040    348462  10        mpls_ldp Reply 1355:04:50:0857  348465  lspv_server
+65852 560415036   1            exec Reply    0:00:16:0003  143560  devc-vty
+65855 560595263   1            exec Reply    0:10:15:0686  143560  devc-vty
+65856 560894272   1            exec Reply    0:00:32:0504  143560  devc-vty
+65857 560910657   1  show_processes Reply    0:00:00:0000       1  kernel
+RP/0/7/CPU0:brhal305me1#sh process devc-vty
+                  Job Id: 178
+                     PID: 143560
+         Executable path: /compactflash/iosxr-infra-4.1.2.CSCtu16989-1.0.0/bin/devc-vty
+              Instance #: 1
+                    Args: -c -d libvty.dll
+              Version ID: 00.00.0000
+                 Respawn: ON
+           Respawn count: 1
+  Max. spawns per minute: 12
+            Last started: Wed Feb 20 06:18:13 2013
+           Process state: Run
+           Package state: Normal
+                    core: MAINMEM
+               Max. core: 0
+                   Level: 200
+               Mandatory: ON
+               Placement: DLRSC Tracker
+            startup_path: /pkg/startup/devc-vty.startup
+                   Ready: 2.058s
+        Process cpu time: 1277.508 user, 199.512 kernel, 1477.019 total
+JID   TID CPU Stack pri state        TimeInState    HR:MM:SS:MSEC   NAME
+178    1    0   44K  10 Receive        0:00:00:0086    0:02:19:0755 devc-vty
+178    2    1   44K  10 Sigwaitinfo    0:01:28:0958    0:00:00:0229 devc-vty
+178    3    0   44K  10 Receive        0:00:00:0004    0:22:17:0040 devc-vty
+178    4    0   44K  10 Receive     1354:26:23:0111    0:00:00:0012 devc-vty
+-------------------------------------------------------------------------------
+RP/0/7/CPU0:brhal305me1#
+RP/0/7/CPU0:brhal305me1#
+RP/0/7/CPU0:brhal305me1#RP/0/7/CPU0:Apr 17 17:31:45.055 : tclsh[65853]: %HA_EM-6-LOG: test2.tcl: (ssearch) result: tty_name /dev/vty9900 tty_id 1 fd file33
+RP/0/7/CPU0:Apr 17 17:31:45.056 : tclsh[65853]: %HA_EM-6-LOG: test2.tcl: (ssearch) AFTER result: tty_name /dev/vty9900 tty_id 1 fd file33
+RP/0/7/CPU0:Apr 17 17:31:45.057 : tclsh[65853]: %HA_EM-6-LOG: test2.tcl: (ssearch) output_file2: disk0:/CommitArchive/brhal305me1.CommitID_1000000187.17.30.52_Apr_17_2013.mr4494
+
+RP/0/7/CPU0:brhal305me1#
+RP/0/7/CPU0:brhal305me1#
+RP/0/7/CPU0:brhal305me1#dir disk0:/CommitArchive
+
+Directory of disk0:/CommitArchive
+
+213712992   -rwx  136         Mon Apr  1 14:04:34 2013  test1
+
+4188659712 bytes total (3370557440 bytes free)
+RP/0/7/CPU0:brhal305me1#
+RP/0/7/CPU0:brhal305me1#
+RP/0/7/CPU0:brhal305me1#
+RP/0/7/CPU0:brhal305me1#
+RP/0/7/CPU0:brhal305me1#
+RP/0/7/CPU0:brhal305me1#
+RP/0/7/CPU0:brhal305me1#show event mana pol reg
+No.  Class     Type    Event Type          Trap  Time Registered           Name
+1    script    user    syslog              Off   Wed Apr 17 17:24:45 2013  test2.tcl
+ pattern {MGBL-CONFIG-6-DB_COMMIT.*Configuration committed.*show configuration commit changes}
+ nice 0 queue-priority normal maxrun 60.000 scheduler rp_primary Secu none
+ persist_time: 3600 seconds,  username: eem-user
+
+RP/0/7/CPU0:brhal305me1#
+RP/0/7/CPU0:brhal305me1#more disk0:/eem/test2.tcl
+::cisco::eem::event_register_syslog pattern "MGBL-CONFIG-6-DB_COMMIT.*Configuration committed.*show configuration commit changes" maxrun 60
+
+###############################################################################################################
+# NAME: ConfigCommitArchive.tcl
+# AUTH: Scott Search (ssearch@cisco.com)
+# DATE: 2/13/13
+# VERS: v0.5
+#
+#
+# Need to set the following EEM example environment variables:
+# -------------------------------------------------------------
+# set _CommitArchive_storage_location "disk0:/CommitArchive"
+#
+#
+# Example pattern:
+# ----------------
+#
+# MGBL-CONFIG-6-DB_COMMIT : Configuration committed by user 'cisco'. Use 'show configuration commit changes
+#    1000000827' to view the changes
+#
+###############################################################################################################
+
+# Import namespace libraries:
+namespace import ::cisco::eem::*
+namespace import ::cisco::lib::*
+
+# Verify the environment vars:
+if {![info exists _CommitArchive_storage_location]} {
+  set result "**ERROR: EEM policy error environment var _CommitArchive_storage_location not set"
+  action_syslog msg $result
+  exit 1
+}
+
+
+proc get_username {output} {
+  set UserID ""
+
+  foreach line [split $output "\n"] {
+    regsub -all {[ \r\t\n]+} $line " " line
+
+    if {[regexp "User: " $line]} {
+      regexp {User: (.*) Line} $line - UserID
+      if {$UserID != ""} {
+        break
+      } else {
+        set UserID "unknown"
+        break
+      }
+    }
+  }
+  return $UserID
+}
+
+
+#############
+# MAIN/main #
+#############
+set msg ""
+set node [info hostname]
+
+set date [clock format [clock sec] -format "%T %Z %a %b %d %Y"]
+set stamp [clock format [clock sec] -format "%T_%b_%d_%Y"]
+regsub -all {:} $stamp "." stamp
+
+# Set the array arr_einfo to the eem event_reqinfo
+array set arr_einfo [event_reqinfo]
+# Extract the syslog message the finally kicked off the EEM script:
+set syslog_msg $arr_einfo(msg)
+
+regsub -all {[ \r\t\n]+} $syslog_msg " " syslog_msg
+regsub -all {^[ ]} $syslog_msg "" syslog_msg
+regsub -all {[ ]$} $syslog_msg "" syslog_msg
+
+# Extract the user id:
+regexp {Configuration committed by user \'(.*)\'\..*} $syslog_msg - UserID
+# Extract the configuration id:
+regexp {show configuration commit changes (\d+).*} $syslog_msg - ChangeID
+
+action_syslog msg "(ssearch) EEM UserID: $UserID --- ChangeID: $ChangeID"
+
+if {[info exists ChangeID]} {
+  set LogFile "$node.CommitID_$ChangeID.$stamp"
+
+  if {[info exists UserID]} {
+    set output_file "$_CommitArchive_storage_location/$LogFile.$UserID"
+  } else {
+    set UserID "unknown"
+  }
+  regsub -all "\[ \t\n\]" $output_file {} output_file
+
+action_syslog msg "(ssearch) LogFile: $LogFile"
+action_syslog msg "(ssearch) output_file: $output_file"
+
+ Open router (vty) connection
+if [catch {cli_open} result] {
+action_syslog msg "(ssearch) EEM script error"
+  error $result $errorInfo
+} else {
+action_syslog msg "(ssearch) result: $result"
+  array set cli $result
+action_syslog msg "(ssearch) AFTER result: $result"
+}
+
+if {$UserID == "unknown"} {
+  if [catch {cli_exec $cli(fd) "show configuration history commit detail | beg $ChangeID"} result] {
+    error $result $errorInfo
+  }
+  # Remove trailing router prompt
+  regexp {\n*(.*\n)([^\n]*)$} $result junk cmd_output
+  set UserID [get_username $cmd_output]
+  set output_file "$_CommitArchive_storage_location/$LogFile.$UserID"
+  regsub -all "\[ \t\n\]" $output_file {} output_file
+}
+
+action_syslog msg "(ssearch) output_file2: $output_file"
+
+#  if [catch {cli_exec $cli(fd) "show configuration commit changes $ChangeID | file $output_file"} result] {
+#    error $result $errorInfo
+#  }
+
+# Close CLI
+cli_close $cli(fd) $cli(tty_id)
+} else {
+  action_syslog msg "**EEM ERROR: ConfigCommitArchive was unable to determine the configuration commit ID"
+}
+
+RP/0/7/CPU0:brhal305me1#
+RP/0/7/CPU0:brhal305me1#
+RP/0/7/CPU0:brhal305me1#
+RP/0/7/CPU0:brhal305me1#

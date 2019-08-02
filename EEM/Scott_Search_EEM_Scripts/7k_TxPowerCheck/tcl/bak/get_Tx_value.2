@@ -1,0 +1,71 @@
+#!/usr/bin/tclsh
+
+puts ""
+
+set syslogs "Ethernet3/1
+    transceiver is present
+    type is 10Gbase-SR
+    name is CISCO-FINISAR
+    part number is FTLX8571D3BCL-C2
+    revision is A
+    serial number is FNS151816K8
+    nominal bitrate is 10300 MBit/sec
+    Link length supported for 50/125um OM2 fiber is 82 m
+    Link length supported for 62.5/125um fiber is 26 m
+    Link length supported for 50/125um OM3 fiber is 300 m
+    cisco id is --
+    cisco extended id number is 4
+    cisco part number is 10-2415-03
+    cisco product id is SFP-10G-SR
+    cisco vendor id is V03
+    number of lanes 1
+
+           SFP Detail Diagnostics Information (internal calibration)
+  ----------------------------------------------------------------------------
+                Current              Alarms                  Warnings
+                Measurement     High        Low         High          Low
+  ----------------------------------------------------------------------------
+  Temperature   25.92 C        75.00 C     -5.00 C     70.00 C        0.00 C
+  Voltage        3.28 V         3.63 V      2.97 V      3.46 V        3.13 V
+  Current        0.36 mA  --   11.80 mA     4.00 mA    10.80 mA       5.00 mA
+  Tx Power     -24.08 dBm --    1.69 dBm  -11.30 dBm   -1.30 dBm     -7.30 dBm
+  Rx Power      -3.20 dBm       2.00 dBm  -13.90 dBm   -1.00 dBm     -9.90 dBm
+  Transmit Fault Count = 1
+  ----------------------------------------------------------------------------
+  Note: ++  high-alarm; +  high-warning; --  low-alarm; -  low-warning
+"
+
+proc get_Tx_values {syslogs} {
+  set iface ""
+  set TxPower ""
+
+  foreach line [split $syslogs "\n"] {
+    regsub -all {[ \r\t\n]+} $line " " line
+    regsub -all {^[ ]} $line "" line
+    regsub -all {[ ]$} $line "" line
+
+    if {[regexp {^\w+.*\d+\/\d+$} $line]} {
+      regexp {^(\w+.*\d+\/\d+)} $line - iface
+    }
+
+    if {[regexp {^Tx Power .* dBm$} $line]} {
+      if {[regexp {\-\-} $line]} {
+        set TxPower [lindex [split $line " "] 5]
+      } else {
+        set TxPower [lindex [split $line " "] 4]
+      }
+    }
+  }
+
+  puts "iface: $iface"
+  puts "TxPower: $TxPower"
+
+} ;# get_Tx_values
+
+get_Tx_values $syslogs
+puts ""
+
+# set IPv6 [get_IPv6_address $syslogs]
+
+puts ""
+

@@ -1,0 +1,57 @@
+#!/usr/bin/tclsh
+
+set cmds "
+show tech-support
+show redundancy
+show fabric errors 
+show fabric drops
+show fabric channel-counters
+remote command standby-rp show log
+remote command module 1 show log
+remote command module 2 show log
+
+remote command switch show fabric resync
+remote command switch show platform hardware earl status
+remote command switch show platform hardware earl statistics
+remote command switch show platform hardware earl interrupt throttle status
+remote command switch show platform software earl reset history
+remote command switch show platform software earl reset counter
+remote command switch show platform software earl reset data
+
+remote command switch test platform firmware me_argos register read all 0 231
+remote command switch test platform firmware me_krypton register read all 0  769
+remote command switch test platform firmware ssantaana register read 0 all
+remote command switch test platform firmware ssantaana register read 1 all
+remote command switch test platform firmware telesto register read 0 0 1756
+remote command switch test platform firmware scruz fpoe regs dump 0 1 1
+remote command switch test platform firmware scruz dump chico 0  1 0
+
+remote command switch test platform firmware kailash reg lprint 0 0x180 0x199 25 1 
+remote command switch test platform firmware kailash reg lprint 0 0x1a0 0x1b9 25 1 
+remote command switch test platform firmware kailash reg mprint 0 0x152 3 1
+remote command switch test platform firmware kailash reg mprint 0 0x420 31 1 
+remote command switch test platform firmware kailash reg lprint 0 0x440 0x449 15 1
+
+show logging
+show diagnostic events module <active RSP>
+show diagnostic result module <active RSP> detail
+"
+
+set cmd1 "show diagnostic events module <Standby RSP>\n"
+set cmd2 "show diagnostic result module <Standby RSP> detail\n"
+
+append cmds $cmd1
+append cmds $cmd2
+
+puts ""
+
+foreach line [split $cmds "\n"] {
+  if {$line == ""} { continue }
+  puts "CMD:  $line"
+}
+
+puts ""
+
+exit
+
+

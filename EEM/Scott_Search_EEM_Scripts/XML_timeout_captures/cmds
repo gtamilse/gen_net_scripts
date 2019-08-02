@@ -1,0 +1,110 @@
+show proc cpu | inc CPU
+show proc cpu | e 0% .*0% .*0%
+show proc cpu location 0/0/cpu0 | inc CPU
+show proc cpu location 0/15/cpu0 | inc CPU
+show mem sum location 0/7/cpu0
+show mem sum location 0/8/cpu0
+show mem sum location 0/0/cpu0
+show mem sum location 0/15/cpu0
+show proc blocked location 0/7/cpu0
+show proc blocked location 0/8/cpu0
+show processes blocked location 0/0/cpu0
+show processes blocked location 0/15/cpu0
+show xml sessions detail
+show ssh
+show ssh session detail
+show config lock
+show config sessions detail
+show user all
+show cfgmgr trace
+show cfgmgr commitdb
+show xml trace
+show config trace
+show tcp trace
+
+debug xml
+debug xml trace
+debug ssh client
+debug ssh server
+debug config connections
+debug config errors
+debug config lock
+debug ssh traffic
+
+
+
+
+
+
+show proc cpu | inc CPU
+show mem sum location 0/7/cpu0
+show mem sum location 0/8/cpu0
+show proc blocked location 0/7/cpu0
+show proc blocked location 0/8/cpu0
+show xml sessions detail
+show ssh
+show ssh session detail
+show xml trace
+show tcp trace
+show config trace
+show config lock
+show config sessions detail
+
+
+DEBUGs:
+
+debug xml
+debug xml core
+debug xml parser
+debug xml trace
+debug ssh client
+debug ssh server
+debug ssh traffic
+debug config connections 
+debug config errors 
+debug config lock
+
+
+
+
+RP/0/8/CPU0:phlpa313me1#show tcp trace file ?
+  WORD  File name
+
+
+
+
+
+show proc cpu | inc CPU
+show proc cpu | e 0% .*0% .*0%
+show mem sum location 0/RSP0/CPU0
+show mem sum location 0/RSP1/CPU0
+show proc blocked location 0/RSP0/CPU0
+show proc blocked location 0/RSP1/CPU0
+show xml sessions detail
+show ssh
+show ssh session detail
+show config lock
+show config sessions detail
+show user all
+show cfgmgr trace
+show cfgmgr commitdb
+show xml trace
+show config trace
+show tcp trace
+
+debug xml
+debug xml trace
+debug ssh client
+debug ssh server
+debug config connections
+debug config errors
+debug config lock
+debug ssh traffic
+
+
+
+
+
+
+show proc cpu | inc CPU
+show mem sum location 0/7/cpu0

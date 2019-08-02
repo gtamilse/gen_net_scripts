@@ -1,0 +1,26 @@
+Router EEM configuration:
+----------------------------------------------------------------
+
+event manager environment _output_log 40G_bw_update
+event manager environment _storage_location disk0:/eem
+event manager environment _40G_mappings 40G_mappings
+!
+event manager directory user policy disk0:/eem
+event manager policy 40G_bw_update.tcl username eem-user type user
+!
+username eem-user
+ group root-system
+ group cisco-support
+ no password
+!
+aaa authorization exec eem-user local
+aaa authorization commands eem-user none
+aaa authorization eventmanager default local
+aaa authorization eventmanager eem-user local
+aaa authentication login eem-user local
+!
+line template EEM
+ authorization exec eem-user
+ authorization commands eem-user
+!
+vty-pool eem 100 105 line-template EEM

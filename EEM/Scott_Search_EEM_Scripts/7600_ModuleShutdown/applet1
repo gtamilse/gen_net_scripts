@@ -1,0 +1,17 @@
+
+1. Copy TCL script:  7k_ModShutdown.tcl  to routers bootflash:/scripts directory
+
+2. Configure the following on the 7k:
+
+event manager applet 7k_ModShutdown
+  event syslog pattern "Module .*: Online Diagnostics detected a Major Error"
+  action 1.0 string trimleft "$_syslog_msg"
+  action 2.0 cli command "enable"
+  action 3.0 cli command "tclsh bootflash:/scripts/7k_ModShutdown.tcl \"$_string_result\""
+  action 4.0 syslog msg "EEM script shutdown module due to: \"$_string_result\""
+
+
+The above applet should call on the tcl script 7k_ModShutdown.tcl to parse the syslog pattern that 
+triggered the eem and shutdown the suspect bad module.
+
+

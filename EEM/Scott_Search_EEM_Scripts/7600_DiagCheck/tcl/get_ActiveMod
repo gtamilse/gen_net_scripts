@@ -1,0 +1,60 @@
+#!/usr/bin/tclsh
+
+set show_module "SW25-C7600#sh redundancy 
+Redundant System Information :
+------------------------------
+       Available system uptime = 3 weeks, 4 days, 15 hours, 34 minutes
+Switchovers system experienced = 0
+              Standby failures = 0
+        Last switchover reason = none
+
+                 Hardware Mode = Simplex
+    Configured Redundancy Mode = sso
+     Operating Redundancy Mode = sso
+              Maintenance Mode = Disabled
+                Communications = Down      Reason: Simplex mode
+
+Current Processor Information :
+-------------------------------
+               Active Location = slot 6
+        Current Software state = ACTIVE
+       Uptime in current state = 3 weeks, 4 days, 15 hours, 33 minutes
+                 Image Version = Cisco IOS Software, s72033_rp Software (s72033_rp-ADVIPSERVICESK9_WAN-M), Version 12.2(33)SXI4, RELEASE SOFTWARE (fc3)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2010 by Cisco Systems, Inc.
+Compiled Sat 29-May-10 17:54 by prod_rel_team
+                          BOOT = disk1:s72033-advipservicesk9_wan-mz.122-33.SXI4,12;
+                   CONFIG_FILE = 
+                       BOOTLDR = 
+        Configuration register = 0x2102
+
+Peer (slot: unavailable) information is not available because it is in 'DISABLED' state
+"
+
+set active ""
+
+puts ""
+
+foreach line [split $show_module "\n"] {
+  regsub -all {[ \r\t\n]+} $line " " line
+  regsub -all {^[ ]} $line "" line
+  regsub -all {[ ]$} $line "" line
+
+  if {[regexp "^Active Location =" $line]} {
+    regexp {^Active Location = slot (\d+)} $line - active
+    puts "active: $active"
+  }
+
+#  if {[regexp "VQI\\($update_VQI" $line]} {
+#    puts "LINE: $line"
+#    regexp {^LTL\((0x.*?)\)\,} $line - LTL
+#    puts "LTL: $LTL"
+#    lappend LTLs $LTL
+#  }
+}
+
+puts ""
+
+exit
+
+

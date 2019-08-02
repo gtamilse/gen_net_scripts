@@ -1,0 +1,42 @@
+#!/usr/bin/tclsh
+
+proc GetDups {list} {
+  array set tmp {}
+
+  # Count the elements in the list
+  foreach item $list {
+    lappend tmp($item) .
+  }
+
+  foreach item [array names tmp] {
+    ;# We will unset any element with a count of 1 as they are unique and seen only once
+    ;# if {[llength $tmp($item)] > 1} continue
+
+    ;# We will unset any element with a count that is not greater than 10:
+    ;# if {[llength $tmp($item)] >= 10} continue
+    if {[llength $tmp($item)] >= 3} continue
+
+    puts "unsetting array with item: $item  -- Because only seen once"
+    unset tmp($item)
+  }
+
+  # Return the array
+  return [array names tmp]
+} ;# GetDups
+
+
+
+set l [list a k k k k k k  a a a a a a b c k c c c d d k e f a f f k f f g k k a h i i k a i j]
+set l [list 12.166.34.1 12.166.34.2 12.166.34.3 12.166.34.1 12.166.34.1 12.166.34.2 12.166.34.2 12.166.34.5 12.166.34.5 12.166.34.2]
+
+puts ""
+puts "before l: $l"
+puts ""
+
+set l [GetDups $l]
+
+puts ""
+puts "after l: $l"
+puts ""
+
+

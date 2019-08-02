@@ -1,0 +1,124 @@
+::cisco::eem::event_register_syslog pattern "CONFIG"
+
+# Define the namespace
+namespace import ::cisco::eem::*
+namespace import ::cisco::lib::*
+
+set freq_list [sys_reqinfo_syslog_freq]
+set hist_list [sys_reqinfo_syslog_history]
+puts $freq_list
+foreach rec $hist_list {
+     foreach syslog $rec {
+         puts $syslog
+     }
+}
+
+
+Results:
+
+esc-2821#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+esc-2821(config)#end
+esc-2821#
+003010: May 26 15:22:11.224: %SYS-5-CONFIG_I: Configured from console  
+by console
+003011: May 26 15:22:11.952: %HA_EM-6-LOG: syslog_freq.tcl: rec_list  
+{ {time_sec 55348 time_msec 252 match_count 1 raise_count 1 occurs 0  
+period_sec 0 period_msec 0 pattern {CONFIG}}}
+003012: May 26 15:22:11.956: %HA_EM-6-LOG: syslog_freq.tcl: rec_list
+003013: May 26 15:22:11.956: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+54811 time_msec 876 msg { 002914: May 26 15:13:14.849: %ENVMON-4- 
+FAN_LOW_RPM: Fan 2 service recommended}
+003014: May 26 15:22:11.956: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+54841 time_msec 968 msg { 002915: May 26 15:13:44.941: %ENVMON-4- 
+FAN_LOW_RPM: Fan 2 service recommended}
+003015: May 26 15:22:11.956: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+54871 time_msec 968 msg { 002916: May 26 15:14:14.941: %ENVMON-4- 
+FAN_LOW_RPM: Fan 2 service recommended}
+003016: May 26 15:22:11.956: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+54901 time_msec 968 msg { 002919: May 26 15:14:44.941: %ENVMON-4- 
+FAN_LOW_RPM: Fan 2 service recommended}
+003017: May 26 15:22:11.956: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+54931 time_msec 968 msg { 002920: May 26 15:15:14.941: %ENVMON-4- 
+FAN_LOW_RPM: Fan 2 service recommended}
+003018: May 26 15:22:11.956: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+54961 time_msec 968 msg { 002921: May 26 15:15:44.941: %ENVMON-4- 
+FAN_LOW_RPM: Fan 2 service recommended}
+003019: May 26 15:22:11.956: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+54989 time_msec 556 msg { 002924: May 26 15:16:12.529: %SYS-5- 
+CONFIG_I: Configured from console by console}
+003020: May 26 15:22:11.956: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+54991 time_msec 968 msg { 002925: May 26 15:16:14.941: %ENVMON-4- 
+FAN_LOW_RPM: Fan 2 service recommended}
+003021: May 26 15:22:11.956: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+55000 time_msec 780 msg { 002928: May 26 15:16:23.753: %SYS-5- 
+CONFIG_I: Configured from console by console}
+003022: May 26 15:22:11.956: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+55012 time_msec 216 msg { 002930: May 26 15:16:35.189: %SYS-5- 
+CONFIG_I: Configured from console by console}
+003023: May 26 15:22:11.956: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+55021 time_msec 968 msg { 002932: May 26 15:16:44.941: %ENVMON-4- 
+FAN_LOW_RPM: Fan 2 service recommended}
+003024: May 26 15:22:11.956: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+55027 time_msec 4 msg { 002933: May 26 15:16:49.977: %SYS-5-CONFIG_I:  
+Configured from console by console}
+003025: May 26 15:22:11.956: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+55032 time_msec 328 msg { 002935: May 26 15:16:55.301: %SYS-5- 
+CONFIG_I: Configured from console by console}
+003026: May 26 15:22:11.956: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+55039 time_msec 88 msg { 002937: May 26 15:17:02.061: %SYS-5-CONFIG_I:  
+Configured from console by console}
+003027: May 26 15:22:11.956: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+55045 time_msec 860 msg { 002939: May 26 15:17:08.833: %SYS-5- 
+CONFIG_I: Configured from console by console}
+003028: May 26 15:22:11.956: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+55047 time_msec 516 msg { 002941: May 26 15:17:10.489: %SYS-5- 
+CONFIG_I: Configured from console by console}
+003029: May 26 15:22:11.956: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+55052 time_msec 32 msg { 002943: May 26 15:17:15.004: %ENVMON-4- 
+FAN_LOW_RPM: Fan 2 service recommended}
+003030: May 26 15:22:11.956: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+55082 time_msec 32 msg { 002944: May 26 15:17:45.004: %ENVMON-4- 
+FAN_LOW_RPM: Fan 2 service recommended}
+003031: May 26 15:22:11.960: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+55091 time_msec 476 msg { 002947: May 26 15:17:54.448: %SYS-5- 
+CONFIG_I: Configured from console by console}
+003032: May 26 15:22:11.960: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+55097 time_msec 224 msg { 002950: May 26 15:18:00.196: %SYS-5- 
+CONFIG_I: Configured from console by console}
+003033: May 26 15:22:11.960: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+55112 time_msec 80 msg { 002953: May 26 15:18:15.052: %ENVMON-4- 
+FAN_LOW_RPM: Fan 2 service recommended}
+003034: May 26 15:22:11.960: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+55142 time_msec 80 msg { 002956: May 26 15:18:45.052: %ENVMON-4- 
+FAN_LOW_RPM: Fan 2 service recommended}
+003035: May 26 15:22:11.960: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+55142 time_msec 672 msg { 002957: May 26 15:18:45.644: %SYS-5- 
+CONFIG_I: Configured from console by console}
+003036: May 26 15:22:11.960: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+55150 time_msec 136 msg { 002961: May 26 15:18:53.108: %SYS-5- 
+CONFIG_I: Configured from console by console}
+003037: May 26 15:22:11.960: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+55172 time_msec 80 msg { 002965: May 26 15:19:15.052: %ENVMON-4- 
+FAN_LOW_RPM: Fan 2 service recommended}
+003038: May 26 15:22:11.960: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+55195 time_msec 300 msg { 002968: May 26 15:19:38.272: %SYS-5- 
+CONFIG_I: Configured from console by console}
+003039: May 26 15:22:11.960: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+55202 time_msec 80 msg { 003003: May 26 15:19:45.052: %ENVMON-4- 
+FAN_LOW_RPM: Fan 2 service recommended}
+003040: May 26 15:22:11.960: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+55232 time_msec 80 msg { 003004: May 26 15:20:15.052: %ENVMON-4- 
+FAN_LOW_RPM: Fan 2 service recommended}
+003041: May 26 15:22:11.960: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+55262 time_msec 80 msg { 003005: May 26 15:20:45.052: %ENVMON-4- 
+FAN_LOW_RPM: Fan 2 service recommended}
+003042: May 26 15:22:11.960: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+55292 time_msec 180 msg { 003006: May 26 15:21:15.152: %ENVMON-4- 
+FAN_LOW_RPM: Fan 2 service recommended}
+003043: May 26 15:22:11.960: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+55322 time_msec 180 msg { 003007: May 26 15:21:45.152: %ENVMON-4- 
+FAN_LOW_RPM: Fan 2 service recommended}
+003044: May 26 15:22:11.960: %HA_EM-6-LOG: syslog_freq.tcl: time_sec  
+55348 time_msec 252 msg { 003010: May 26 15:22:11.224: %SYS-5- 
+CONFIG_I: Configured from console by console}

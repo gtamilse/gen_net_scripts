@@ -1,0 +1,54 @@
+show log
+show platform
+show ip int brief
+admin show install
+
+show interface <main interface> <cr> (capture 3 times 5-10 seconds apart)
+show controller atm <main interface> <cr> (capture 3 times 5-10 seconds apart) 
+show controller atm <interface> traffic port <cr> (capture 3 times 5-10 seconds apart) 
+
+show interface <sub-interface> <cr> (capture 3 times 5-10 seconds apart)
+
+
+show controller pse ingress stat loc <location of LC> <cr> (capture 3 times 5-10 seconds apart) 
+show controller fwd stats loc <location of LC> <cr>
+show controller ingressq qmstats 0 loc <location of LC> <cr>
+
+
+
+Attach to LC to collect the following;
+=====================================
+RP/0/4/cpu0:12K06-CE16# run attach <location of LC> <cr>
+
+ksh-LC> hfa_show –c <cr>
+
+
+ksh-LC> cd /tmp <cr>
+ksh-LC> more plim_dump.txt <cr>
+
+
+
+Use dip tool to capture channel status & CPK data (for all 4 ports, one at a time)
+==================================================================================
+ksh-LC> dip_atm <cr>
+DIP %
+
+
+DIP % gatm0 dad status –l0 <cr>  (capture 3 times 5-10 seconds apart for each port) 
+
+DIP % gatm0 dad status –l1 <cr>  
+DIP % gatm0 dad status –l2 <cr>  
+DIP % gatm0 dad status –l3 <cr>  
+
+
+DIP % gatm0 dad pm cpk –l0 <cr>  (capture 3 times 5-10 seconds apart for each port)
+
+
+DIP % gatm0 dad pm cpk –l1 <cr>
+DIP % gatm0 dad pm cpk –l2 <cr> 
+DIP % gatm0 dad pm cpk –l3 <cr>       
+
+DIP % quit <cr>
+
+ksh-LC> exit <cr>
+RP/0/4/CPU0:ios#

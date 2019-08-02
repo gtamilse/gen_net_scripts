@@ -1,0 +1,13 @@
+#!/usr/bin/tclsh
+
+set date      [clock format [clock sec] -format "%T %Z %a %b %d %Y"]
+set stamp     [clock format [clock sec] -format "%T_%b_%d_%Y"]
+set month_day [clock format [clock sec] -format "%b %d"]
+
+;# stamp: 09:11:08_May_17_2013
+
+puts ""
+puts "stamp: $stamp"
+puts ""
+puts "month_day: $month_day"
+puts ""

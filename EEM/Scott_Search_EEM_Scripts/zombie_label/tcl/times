@@ -1,0 +1,48 @@
+#!/usr/bin/tclsh
+
+puts ""
+
+set time_now [clock seconds]
+puts "time_now: $time_now"
+
+set date_time [clock format $time_now -format "%m-%d-%Y_%H.%M.%S"]
+puts "date_time: $date_time"
+
+# Set the seconds to go back from the previously captured script start time:
+set seconds_to_go_back [expr $time_now - 60]
+puts "seconds_to_go_back: $seconds_to_go_back"
+
+set actual_time [clock format $seconds_to_go_back -format "%m-%d-%Y_%H.%M.%S"]
+puts "actual_time: $actual_time"
+
+
+puts "\n"
+
+set go_back_3min [expr $time_now - 180]
+puts "go_back_3min: $go_back_3min"
+
+set actual_time [clock format $go_back_3min -format "%m-%d-%Y_%H.%M.%S"]
+puts "actual_time: $actual_time"
+puts ""
+
+
+# show log start oct 9 14:01:00
+set show_log_DateTime [clock format $go_back_3min -format "%b %d %H:%M:%S"]
+
+puts ""
+puts "show_log_DateTime: $show_log_DateTime"
+puts ""
+
+
+puts "show log start $show_log_DateTime | inc ROUTING-BGP-3-NBR_NSR_DISABLED : NSR disabled on"
+puts ""
+
+
+# time_now: 1412885061
+# date_time: 10-09-2014_14.04.21
+# seconds_to_go_back: 1412885001
+# actual_time: 10-09-2014_14.03.21
+# 
+# go_back_3min: 1412884881
+# actual_time: 10-09-2014_14.01.21
+

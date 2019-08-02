@@ -1,0 +1,61 @@
+#!/usr/bin/tclsh
+
+proc clean_string {line} {
+  # Trim up the line remove extra space/tabs:
+  regsub -all {[ \r\t\n]+} $line " " line
+  # Remove any leading white space:
+  regsub -all {^[ ]} $line "" line
+  # Remove any ending white space:
+  regsub -all {[ ]$} $line "" line
+  
+  return $line
+}
+
+
+proc verify_eem_managed {output} {
+  set eem_managed 0
+
+  foreach line [split $output "\n"] {
+    set line [clean_string $line]
+  
+    if {$line ne ""} {
+      if {[regexp {^Description: } $line]} {
+        if {[regexp {EEM-managed} $line]} {
+          set eem_managed 1
+        }
+      }
+    }
+  }
+
+  return $eem_managed
+}
+
+
+set output "MSMR#show lisp 1 site name 0000
+Site name: 0000
+Description: EEM-managed
+Allowed configured locators: any
+Allowed EID-prefixes:
+.
+
+.
+.
+.
+"
+
+#set output "MSMR#show lisp 1 site name 0000
+#Site name: 0000
+#Description: EEM-not-managed
+#Allowed configured locators: any
+#Allowed EID-prefixes:
+#.
+#.
+#.
+#.
+#"
+
+set eem_managed [verify_eem_managed $output]
+
+puts "\neem_managed: $eem_managed\n"
+
+

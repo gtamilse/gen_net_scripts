@@ -1,0 +1,8 @@
+To test the EEM script run the following from a LC.  Set the bay # to the correct SPA port:
+---------------------------------------------------------------------------------------------
+
+echo "L2-SPA-3-PLIM_HEARTBEAT_ERR : SPA-4XT3/E3: bay 0 heartbeat missed, expected seq# 4981185 received seq# 4981184, Time since last message 38s" > /dev/syslog
+
+
+
+

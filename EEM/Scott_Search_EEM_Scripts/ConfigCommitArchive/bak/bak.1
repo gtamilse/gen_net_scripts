@@ -1,0 +1,130 @@
+::cisco::eem::event_register_syslog pattern "MGBL-CONFIG-6-DB_COMMIT.*Configuration committed.*show configuration commit changes" maxrun 300
+
+
+############################################
+# NAME: ConfigCommitArchive.tcl
+#
+#
+# Example pattern:
+# MGBL-CONFIG-6-DB_COMMIT : Configuration committed by user 'cisco'. Use 'show configuration commit changes 
+#    1000000827' to view the changes
+#
+############################################
+ 
+# Import namespace libraries:
+namespace import ::cisco::eem::*
+namespace import ::cisco::lib::*
+ 
+##################################
+# Verify the environment vars:
+##################################
+# Storage location:
+if {![info exists _ConfigCheck_storage_location]} {
+  set result "EEM policy error: environment var _ConfigCheck_storage_location not set"
+  error $result $errInfo
+}
+# Output log file:
+if {![info exists _ConfigCheck_output_log]} {
+  set result "EEM policy error: environment var _ConfigCheck_output_log not set"
+  error $result $errInfo
+}
+
+
+##################################
+# PROCs:
+##################################
+proc send_syslog {msg repeat} {
+  set kont 0
+
+  while {$kont < $repeat} {
+    action_syslog priority alert msg $msg
+    incr kont
+  }
+}
+
+proc parse_config_changes {ConfigChanges UserID} {
+  set msg ""
+
+  if {$ConfigChanges != ""} {
+    foreach line [split $ConfigChanges "\n"] {
+
+      if {[regexp "router ospf|router bgp" $line]} {
+        set msg "Operator '$UserID' made configuration changes to the Routing Protocol Control Plane"
+      }
+    }
+  }
+  return $msg
+}
+
+
+##################################
+# main
+##################################
+global FH
+global _email_to _email_from
+global _email_server _domainname
+global email_subject
+set msg ""
+
+# Capture the scripts start time:
+set time_now [clock seconds]
+
+# Timestamp the script start time to the output log file:
+set date [clock format $time_now -format "%T %Z %a %b %d %Y"]
+
+# Set the array arr_einfo to the eem event_reqinfo
+array set arr_einfo [event_reqinfo]
+# Extract the syslog message the finally kicked off the EEM script:
+set syslog_msg $arr_einfo(msg)
+
+regsub -all {[ \r\t\n]+} $syslog_msg " " syslog_msg
+regsub -all {^[ ]} $syslog_msg "" syslog_msg
+regsub -all {[ ]$} $syslog_msg "" syslog_msg
+
+# Extract the user id:
+regexp {Configuration committed by user '(\w+)'.*} $syslog_msg - UserID
+# Extract the configuration id:
+regexp {show configuration commit changes (\d+).*} $syslog_msg - ChangeID
+
+if {$ChangeID} {
+  # Open router (vty) connection:
+  if [catch {cli_open} result] {
+    error $result $errorInfo
+  } else {
+    array set cli $result
+  }
+
+  # Gather configuration change
+  if [catch {cli_exec $cli(fd) "sh configuration commit changes $ChangeID"} result] {
+    error $result $errorInfo
+  }
+  # Remove trailing router prompt
+  regexp {\n*(.*\n)([^\n]*)$} $result junk ConfigChanges
+
+  # Close CLI
+  cli_close $cli(fd) $cli(tty_id)
+
+  # Call on proc to parse the configuration change output:
+  set msg [parse_config_changes $ConfigChanges $UserID]
+
+  if {$msg != ""} {
+    # Open the output file (for write):
+    if [catch {open $_ConfigCheck_storage_location/$_ConfigCheck_output_log w} result] {
+        error $result
+    }
+    set FH $result
+    puts $FH "*Timestamp = $date"
+
+    # Log the nodes hostname to the output log file:
+    set node [info hostname]
+    puts $FH "Node: $node"
+
+    puts $FH "\n"
+    puts $FH $msg
+    puts $FH "\n"
+
+    send_syslog $msg 1
+    close $FH
+  }
+}
+

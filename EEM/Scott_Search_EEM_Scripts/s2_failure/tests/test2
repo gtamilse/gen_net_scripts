@@ -1,0 +1,59 @@
+RP/1/RP0/CPU0:JC22CRS#run echo "fabricq_mgr[136]: %FABRIC-FABRICQ-3-RESET : Reseting Fabricq ASIC Device 0. Reason: UC_PSN_$
+Thu May 27 02:38:46.302 UTC
+RP/1/RP0/CPU0:May 27 02:38:46.399 : syslog_dev[83]: syslog_dev: fabricq_mgr[136]: %FABRIC-FABRICQ-3-RESET : Reseting Fabricq ASIC Device 0. Reason: UC_PSN_WRAP
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#run echo "fabricq_mgr[136]: %FABRIC-FABRICQ-3-RESET : Reseting Fabricq ASIC Device 0. Reason: UC_PSN_$
+Thu May 27 02:38:50.334 UTC
+RP/1/RP0/CPU0:May 27 02:38:50.543 : syslog_dev[83]: syslog_dev: fabricq_mgr[136]: %FABRIC-FABRICQ-3-RESET : Reseting Fabricq ASIC Device 0. Reason: UC_PSN_WRAP
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#RP/1/RP0/CPU0:May 27 02:39:00.926 : config[65822]: %MGBL-CONFIG-6-DB_COMMIT : Configuration committed by user 'eem-user'. Use 'show configuration commit changes 1000000645' to view the changes.
+RP/1/RP0/CPU0:May 27 02:39:01.983 : config[65822]: %MGBL-SYS-5-CONFIG_I : Configured from console by console on vty100 (192.168.116.8)
+ 
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#RP/1/RP0/CPU0:May 27 02:39:02.855 : s2FailDetect.tcl[65821]: EEM policy detected a possible Node S2 problem, COSTING OUT the node
+ 
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#term mon dis
+Thu May 27 02:39:07.168 UTC
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#sh run | inc max-metric
+Thu May 27 02:39:18.994 UTC
+Building configuration...
+ max-metric router-lsa include-stub <<<<<<<<
+ max-metric router-lsa on-startup 2400 include-stub
+ max-metric router-lsa on-switchover 1200 include-stub
+ max-metric router-lsa on-proc-migration 900 include-stub
+ max-metric router-lsa on-proc-restart 1200 include-stub
+ max-metric router-lsa on-startup 2400 include-stub
+ max-metric router-lsa on-switchover 1200 include-stub
+ max-metric router-lsa on-proc-migration 900 include-stub
+ max-metric router-lsa on-proc-restart 1200 include-stub
+
+RP/1/RP0/CPU0:JC22CRS#conf t
+Thu May 27 02:39:25.549 UTC
+RP/1/RP0/CPU0:JC22CRS(config)#
+RP/1/RP0/CPU0:JC22CRS(config)#router ospf 2
+RP/1/RP0/CPU0:JC22CRS(config-ospf)#no max-metric router-lsa include-stub
+RP/1/RP0/CPU0:JC22CRS(config-ospf)#commit
+RP/1/RP0/CPU0:JC22CRS(config-ospf)#no event manager environment _s2FailDetect_unique_locations 0
+RP/1/RP0/CPU0:JC22CRS(config)#commit
+RP/1/RP0/CPU0:JC22CRS(config)#event manager environment _s2FailDetect_unique_locations 3
+RP/1/RP0/CPU0:JC22CRS(config)#commit
+RP/1/RP0/CPU0:JC22CRS(config)#end
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#sh run | inc event mana
+Thu May 27 02:40:42.535 UTC
+Building configuration...
+event manager environment _s2FailDetect_ospf_id 2
+event manager environment _s2FailDetect_output_log s2FailDetect.log
+event manager environment _s2FailDetect_second_diff 30
+event manager environment _s2FailDetect_storage_location harddisk:/eem
+event manager environment _s2FailDetect_unique_locations 3
+event manager directory user policy harddisk:/eem
+event manager policy s2FailDetect.tcl username eem-user type user
+RP/1/RP0/CPU0:JC22CRS#
+

@@ -1,0 +1,11 @@
+#!/usr/bin/tclsh
+
+puts ""
+
+set label "this is a test"
+
+puts $label
+
+puts ""
+
+

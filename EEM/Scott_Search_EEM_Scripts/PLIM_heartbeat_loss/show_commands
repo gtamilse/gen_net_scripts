@@ -1,0 +1,86 @@
+show platform
+show log
+show hw-module subslot <R/S/bay> plim-subblock <===== 10 times
+show hw-module subslot counters spi4 <====== 5 times
+
+
+**** show processes blocked location R/S/cpu0 <==== 3 times.  (Make a note of the g_spa_<> and spa_192_jacket_v2 process ID.)
+
+-follow process <PID> stackonly Iteration 3 location <R/S/cpu0>  
+Note: Run this command for both g_spa<> and spa_192_v2_jacket process
+dumpcore running g_spa_0 location 0/x/cpu0
+dumpcore running spa_192_jacket_v2 location 0/x/cpu0
+
+-run attach <R/S/cpu0>
+-qad_show -p /dev/shmem/spa_ingress_q <======= 5 times
+-qad_show -p /dev/shmem/spa_egress_q  <======= 5 times
+-fab_lc_dbg -s   <======= 3 times
+-qad_show -i     <======= 2 times
+-show_spabrg -b txedrp,bay=<bay>,chan=3  <======= 5 times For CHOC 12 SPA chan is 3 else channel is 1.
+-pidin  <==== 2 times
+
+-attach_process -p <PID> -S –i3  <===== Collect for the g_spa_<> and spa_192_v2_jacket process ID's
+ls /net/node<R_S_bay>
+
+-cat /net/node<R_S_bay>/dev/cpu_util <===== 5 times
+-cat /proc/qnetstats <==== 3 times
+-cat /net/node<R_S_bay>/dev/slog  <=== after dump Type “^C” once
+-cat /net/node<R_S_bay>/proc/qnetstats
+
+Collect the "show logging" output.
+show log
+ 
+show hw-module trace all level error location <>
+show hw-module trace pltfm level sum loc <>
+show hw-module trace all level detailed location <>
+show hw-module fpd location all
+ 
+Now disable the debug enabled.
+no debug spa disable-heartbeat process g_spa_<0> location <R/S/cpu0> <====== SPA will reload and recover
+
+
+
+
+
+
+
+
+
+
+
+Attach to LC to collect the following;
+=====================================
+RP/0/4/cpu0:12K06-CE16# run attach <location of LC> <cr>
+
+ksh-LC> hfa_show –c <cr>
+
+
+ksh-LC> cd /tmp <cr>
+ksh-LC> more plim_dump.txt <cr>
+
+
+
+Use dip tool to capture channel status & CPK data (for all 4 ports, one at a time)
+==================================================================================
+ksh-LC> dip_atm <cr>
+DIP %
+
+
+DIP % gatm0 dad status –l0 <cr>  (capture 3 times 5-10 seconds apart for each port) 
+
+DIP % gatm0 dad status –l1 <cr>  
+DIP % gatm0 dad status –l2 <cr>  
+DIP % gatm0 dad status –l3 <cr>  
+
+
+DIP % gatm0 dad pm cpk –l0 <cr>  (capture 3 times 5-10 seconds apart for each port)
+
+
+DIP % gatm0 dad pm cpk –l1 <cr>
+DIP % gatm0 dad pm cpk –l2 <cr> 
+DIP % gatm0 dad pm cpk –l3 <cr>       
+
+DIP % quit <cr>
+
+ksh-LC> exit <cr>
+RP/0/4/CPU0:ios#

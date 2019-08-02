@@ -1,0 +1,354 @@
+Script started on Sat Aug  3 21:12:36 2013
+ssearch@ssearch-mac XML_timeout_captures$ att brharl30[K[K[K[Kl305me1
+spawn ssh -X ssearch@att-net.cisco.com
+ssearch@att-net.cisco.com's password: 
+Last login: Sat Aug  3 20:11:31 2013 from engaslab-sun1.cisco.com
+
+##########################################################################
+Cisco Linux 6.20-6Server Kickstarted on: Fri Sep 28 05:28:55 PDT 2012.
+
+         |           |           |    Cisco Systems, Inc.
+       .|||.       .|||.         |    att-net
+   ..:|||||||:...:|||||||:..     |    MTV5 ATT service jump host
+   C i s c o   S y s t e m s     |    +1-408-902-6072 tacsuns@cisco.com
+
+UNAUTHORIZED ACCESS TO THIS DEVICE IS PROHIBITED.
+You must have explicit permission to access or configure this
+device.  All activities performed on this device are logged and
+violations of this policy may result in disciplinary action.
+ 
+##########################################################################
+
+
+INFO FOR MIGRATED USERS!!!
+
+   1.) New path for Expect and Tcl scripts
+
+        You need to update the first line in your script to be:
+
+               #!/usr/bin/expect
+
+   2.) If you are missing files, look at your OLD home directory in /oldhome/<username>
+
+
+ssh cisco@aquila-att
+
+
+ATT jump host (CRS): 12.0.1.8
+ATT jump host (AVPN): svnj100
+ATT jump host (AVPN): svnj200
+ATT jump host (AVPN): auriga
+ATT jump host (AVPN): aquila
+ATT jump host (AGN): bhxagn1 (or redcw2000)
+
+
+]0;ssearch@att-net:~[ssearch@att-net ~]$ ssh cisco@aquila-att
+  This system is restricted solely to AT&T authorized users for legitimate
+  business purposes only. The actual or attempted unauthorized access, use, or
+  modification of this system is strictly prohibited by AT&T. Unauthorized
+  users are subject to Company disciplinary proceedings and/or criminal and
+  civil penalties under state, federal, or other applicable domestic and
+  foreign laws. The use of this system may be monitored and recorded for
+  administrative and security reasons. Anyone accessing this system expressly
+  consents to such monitoring and is advised that if monitoring reveals
+  possible evidence of criminal activity, AT&T may provide the evidence of
+  such activity to law enforcement officials. All users must comply with AT&T
+  company policies regarding the protection of AT&T information assets.
+
+  IMPORTANT NOTICE:  See here for authentication requirements to be enforced:
+  http://wiki.web.att.com/display/USH/Migration+from+passwords
+Password: 
+Last login: Sat Aug  3 23:12:50 2013 from att-net.cisco.c
+You have new mail.
+*********************************************************
+* SECURITY WARNING: cisco is already logged on! 
+* cisco      pts/1        Aug  3 22:47  (att-net.cisco.com) *
+* cisco      pts/164      Jul  7 12:12  (att-net.cisco.com) *
+* cisco      pts/38       Jul 24 15:28  (att-net.cisco.com) *
+* cisco      pts/160      May 30 08:56  (att-net.cisco.com) *
+* cisco      pts/110      May 30 08:57  (att-net.cisco.com) *
+* cisco      pts/36       Jul 18 11:05  (att-net.cisco.com) *
+* cisco      pts/156      Aug  3 23:05  (att-net.cisco.com) *
+* cisco      pts/62       Jul 16 12:20  (att-net.cisco.com) *
+* cisco      pts/45       Jul 29 11:17  (att-net.cisco.com) *
+* cisco      pts/181      Aug  2 11:08  (att-net.cisco.com) *
+*********************************************************
+aquila:cisco>telnet brhal305me1
+Trying 135.184.175.235...
+Connected to brhal305me1.noc.att.com.
+Escape character is '^]'.
+
+EDGE-XR (Global Tacacs) Access Verification
+
+BRIDGETON NOC: ss069s
+Password :
+
+You are in Privilege class (VENDOR)
+
+                                WARNING NOTICE
+        This system is restricted solely to AT&T authorized users for
+        legitimate business purposes only. The actual or attempted
+        unauthorized access, use or modification of this system is
+        strictly prohibited by AT&T.  Unauthorized users are subject to
+        Company disciplinary proceedings and/or criminal and civil
+        penalties under state, federal or other applicable domestic and
+        foreign laws.  The use of this system may be monitored and
+        recorded for administrative and security reasons.  Anyone
+        accessing this system expressly consents to such monitoring and
+        is advised that if such monitoring reveals possible evidence of
+        criminal activity, AT&T may provide the evidence of such
+        activity to law enforcement officials.  All users must comply
+        with AT&T Corporate Security Instructions regarding the
+        protection of AT&T information assets.
+
+Last switch-over Mon Jul 29 20:32:36 2013: 5 days, 6 hours, 40 minutes ago
+
+RP/0/8/CPU0:brhal305me1#term len 0
+RP/0/8/CPU0:brhal305me1#show management xml client trace
+233 wrapping entries (320 possible, 0 filtered, 106818 total)
+Aug  4 03:04:48.419 xml/client/gen 0/8/CPU0 103797# t1  [987496764] Detect IO write event [response 0]
+Aug  4 03:04:48.420 xml/client/gen 0/8/CPU0 102870# t1  [987496764] XML response is written (178 bytes)
+Aug  4 03:04:48.631 xml/client/gen 0/8/CPU0 105888# t1  [987496764] XML request is dispatched to agent (70 bytes in 1 blocks)
+Aug  4 03:04:50.629 xml/client/gen 0/8/CPU0 96378# t1  [987496764] Detect IO write event [response 0]
+Aug  4 03:04:50.630 xml/client/gen 0/8/CPU0 105657# t1  [987496764] XML response is written (168 bytes)
+Aug  4 03:05:00.230 xml/client/gen 0/8/CPU0 105658# t1  [987529532] Process spawned
+Aug  4 03:05:00.273 xml/client/gen 0/8/CPU0 106359# t1  [987529532] IO init done (fd_read '0', fd_write '1')
+Aug  4 03:05:00.295 xml/client/gen 0/8/CPU0 104730# t1  [987529532] Session started [session 1000000]
+Aug  4 03:05:00.419 xml/client/gen 0/8/CPU0 106128# t1  [987529532] XML request is dispatched to agent (392 bytes in 1 blocks)
+Aug  4 03:05:00.446 xml/client/gen 0/8/CPU0 103806# t1  [987529532] Detect IO write event [response 0]
+Aug  4 03:05:00.463 xml/client/gen 0/8/CPU0 106129# t1  [987529532] XML response is written (2797 bytes)
+Aug  4 03:05:00.791 xml/client/gen 0/8/CPU0 105897# t1  [987529532] XML request is dispatched to agent (392 bytes in 1 blocks)
+Aug  4 03:05:00.806 xml/client/gen 0/8/CPU0 102186# t1  [987529532] Detect IO write event [response 0]
+Aug  4 03:05:00.813 xml/client/gen 0/8/CPU0 105199# t1  [987529532] XML response is written (2797 bytes)
+Aug  4 03:05:33.728 xml/client/gen 0/8/CPU0 104274# t1  [987595069] Process spawned
+Aug  4 03:05:33.786 xml/client/gen 0/8/CPU0 104043# t1  [987595069] IO init done (fd_read '0', fd_write '1')
+Aug  4 03:05:33.813 xml/client/gen 0/8/CPU0 104739# t1  [987595069] Session started [session 1000000]
+Aug  4 03:05:34.021 xml/client/gen 0/8/CPU0 105438# t1  [987595069] XML request is dispatched to agent (450 bytes in 1 blocks)
+Aug  4 03:05:34.047 xml/client/gen 0/8/CPU0 106371# t1  [987595069] Detect IO write event [response 0]
+Aug  4 03:05:34.048 xml/client/gen 0/8/CPU0 99874# t1  [987595069] XML response is written (2069 bytes)
+Aug  4 03:05:34.383 xml/client/gen 0/8/CPU0 104511# t1  [987595069] XML request is dispatched to agent (522 bytes in 1 blocks)
+Aug  4 03:05:34.392 xml/client/gen 0/8/CPU0 103818# t1  [987595069] Detect IO write event [response 0]
+Aug  4 03:05:34.392 xml/client/gen 0/8/CPU0 103587# t1  [987595069] XML response is written (178 bytes)
+Aug  4 03:05:34.599 xml/client/gen 0/8/CPU0 105909# t1  [987595069] XML request is dispatched to agent (70 bytes in 1 blocks)
+Aug  4 03:05:36.642 xml/client/gen 0/8/CPU0 104283# t1  [987595069] Detect IO write event [response 0]
+Aug  4 03:05:36.643 xml/client/gen 0/8/CPU0 105678# t1  [987595069] XML response is written (168 bytes)
+Aug  4 03:05:40.998 xml/client/gen 0/8/CPU0 105679# t1  [987623546] Process spawned
+Aug  4 03:05:41.045 xml/client/gen 0/8/CPU0 106380# t1  [987623546] IO init done (fd_read '0', fd_write '1')
+Aug  4 03:05:41.066 xml/client/gen 0/8/CPU0 98491# t1  [987623546] Session started [session 1000000]
+Aug  4 03:05:41.192 xml/client/gen 0/8/CPU0 106149# t1  [987623546] XML request is dispatched to agent (392 bytes in 1 blocks)
+Aug  4 03:05:41.218 xml/client/gen 0/8/CPU0 103827# t1  [987623546] Detect IO write event [response 0]
+Aug  4 03:05:41.236 xml/client/gen 0/8/CPU0 102900# t1  [987623546] XML response is written (2797 bytes)
+Aug  4 03:05:41.563 xml/client/gen 0/8/CPU0 105918# t1  [987623546] XML request is dispatched to agent (392 bytes in 1 blocks)
+Aug  4 03:05:41.582 xml/client/gen 0/8/CPU0 106152# t1  [987623546] Detect IO write event [response 0]
+Aug  4 03:05:41.585 xml/client/gen 0/8/CPU0 104988# t1  [987623546] XML response is written (2797 bytes)
+Aug  4 03:06:25.065 xml/client/gen 0/8/CPU0 100818# t1  [987705663] Process spawned
+Aug  4 03:06:25.067 xml/client/gen 0/8/CPU0 101748# t1  [987705661] Process spawned
+Aug  4 03:06:25.127 xml/client/gen 0/8/CPU0 105459# t1  [987705663] IO init done (fd_read '0', fd_write '1')
+Aug  4 03:06:25.130 xml/client/gen 0/8/CPU0 106392# t1  [987705661] IO init done (fd_read '0', fd_write '1')
+Aug  4 03:06:25.164 xml/client/gen 0/8/CPU0 103141# t1  [987705663] Session started [session 1000000]
+Aug  4 03:06:25.169 xml/client/gen 0/8/CPU0 105228# t1  [987705661] Session started [session 1000001]
+Aug  4 03:06:25.293 xml/client/gen 0/8/CPU0 100360# t1  [987705663] XML request is dispatched to agent (392 bytes in 1 blocks)
+Aug  4 03:06:25.315 xml/client/gen 0/8/CPU0 103608# t1  [987705661] XML request is dispatched to agent (450 bytes in 1 blocks)
+Aug  4 03:06:25.321 xml/client/gen 0/8/CPU0 105930# t1  [987705663] Detect IO write event [response 0]
+Aug  4 03:06:25.337 xml/client/gen 0/8/CPU0 104304# t1  [987705663] XML response is written (2797 bytes)
+Aug  4 03:06:25.355 xml/client/gen 0/8/CPU0 105699# t1  [987705661] Detect IO write event [response 0]
+Aug  4 03:06:25.356 xml/client/gen 0/8/CPU0 103380# t1  [987705661] XML response is written (2069 bytes)
+Aug  4 03:06:25.597 xml/client/gen 0/8/CPU0 105700# t1  [987705661] XML request is dispatched to agent (522 bytes in 1 blocks)
+Aug  4 03:06:25.609 xml/client/gen 0/8/CPU0 106401# t1  [987705661] Detect IO write event [response 0]
+Aug  4 03:06:25.610 xml/client/gen 0/8/CPU0 92946# t1  [987705661] XML response is written (178 bytes)
+Aug  4 03:06:25.641 xml/client/gen 0/8/CPU0 106170# t1  [987705663] XML request is dispatched to agent (392 bytes in 1 blocks)
+Aug  4 03:06:25.657 xml/client/gen 0/8/CPU0 102225# t1  [987705663] Detect IO write event [response 0]
+Aug  4 03:06:25.663 xml/client/gen 0/8/CPU0 102921# t1  [987705663] XML response is written (2797 bytes)
+Aug  4 03:06:25.815 xml/client/gen 0/8/CPU0 69721# t1  [987705661] XML request is dispatched to agent (70 bytes in 1 blocks)
+Aug  4 03:06:27.655 xml/client/gen 0/8/CPU0 104313# t1  [987705661] Detect IO write event [response 0]
+Aug  4 03:06:27.655 xml/client/gen 0/8/CPU0 105009# t1  [987705661] XML response is written (168 bytes)
+Aug  4 03:07:05.568 xml/client/gen 0/8/CPU0 102462# t1  [987820352] Process spawned
+Aug  4 03:07:05.634 xml/client/gen 0/8/CPU0 103854# t1  [987820352] IO init done (fd_read '0', fd_write '1')
+Aug  4 03:07:05.667 xml/client/gen 0/8/CPU0 95970# t1  [987820352] Session started [session 1000000]
+Aug  4 03:07:05.802 xml/client/gen 0/8/CPU0 106179# t1  [987820352] XML request is dispatched to agent (392 bytes in 1 blocks)
+Aug  4 03:07:05.835 xml/client/gen 0/8/CPU0 106413# t1  [987820352] Detect IO write event [response 0]
+Aug  4 03:07:05.846 xml/client/gen 0/8/CPU0 105249# t1  [987820352] XML response is written (2797 bytes)
+Aug  4 03:07:06.148 xml/client/gen 0/8/CPU0 104553# t1  [987820352] XML request is dispatched to agent (392 bytes in 1 blocks)
+Aug  4 03:07:06.169 xml/client/gen 0/8/CPU0 104322# t1  [987820352] Detect IO write event [response 0]
+Aug  4 03:07:06.170 xml/client/gen 0/8/CPU0 105951# t1  [987820352] XML response is written (2797 bytes)
+Aug  4 03:07:11.013 xml/client/gen 0/8/CPU0 100848# t1  [987840634] Process spawned
+Aug  4 03:07:11.057 xml/client/gen 0/8/CPU0 105720# t1  [987840634] IO init done (fd_read '0', fd_write '1')
+Aug  4 03:07:11.078 xml/client/gen 0/8/CPU0 95979# t1  [987840634] Session started [session 1000000]
+Aug  4 03:07:11.242 xml/client/gen 0/8/CPU0 105489# t1  [987840634] XML request is dispatched to agent (450 bytes in 1 blocks)
+Aug  4 03:07:11.274 xml/client/gen 0/8/CPU0 106422# t1  [987840634] Detect IO write event [response 0]
+Aug  4 03:07:11.275 xml/client/gen 0/8/CPU0 103171# t1  [987840634] XML response is written (2069 bytes)
+Aug  4 03:07:11.656 xml/client/gen 0/8/CPU0 106191# t1  [987840634] XML request is dispatched to agent (522 bytes in 1 blocks)
+Aug  4 03:07:11.664 xml/client/gen 0/8/CPU0 102942# t1  [987840634] Detect IO write event [response 0]
+Aug  4 03:07:11.664 xml/client/gen 0/8/CPU0 105960# t1  [987840634] XML response is written (178 bytes)
+Aug  4 03:07:11.876 xml/client/gen 0/8/CPU0 104796# t1  [987840634] XML request is dispatched to agent (70 bytes in 1 blocks)
+Aug  4 03:07:13.752 xml/client/gen 0/8/CPU0 104334# t1  [987840634] Detect IO write event [response 0]
+Aug  4 03:07:13.752 xml/client/gen 0/8/CPU0 105729# t1  [987840634] XML response is written (168 bytes)
+Aug  4 03:07:46.265 xml/client/gen 0/8/CPU0 105031# t1  [987926846] Process spawned
+Aug  4 03:07:46.305 xml/client/gen 0/8/CPU0 101325# t1  [987926846] IO init done (fd_read '0', fd_write '1')
+Aug  4 03:07:46.328 xml/client/gen 0/8/CPU0 100398# t1  [987926846] Session started [session 1000000]
+Aug  4 03:07:46.450 xml/client/gen 0/8/CPU0 106200# t1  [987926846] XML request is dispatched to agent (392 bytes in 1 blocks)
+Aug  4 03:07:46.473 xml/client/gen 0/8/CPU0 106434# t1  [987926846] Detect IO write event [response 0]
+Aug  4 03:07:46.495 xml/client/gen 0/8/CPU0 105270# t1  [987926846] XML response is written (2797 bytes)
+Aug  4 03:07:46.819 xml/client/gen 0/8/CPU0 57657# t1  [987926846] XML request is dispatched to agent (392 bytes in 1 blocks)
+Aug  4 03:07:46.835 xml/client/gen 0/8/CPU0 104343# t1  [987926846] Detect IO write event [response 0]
+Aug  4 03:07:46.841 xml/client/gen 0/8/CPU0 105972# t1  [987926846] XML response is written (2797 bytes)
+Aug  4 03:07:56.698 xml/client/gen 0/8/CPU0 102492# t1  [987959614] Process spawned
+Aug  4 03:07:56.739 xml/client/gen 0/8/CPU0 105741# t1  [987959614] IO init done (fd_read '0', fd_write '1')
+Aug  4 03:07:56.757 xml/client/gen 0/8/CPU0 103884# t1  [987959614] Session started [session 1000000]
+Aug  4 03:07:56.925 xml/client/gen 0/8/CPU0 105510# t1  [987959614] XML request is dispatched to agent (450 bytes in 1 blocks)
+Aug  4 03:07:56.949 xml/client/gen 0/8/CPU0 106443# t1  [987959614] Detect IO write event [response 0]
+Aug  4 03:07:56.950 xml/client/gen 0/8/CPU0 101106# t1  [987959614] XML response is written (2069 bytes)
+Aug  4 03:07:57.309 xml/client/gen 0/8/CPU0 106212# t1  [987959614] XML request is dispatched to agent (522 bytes in 1 blocks)
+Aug  4 03:07:57.316 xml/client/gen 0/8/CPU0 104352# t1  [987959614] Detect IO write event [response 0]
+Aug  4 03:07:57.317 xml/client/gen 0/8/CPU0 105981# t1  [987959614] XML response is written (178 bytes)
+Aug  4 03:07:57.527 xml/client/gen 0/8/CPU0 104817# t1  [987959614] XML request is dispatched to agent (70 bytes in 1 blocks)
+Aug  4 03:07:59.369 xml/client/gen 0/8/CPU0 100878# t1  [987959614] Detect IO write event [response 0]
+Aug  4 03:07:59.370 xml/client/gen 0/8/CPU0 105750# t1  [987959614] XML response is written (168 bytes)
+Aug  4 03:08:26.613 xml/client/gen 0/8/CPU0 105052# t1  [988020858] Process spawned
+Aug  4 03:08:26.667 xml/client/gen 0/8/CPU0 102273# t1  [988020858] IO init done (fd_read '0', fd_write '1')
+Aug  4 03:08:26.693 xml/client/gen 0/8/CPU0 101578# t1  [988020858] Session started [session 1000000]
+Aug  4 03:08:26.835 xml/client/gen 0/8/CPU0 106221# t1  [988020858] XML request is dispatched to agent (392 bytes in 1 blocks)
+Aug  4 03:08:26.876 xml/client/gen 0/8/CPU0 106455# t1  [988020858] Detect IO write event [response 0]
+Aug  4 03:08:26.878 xml/client/gen 0/8/CPU0 105291# t1  [988020858] XML response is written (2797 bytes)
+Aug  4 03:08:27.189 xml/client/gen 0/8/CPU0 104826# t1  [988020858] XML request is dispatched to agent (392 bytes in 1 blocks)
+Aug  4 03:08:27.205 xml/client/gen 0/8/CPU0 104364# t1  [988020858] Detect IO write event [response 0]
+Aug  4 03:08:27.211 xml/client/gen 0/8/CPU0 105993# t1  [988020858] XML response is written (2797 bytes)
+Aug  4 03:08:42.256 xml/client/gen 0/8/CPU0 103209# t1  [988066108] Process spawned
+Aug  4 03:08:42.297 xml/client/gen 0/8/CPU0 105762# t1  [988066108] IO init done (fd_read '0', fd_write '1')
+Aug  4 03:08:42.316 xml/client/gen 0/8/CPU0 100428# t1  [988066108] Session started [session 1000000]
+Aug  4 03:08:42.482 xml/client/gen 0/8/CPU0 105531# t1  [988066108] XML request is dispatched to agent (450 bytes in 1 blocks)
+Aug  4 03:08:42.506 xml/client/gen 0/8/CPU0 106464# t1  [988066108] Detect IO write event [response 0]
+Aug  4 03:08:42.507 xml/client/gen 0/8/CPU0 103677# t1  [988066108] XML response is written (2069 bytes)
+Aug  4 03:08:42.770 xml/client/gen 0/8/CPU0 106465# t1  [988066108] XML request is dispatched to agent (522 bytes in 1 blocks)
+Aug  4 03:08:42.778 xml/client/gen 0/8/CPU0 104373# t1  [988066108] Detect IO write event [response 0]
+Aug  4 03:08:42.778 xml/client/gen 0/8/CPU0 106002# t1  [988066108] XML response is written (178 bytes)
+Aug  4 03:08:42.990 xml/client/gen 0/8/CPU0 103449# t1  [988066108] XML request is dispatched to agent (70 bytes in 1 blocks)
+Aug  4 03:08:44.788 xml/client/gen 0/8/CPU0 102522# t1  [988066108] Detect IO write event [response 0]
+Aug  4 03:08:44.788 xml/client/gen 0/8/CPU0 105771# t1  [988066108] XML response is written (168 bytes)
+Aug  4 03:09:07.386 xml/client/gen 0/8/CPU0 105073# t1  [988127548] Process spawned
+Aug  4 03:09:07.428 xml/client/gen 0/8/CPU0 102990# t1  [988127548] IO init done (fd_read '0', fd_write '1')
+Aug  4 03:09:07.447 xml/client/gen 0/8/CPU0 101136# t1  [988127548] Session started [session 1000000]
+Aug  4 03:09:07.627 xml/client/gen 0/8/CPU0 106242# t1  [988127548] XML request is dispatched to agent (392 bytes in 1 blocks)
+Aug  4 03:09:07.651 xml/client/gen 0/8/CPU0 104382# t1  [988127548] Detect IO write event [response 0]
+Aug  4 03:09:07.672 xml/client/gen 0/8/CPU0 105312# t1  [988127548] XML response is written (2797 bytes)
+Aug  4 03:09:08.017 xml/client/gen 0/8/CPU0 104847# t1  [988127548] XML request is dispatched to agent (392 bytes in 1 blocks)
+Aug  4 03:09:08.034 xml/client/gen 0/8/CPU0 100908# t1  [988127548] Detect IO write event [response 0]
+Aug  4 03:09:08.039 xml/client/gen 0/8/CPU0 106014# t1  [988127548] XML response is written (2797 bytes)
+Aug  4 03:09:28.725 xml/client/gen 0/8/CPU0 104619# t1  [988160316] Process spawned
+Aug  4 03:09:28.764 xml/client/gen 0/8/CPU0 105783# t1  [988160316] IO init done (fd_read '0', fd_write '1')
+Aug  4 03:09:28.784 xml/client/gen 0/8/CPU0 104620# t1  [988160316] Session started [session 1000000]
+Aug  4 03:09:28.949 xml/client/gen 0/8/CPU0 105552# t1  [988160316] XML request is dispatched to agent (450 bytes in 1 blocks)
+Aug  4 03:09:28.972 xml/client/gen 0/8/CPU0 106485# t1  [988160316] Detect IO write event [response 0]
+Aug  4 03:09:28.974 xml/client/gen 0/8/CPU0 104160# t1  [988160316] XML response is written (2069 bytes)
+Aug  4 03:09:29.332 xml/client/gen 0/8/CPU0 106254# t1  [988160316] XML request is dispatched to agent (522 bytes in 1 blocks)
+Aug  4 03:09:29.339 xml/client/gen 0/8/CPU0 104394# t1  [988160316] Detect IO write event [response 0]
+Aug  4 03:09:29.340 xml/client/gen 0/8/CPU0 106023# t1  [988160316] XML response is written (178 bytes)
+Aug  4 03:09:29.548 xml/client/gen 0/8/CPU0 103932# t1  [988160316] XML request is dispatched to agent (70 bytes in 1 blocks)
+Aug  4 03:09:31.482 xml/client/gen 0/8/CPU0 103239# t1  [988160316] Detect IO write event [response 0]
+Aug  4 03:09:31.482 xml/client/gen 0/8/CPU0 105792# t1  [988160316] XML response is written (168 bytes)
+Aug  4 03:09:48.079 xml/client/gen 0/8/CPU0 105094# t1  [988221758] Process spawned
+Aug  4 03:09:48.124 xml/client/gen 0/8/CPU0 106494# t1  [988221758] IO init done (fd_read '0', fd_write '1')
+Aug  4 03:09:48.146 xml/client/gen 0/8/CPU0 103707# t1  [988221758] Session started [session 1000000]
+Aug  4 03:09:48.292 xml/client/gen 0/8/CPU0 106263# t1  [988221758] XML request is dispatched to agent (392 bytes in 1 blocks)
+Aug  4 03:09:48.315 xml/client/gen 0/8/CPU0 104403# t1  [988221758] Detect IO write event [response 0]
+Aug  4 03:09:48.337 xml/client/gen 0/8/CPU0 105333# t1  [988221758] XML response is written (2797 bytes)
+Aug  4 03:09:48.641 xml/client/gen 0/8/CPU0 103479# t1  [988221758] XML request is dispatched to agent (392 bytes in 1 blocks)
+Aug  4 03:09:48.664 xml/client/gen 0/8/CPU0 102552# t1  [988221758] Detect IO write event [response 0]
+Aug  4 03:09:48.686 xml/client/gen 0/8/CPU0 106035# t1  [988221758] XML response is written (2797 bytes)
+Aug  4 03:10:14.724 xml/client/gen 0/8/CPU0 104640# t1  [988279102] Process spawned
+Aug  4 03:10:14.764 xml/client/gen 0/8/CPU0 105804# t1  [988279102] IO init done (fd_read '0', fd_write '1')
+Aug  4 03:10:14.789 xml/client/gen 0/8/CPU0 101166# t1  [988279102] Session started [session 1000000]
+Aug  4 03:10:14.949 xml/client/gen 0/8/CPU0 105573# t1  [988279102] XML request is dispatched to agent (450 bytes in 1 blocks)
+Aug  4 03:10:14.981 xml/client/gen 0/8/CPU0 106506# t1  [988279102] Detect IO write event [response 0]
+Aug  4 03:10:14.982 xml/client/gen 0/8/CPU0 104181# t1  [988279102] XML response is written (2069 bytes)
+Aug  4 03:10:15.235 xml/client/gen 0/8/CPU0 106275# t1  [988279102] XML request is dispatched to agent (522 bytes in 1 blocks)
+Aug  4 03:10:15.243 xml/client/gen 0/8/CPU0 102561# t1  [988279102] Detect IO write event [response 0]
+Aug  4 03:10:15.243 xml/client/gen 0/8/CPU0 106044# t1  [988279102] XML response is written (178 bytes)
+Aug  4 03:10:15.454 xml/client/gen 0/8/CPU0 103953# t1  [988279102] XML request is dispatched to agent (70 bytes in 1 blocks)
+Aug  4 03:10:17.340 xml/client/gen 0/8/CPU0 104649# t1  [988279102] Detect IO write event [response 0]
+Aug  4 03:10:17.340 xml/client/gen 0/8/CPU0 105813# t1  [988279102] XML response is written (168 bytes)
+Aug  4 03:10:28.288 xml/client/gen 0/8/CPU0 105115# t1  [988311870] Process spawned
+Aug  4 03:10:28.347 xml/client/gen 0/8/CPU0 106515# t1  [988311870] IO init done (fd_read '0', fd_write '1')
+Aug  4 03:10:28.374 xml/client/gen 0/8/CPU0 104190# t1  [988311870] Session started [session 1000000]
+Aug  4 03:10:28.514 xml/client/gen 0/8/CPU0 106284# t1  [988311870] XML request is dispatched to agent (392 bytes in 1 blocks)
+Aug  4 03:10:28.548 xml/client/gen 0/8/CPU0 104424# t1  [988311870] Detect IO write event [response 0]
+Aug  4 03:10:28.558 xml/client/gen 0/8/CPU0 105354# t1  [988311870] XML response is written (2797 bytes)
+Aug  4 03:10:28.872 xml/client/gen 0/8/CPU0 103962# t1  [988311870] XML request is dispatched to agent (392 bytes in 1 blocks)
+Aug  4 03:10:28.894 xml/client/gen 0/8/CPU0 104658# t1  [988311870] Detect IO write event [response 0]
+Aug  4 03:10:28.917 xml/client/gen 0/8/CPU0 106056# t1  [988311870] XML response is written (2797 bytes)
+Aug  4 03:11:00.969 xml/client/gen 0/8/CPU0 98401# t1  [988385597] Process spawned
+Aug  4 03:11:01.010 xml/client/gen 0/8/CPU0 105825# t1  [988385597] IO init done (fd_read '0', fd_write '1')
+Aug  4 03:11:01.033 xml/client/gen 0/8/CPU0 103737# t1  [988385597] Session started [session 1000000]
+Aug  4 03:11:01.196 xml/client/gen 0/8/CPU0 105594# t1  [988385597] XML request is dispatched to agent (450 bytes in 1 blocks)
+Aug  4 03:11:01.220 xml/client/gen 0/8/CPU0 106527# t1  [988385597] Detect IO write event [response 0]
+Aug  4 03:11:01.221 xml/client/gen 0/8/CPU0 105595# t1  [988385597] XML response is written (2069 bytes)
+Aug  4 03:11:01.581 xml/client/gen 0/8/CPU0 106296# t1  [988385597] XML request is dispatched to agent (522 bytes in 1 blocks)
+Aug  4 03:11:01.588 xml/client/gen 0/8/CPU0 102582# t1  [988385597] Detect IO write event [response 0]
+Aug  4 03:11:01.588 xml/client/gen 0/8/CPU0 106065# t1  [988385597] XML response is written (178 bytes)
+Aug  4 03:11:01.800 xml/client/gen 0/8/CPU0 103974# t1  [988385597] XML request is dispatched to agent (70 bytes in 1 blocks)
+Aug  4 03:11:04.205 xml/client/gen 0/8/CPU0 104670# t1  [988385597] Detect IO write event [response 0]
+Aug  4 03:11:04.205 xml/client/gen 0/8/CPU0 105834# t1  [988385597] XML response is written (168 bytes)
+Aug  4 03:11:09.099 xml/client/gen 0/8/CPU0 105136# t1  [988418170] Process spawned
+Aug  4 03:11:09.141 xml/client/gen 0/8/CPU0 106536# t1  [988418170] IO init done (fd_read '0', fd_write '1')
+Aug  4 03:11:09.159 xml/client/gen 0/8/CPU0 104211# t1  [988418170] Session started [session 1000000]
+Aug  4 03:11:09.286 xml/client/gen 0/8/CPU0 106305# t1  [988418170] XML request is dispatched to agent (392 bytes in 1 blocks)
+Aug  4 03:11:09.307 xml/client/gen 0/8/CPU0 102591# t1  [988418170] Detect IO write event [response 0]
+Aug  4 03:11:09.330 xml/client/gen 0/8/CPU0 106306# t1  [988418170] XML response is written (2797 bytes)
+Aug  4 03:11:09.653 xml/client/gen 0/8/CPU0 103983# t1  [988418170] XML request is dispatched to agent (392 bytes in 1 blocks)
+Aug  4 03:11:09.670 xml/client/gen 0/8/CPU0 105376# t1  [988418170] Detect IO write event [response 0]
+Aug  4 03:11:09.675 xml/client/gen 0/8/CPU0 106077# t1  [988418170] XML response is written (2797 bytes)
+Aug  4 03:11:52.869 xml/client/gen 0/8/CPU0 102364# t1  [988524862] Process spawned
+Aug  4 03:11:52.896 xml/client/gen 0/8/CPU0 104220# t1  [988524864] Process spawned
+Aug  4 03:11:52.929 xml/client/gen 0/8/CPU0 105615# t1  [988524862] IO init done (fd_read '0', fd_write '1')
+Aug  4 03:11:52.962 xml/client/gen 0/8/CPU0 106548# t1  [988524862] Session started [session 1000000]
+Aug  4 03:11:52.966 xml/client/gen 0/8/CPU0 105616# t1  [988524864] IO init done (fd_read '0', fd_write '1')
+Aug  4 03:11:52.989 xml/client/gen 0/8/CPU0 103992# t1  [988524864] Session started [session 1000001]
+Aug  4 03:11:53.116 xml/client/gen 0/8/CPU0 104688# t1  [988524864] XML request is dispatched to agent (392 bytes in 1 blocks)
+Aug  4 03:11:53.139 xml/client/gen 0/8/CPU0 106086# t1  [988524864] Detect IO write event [response 0]
+Aug  4 03:11:53.140 xml/client/gen 0/8/CPU0 100518# t1  [988524862] XML request is dispatched to agent (450 bytes in 1 blocks)
+Aug  4 03:11:53.159 xml/client/gen 0/8/CPU0 98431# t1  [988524864] XML response is written (2797 bytes)
+Aug  4 03:11:53.166 xml/client/gen 0/8/CPU0 105855# t1  [988524862] Detect IO write event [response 0]
+Aug  4 03:11:53.167 xml/client/gen 0/8/CPU0 103767# t1  [988524862] XML response is written (2069 bytes)
+Aug  4 03:11:53.403 xml/client/gen 0/8/CPU0 105157# t1  [988524862] XML request is dispatched to agent (522 bytes in 1 blocks)
+Aug  4 03:11:53.414 xml/client/gen 0/8/CPU0 106557# t1  [988524862] Detect IO write event [response 0]
+Aug  4 03:11:53.414 xml/client/gen 0/8/CPU0 104232# t1  [988524862] XML response is written (178 bytes)
+Aug  4 03:11:53.469 xml/client/gen 0/8/CPU0 106326# t1  [988524864] XML request is dispatched to agent (392 bytes in 1 blocks)
+Aug  4 03:11:53.487 xml/client/gen 0/8/CPU0 102612# t1  [988524864] Detect IO write event [response 0]
+Aug  4 03:11:53.491 xml/client/gen 0/8/CPU0 105396# t1  [988524864] XML response is written (2797 bytes)
+Aug  4 03:11:53.621 xml/client/gen 0/8/CPU0 100063# t1  [988524862] XML request is dispatched to agent (70 bytes in 1 blocks)
+Aug  4 03:11:55.384 xml/client/gen 0/8/CPU0 105397# t1  [988524862] Detect IO write event [response 0]
+Aug  4 03:11:55.384 xml/client/gen 0/8/CPU0 106098# t1  [988524862] XML response is written (168 bytes)
+Aug  4 03:12:33.837 xml/client/gen 0/8/CPU0 85917# t1  [988623166] Process spawned
+Aug  4 03:12:33.888 xml/client/gen 0/8/CPU0 105867# t1  [988623166] IO init done (fd_read '0', fd_write '1')
+Aug  4 03:12:33.914 xml/client/gen 0/8/CPU0 104241# t1  [988623166] Session started [session 1000000]
+Aug  4 03:12:34.035 xml/client/gen 0/8/CPU0 106335# t1  [988623166] XML request is dispatched to agent (392 bytes in 1 blocks)
+Aug  4 03:12:34.064 xml/client/gen 0/8/CPU0 106569# t1  [988623166] Detect IO write event [response 0]
+Aug  4 03:12:34.078 xml/client/gen 0/8/CPU0 105637# t1  [988623166] XML response is written (2797 bytes)
+Aug  4 03:12:34.403 xml/client/gen 0/8/CPU0 104013# t1  [988623166] XML request is dispatched to agent (392 bytes in 1 blocks)
+Aug  4 03:12:34.421 xml/client/gen 0/8/CPU0 104709# t1  [988623166] Detect IO write event [response 0]
+Aug  4 03:12:34.425 xml/client/gen 0/8/CPU0 106107# t1  [988623166] XML response is written (2797 bytes)
+Aug  4 03:12:38.656 xml/client/gen 0/8/CPU0 99844# t1  [988643644] Process spawned
+Aug  4 03:12:38.701 xml/client/gen 0/8/CPU0 105876# t1  [988643644] IO init done (fd_read '0', fd_write '1')
+Aug  4 03:12:38.720 xml/client/gen 0/8/CPU0 104250# t1  [988643644] Session started [session 1000000]
+Aug  4 03:12:38.886 xml/client/gen 0/8/CPU0 105178# t1  [988643644] XML request is dispatched to agent (450 bytes in 1 blocks)
+Aug  4 03:12:38.910 xml/client/gen 0/8/CPU0 106578# t1  [988643644] Detect IO write event [response 0]
+Aug  4 03:12:38.911 xml/client/gen 0/8/CPU0 97761# t1  [988643644] XML response is written (2069 bytes)
+Aug  4 03:12:39.175 xml/client/gen 0/8/CPU0 106347# t1  [988643644] XML request is dispatched to agent (522 bytes in 1 blocks)
+Aug  4 03:12:39.185 xml/client/gen 0/8/CPU0 104718# t1  [988643644] Detect IO write event [response 0]
+Aug  4 03:12:39.185 xml/client/gen 0/8/CPU0 105417# t1  [988643644] XML response is written (178 bytes)
+Aug  4 03:12:39.395 xml/client/gen 0/8/CPU0 100548# t1  [988643644] XML request is dispatched to agent (70 bytes in 1 blocks)
+Aug  4 03:12:41.367 xml/client/gen 0/8/CPU0 105418# t1  [988643644] Detect IO write event [response 0]
+Aug  4 03:12:41.367 xml/client/gen 0/8/CPU0 106119# t1  [988643644] XML response is written (168 bytes)
+RP/0/8/CPU0:brhal305me1#exit
+Connection to brhal305me1.noc.att.com closed by foreign host.
+aquila:cisco>xit
+ex-bash: xit: command not found
+aquila:cisco>exit
+logout
+Connection to aquila-att closed.
+]0;ssearch@att-net:~[ssearch@att-net ~]$ exit
+logout
+Connection to att-net.cisco.com closed.
+ssearch@ssearch-mac XML_timeout_captures$ exit
+
+Script done on Sat Aug  3 21:13:12 2013

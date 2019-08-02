@@ -1,0 +1,85 @@
+::cisco::eem::event_register_syslog pattern "ETHPORT-3-IF_XCVR_ALARM: Interface.*High Tx Power Alarm" maxrun 180
+
+#------------------------------------------------------------------
+# 7k_TxPowerCheck EEM Script
+#
+# May 2016 - Scott Search (ssearch@cisco.com)
+#
+# This EEM script will be triggered off the following syslog message:
+#     "%ETHPORT-3-IF_XCVR_ALARM: Interface Ethernet4/3, High Tx Power Alarm"
+#
+# Description:
+#   This EEM script is triggered off the above syslog message.  After the script is triggered the script will
+#   check every interface TxPower High Alarm value.  If the value is >= 5.29 the script will generate its own
+#   syslog alarm with the interface name that is above this threshold.
+#
+# Copyright (c) 2016 by cisco Systems, Inc.
+# All rights reserved.
+#------------------------------------------------------------------
+#
+namespace import ::cisco::eem::*
+namespace import ::cisco::lib::*
+ 
+
+#################################
+# PROCs:
+##################################
+proc get_Tx_values {output node} {
+  global threshold
+  set iface ""
+  set TxPower ""
+  set msg ""
+
+  foreach line [split $output "\n"] {
+    regsub -all {[ \r\t\n]+} $line " " line
+    regsub -all {^[ ]} $line "" line
+    regsub -all {[ ]$} $line "" line
+
+    if {[regexp {^\w+.*\d+\/\d+$} $line]} {
+      regexp {^(\w+.*\d+\/\d+)} $line - iface
+    }
+
+    if {[regexp {^Tx Power .* dBm$} $line]} {
+      if {[regexp {\-\-} $line]} {
+        regexp {dBm \-\- (\d+\.\d+) dBm .* dBm$} $line - TxPower
+      } else {
+        regexp {dBm (\d+\.\d+) dBm .* dBm$} $line - TxPower
+      }
+    }
+  }
+
+  if {$TxPower >= $threshold} {
+    set msg "EEM 7k_TxPowerCheck ($node) ALARM: interface $iface TxPower High Alarm above threshold ($threshold) at $TxPower"
+    send_syslog $msg 1
+  }
+} ;# get_Tx_values
+
+proc send_syslog {msg repeat} {
+  set kont 0
+
+  while {$kont < $repeat} {
+    action_syslog msg $msg
+    incr kont
+  }
+} ;# send_syslog
+
+
+##################################
+# MAIN/main
+##################################
+global threshold 5.29
+set node [info hostname]
+
+if [catch {cli_open} result] {
+  error $result $errorInfo
+} else {
+  array set cli $result
+}
+
+set cmd "show interface transceiver details | inc \"ther|Tx Power\""
+if [catch {cli_exec $cli(fd) $cmd} result] {
+  error $result $errorInfo
+}
+
+get_Tx_values $result $node
+

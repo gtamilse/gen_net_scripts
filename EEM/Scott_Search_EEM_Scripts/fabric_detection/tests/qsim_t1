@@ -1,0 +1,17 @@
+event manager environment _output_log eem_fabric_detect.log
+event manager environment _storage_location harddisk:/eem
+event manager directory user policy harddisk:/eem
+event manager policy bcc.tcl username lab type user
+event manager policy fab_detect.tcl username lab type user
+!
+username lab
+ group root-lr
+ group netadmin
+ group operator
+ group sysadmin
+ group root-system
+ group serviceadmin
+ group cisco-support
+ secret 5 $1$fEwV$26Q05CHvERNNsdG6typ87/
+!
+aaa authorization eventmanager default local

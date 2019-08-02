@@ -1,0 +1,38 @@
+#!/usr/bin/tclsh
+
+set line "DIAG-SP-3-MAJOR: Module 9: Online Diagnostics detected a Major Error"
+
+set module ""
+puts ""
+
+regexp {Module (\d+): Online} $line - module
+
+puts "module: $module"
+
+puts ""
+
+
+
+#foreach line [split $syslog "\n"] {
+#  regsub -all {[ \r\t\n]+} $line " " line
+#  regsub -all {^[ ]} $line "" line
+#  regsub -all {[ ]$} $line "" line
+#
+#  if {[regexp "^Active Location =" $line]} {
+#    regexp {^Active Location = slot (\d+)} $line - active
+#    puts "active: $active"
+#  }
+#
+##  if {[regexp "VQI\\($update_VQI" $line]} {
+##    puts "LINE: $line"
+##    regexp {^LTL\((0x.*?)\)\,} $line - LTL
+##    puts "LTL: $LTL"
+##    lappend LTLs $LTL
+##  }
+#}
+#
+#puts ""
+
+exit
+
+

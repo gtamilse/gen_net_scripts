@@ -1,0 +1,50 @@
+#!/usr/bin/tclsh
+
+set output "RP/0/RP0/CPU0:cgcil21crs#show interfaces location 2/0/cpu0 | inc line protocol is up  
+HundredGigE2/0/0/0 is up, line protocol is up 
+HundredGigE2/0/0/3 is up, line protocol is up"
+
+set iface ""
+set interfaces ""
+
+puts ""
+
+foreach line [split $output "\n"] {
+  regsub -all {[ \r\t\n]+} $line " " line
+  regsub -all {^[ ]} $line "" line
+  regsub -all {[ ]$} $line "" line
+
+  if {[regexp {up.*up$} $line]} {
+    set iface [lindex [split $line " "] 0]
+    lappend interfaces $iface
+  }
+}
+
+
+foreach CMD [split $interfaces] {
+  puts "iface: $CMD"
+}
+
+puts ""
+
+
+
+#proc get_locations {output} {
+#  set loc ""
+#  set locations ""
+#
+#  foreach line [split $output "\n"] {
+#    regsub -all {[ \r\t\n]+} $line " " line
+#    regsub -all {^[ ]} $line "" line
+#    regsub -all {[ ]$} $line "" line
+#
+#    if {[regexp {^\S+\d+\/\d+\/\d+\/\d+.*} $line]} {
+#      regexp {^\S+\d+\/(\d+)\/\d+\/\d+.*} $line - loc
+#      lappend locations $loc
+#    }
+#  }
+#
+#  set locations [lsort -unique $locations]
+#
+#  return $locations
+#} ;# get_locations

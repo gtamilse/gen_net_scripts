@@ -1,0 +1,52 @@
+
+Step #1: Create directory eem
+
+mkdir disk0:/eem
+mkdir disk0:/eem location 0/8/CPU0
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Step #2: Copy debug_ssh_server.tcl script to eem directory.
+
+copy ftp://ssearch@135.16.32.148/debug_ssh_server.tcl disk0:/eem
+copy disk0:/eem/debug_ssh_server.tcl location 0/7/CPU0 disk0:/eem location 0/8/CPU0
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Step #3: Configure the necessary configuration need for the EEM script to work and commit.
+
+event manager environment _debug_ssh_server_storage_location disk0:/CommitArchive
+event manager directory user policy disk0:/eem
+!
+aaa authorization exec eem-user local
+aaa authorization commands eem-user none
+aaa authorization eventmanager default local
+aaa authorization eventmanager eem-user local
+aaa authentication login eem-user local
+!
+line template EEM
+ authorization exec eem-user
+ authorization commands eem-user
+!
+vty-pool eem 100 120 line-template EEM
+!
+username eem-user
+ group root-system
+ group cisco-support
+ no password
+!
+commit
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Step #4: Register the EEM script using the following command and commit.
+
+event manager policy debug_ssh_server.tcl username eem-user type user
+commit
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Lastly, wait for the following syslog event:
+
+SSHD_[65849]: %SECURITY-SSHD-3-ERR_GENERAL : Failed to allocate pty
+

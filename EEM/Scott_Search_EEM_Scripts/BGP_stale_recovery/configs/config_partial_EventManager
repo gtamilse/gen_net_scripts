@@ -1,0 +1,3 @@
+event manager environment _BGP_stale_recovery_storage_location harddisk:/eem
+!
+event manager policy BGP_stale_recovery.tcl username cisco type user

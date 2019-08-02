@@ -1,0 +1,64 @@
+RP/0/RP0/CPU0:rmonc401cts#show run router static
+router static
+ maximum path ipv4 10000
+ address-family ipv4 unicast
+  12.83.49.81/32 12.83.67.106 tag 333
+  12.83.49.81/32 12.83.67.110 tag 333
+  151.164.255.113/32 12.83.103.4
+  192.0.2.1/32 Null0
+ !
+ address-family ipv6 unicast
+  2602:300::/28 2001:506:2001:fff:c534:369:0:2
+  2602:300::/28 2001:506:2001:fff:c534:36d:0:2
+  2602:300:c533:1510::/60 Null0
+  2602:300:c533:1510::/128 2001:506:2001:fff:c534:369:0:2
+  2602:300:c533:1510::/128 2001:506:2001:fff:c534:36d:0:2
+  2602:300:c533:1510::27/128 2001:506:2001:fff:c534:369:0:2
+  2602:300:c533:1510::29/128 2001:506:2001:fff:c534:36d:0:2
+ !
+!
+
+RP/0/RP0/CPU0:rmonc401cts#show run interface serviceapp 41
+interface ServiceApp41
+ ipv4 address 12.83.67.105 255.255.255.252
+ load-interval 30
+ service cgn cgse1 service-type tunnel v6rd
+ logging events link-status
+!
+
+RP/0/RP0/CPU0:rmonc401cts#show run interface serviceapp 42
+interface ServiceApp42
+ ipv4 address 12.83.67.109 255.255.255.252
+ load-interval 30
+ service cgn cgse2 service-type tunnel v6rd
+ logging events link-status
+!
+
+RP/0/RP0/CPU0:rmonc401cts#show run interface serviceapp 61
+interface ServiceApp61
+ ipv6 address 2001:506:2001:fff:c534:369:0:1/126
+ load-interval 30
+ service cgn cgse1 service-type tunnel v6rd
+ logging events link-status
+!
+
+RP/0/RP0/CPU0:rmonc401cts#show run interface serviceapp 62
+interface ServiceApp62
+ ipv6 address 2001:506:2001:fff:c534:36d:0:1/126
+ load-interval 30
+ service cgn cgse2 service-type tunnel v6rd
+ logging events link-status
+!
+
+RP/0/RP0/CPU0:rmonc401cts#show run interface serviceinfra 1
+interface ServiceInfra1
+ ipv4 address 151.164.38.1 255.255.255.252
+ service-location 0/6/CPU0
+ logging events link-status
+!
+
+RP/0/RP0/CPU0:rmonc401cts#show run interface serviceinfra 2
+interface ServiceInfra2
+ ipv4 address 151.164.41.1 255.255.255.252
+ service-location 0/14/CPU0
+ logging events link-status

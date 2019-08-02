@@ -1,0 +1,69 @@
+#!/usr/bin/tclsh
+
+set show_cmds ""
+lappend show_cmds "show run"
+lappend show_cmds "show ver"
+lappend show_cmds "show brief"
+lappend show_cmds "show descr"
+lappend show_cmds "show inter"
+
+lappend show_cmds "show plat"
+lappend show_cmds "show diag"
+
+puts ""
+puts "show_cmds:\n$show_cmds\n"
+
+
+puts ""
+puts ""
+
+foreach cmd $show_cmds {
+  puts "CMD: $cmd"
+}
+
+puts ""
+
+
+foreach cmd [split $show_cmds "|"] {
+  # Trim up the cmd remove extra space/tabs etc:
+  regsub -all {[ \r\t\n]+} $cmd " " cmd
+  # Remove any leading white space:
+  regsub -all {^[ ]} $cmd "" cmd
+
+  puts "Run CMD: $cmd"
+}
+
+
+set location "0/4/cpu0"
+set cmds ""
+
+puts ""
+puts ""
+puts ""
+
+lappend cmds "tem len 0"
+lappend cmds "term exec prompt timestamp"
+lappend cmds "show packet-memory inuse summary location $location"
+lappend cmds "show spp buffer location $location "
+lappend cmds "show spp client detail location $location  | inc allocator"
+lappend cmds "show process block location $location"
+
+# Run static commands listed above
+#foreach CMD [split $cmds] {
+#}
+#foreach CMD [split $cmds "|"] {
+#  # Trim up the cmd remove extra space/tabs etc:
+#  regsub -all {[ \r\t\n]+} $CMD " " CMD
+#  # Remove any leading white space:
+#  regsub -all {^[ ]} $CMD "" CMD
+#
+#  puts "CMD: $CMD"
+#}
+
+foreach cmd $cmds {
+  puts "CMD: $cmd"
+}
+
+puts ""
+puts ""
+

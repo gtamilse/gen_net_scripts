@@ -1,0 +1,122 @@
+RP/1/RP0/CPU0:JC22CRS#run echo "test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally $
+
+RP/1/RP0/CPU0:May 11 15:28:41.977 : exec[65821]: Add remote addr attribute - 192.205.220.50 (length 14)
+RP/1/RP0/CPU0:May 11 15:28:41.979 : exec[65821]: Authorization message composed successfully
+RP/1/RP0/CPU0:May 11 15:28:41.980 : exec[65821]: Sending authorization request message to server
+RP/1/RP0/CPU0:May 11 15:28:42.073 : exec[65821]: Interpreting the authorization reply
+RP/1/RP0/CPU0:May 11 15:28:42.074 : exec[65821]: Reply buffer length: 600 - 24 = 576 bytes
+RP/1/RP0/CPU0:May 11 15:28:42.074 : exec[65821]: Unpacking the AV list from the reply data
+RP/1/RP0/CPU0:May 11 15:28:42.075 : exec[65821]: [Authorization reply attributes] avpair list 'Authorization Request' count 13      AAA_SERVICE_TYPE_ATTR (262/4) * cmd      AAA_AUTHEN_OPTION_ATTR (43/4) * <Unknown type value>      AAA_METHODLIST_ATTR (17/8) * default (length 8)      AAA_USERNAME_ATTR (257/8) * csco-se (length 8) AAA_AUTHEN_METHOD_ATTR (39/4) * tacacs+      AAA_TTYNAME_ATTR (20/10) * /dev/vty1 (length 10)      AAA_REMOTE_ADDR_ATTR (37/14) * 192.205.220.50AT (length 14)      AAA_PASSWORD_ATTR (258/9) * *      AAA_CMD_ATTR (36/146) * run echo "test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled End of test" > /dev/syslog       AAA_SESSIONID_ATTR (26/4) * 239674571      AAA_SEQNUM_ATTR (27/4) * 1  AAA_STATUS_ATTR (2/4) * PASS      AAA_TASKMAP_ATTR (44/72) * 0
+RP/1/RP0/CPU0:May 11 15:28:42.075 : exec[65821]: Authorization reply had 0 attributes
+RP/1/RP0/CPU0:May 11 15:28:42.076 : exec[65821]: Returning 0 attributes
+RP/1/RP0/CPU0:May 11 15:28:42.076 : exec[65821]: Extracting results from the server's reply
+RP/1/RP0/CPU0:May 11 15:28:42.077 : exec[65821]: Authorization status returned by server: PASS
+RP/1/RP0/CPU0:May 11 15:28:42.077 : exec[65821]: Now going to update user idle time based on authorization
+RP/1/RP0/CPU0:May 11 15:28:42.078 : exec[65821]: User's idletime is not configured 0
+RP/1/RP0/CPU0:May 11 15:28:42.127 : exec[65821]: Add remote addr attribute - 192.205.220.50 (length 14)
+Tue May 11 15:28:42.205 UTC
+RP/1/RP0/CPU0:May 11 15:28:42.335 : syslog_dev[83]: syslog_dev: test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled End of test
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#RP/1/RP0/CPU0:May 11 15:28:46.346 : exec[65823]: Authorization not configured, for this line at ________/________/vty/100/cfg/aaa/authorization/exec, using 'default' methodlist
+RP/1/RP0/CPU0:May 11 15:28:46.403 : exec[65823]: item_name = ________/________/vty/100/state/connection/host
+RP/1/RP0/CPU0:May 11 15:28:46.413 : exec[65823]: Looking host address in ________/________/vty/100/state/connection/host
+RP/1/RP0/CPU0:May 11 15:28:46.460 : exec[65823]: Looking host family in ________/________/vty/100/state/connection/family
+RP/1/RP0/CPU0:May 11 15:28:46.495 : exec[65823]: Got remote address 192.168.116.8 (length 13)
+RP/1/RP0/CPU0:May 11 15:28:46.503 : exec[65823]: Add remote addr attribute - 192.168.116.8 (length 13)
+RP/1/RP0/CPU0:May 11 15:28:46.504 : exec[65823]: Authorization message composed successfully
+RP/1/RP0/CPU0:May 11 15:28:46.505 : exec[65823]: Sending authorization request message to server
+RP/1/RP0/CPU0:May 11 15:28:46.630 : exec[65823]: Interpreting the authorization reply
+RP/1/RP0/CPU0:May 11 15:28:46.634 : exec[65823]: Reply buffer length: 468 - 24 = 444 bytes
+RP/1/RP0/CPU0:May 11 15:28:46.635 : exec[65823]: Unpacking the AV list from the reply data
+RP/1/RP0/CPU0:May 11 15:28:46.637 : exec[65823]: [Authorization reply attributes] avpair list 'Authorization Request' count 13      AAA_SERVICE_TYPE_ATTR (262/4) * exec      AAA_TYPE_ATTR (3/4) * AUTHOR SHELL      AAA_AUTHEN_OPTION_ATTR (43/4) * <Unknown type value>      AAA_METHODLIST_ATTR (17/8) * default (length 8)      AAA_USERNAME_ATTR (257/8) * teamops (length 8)      AAA_AUTHEN_METHOD_ATTR (39/4) * tacacs+      AAA_TTYNAME_ATTR (20/12) * /dev/vty100 (length 12)      AAA_REMOTE_ADDR_ATTR (37/13) * 192.168.116.8 (length 13)      AAA_SESSIONID_ATTR (26/4) * 1438459085      AAA_SEQNUM_ATTR (27/4) * 1      AAA_STATUS_ATTR (2/4) * FAIL      AAA_USERGROUPS_ATTR (50/27) * root-system, cisco-support (length 27)      AAA_TASKMAP_ATTR (44/72) [out] * -268435457
+RP/1/RP0/CPU0:May 11 15:28:46.639 : exec[65823]: Authorization reply had 1 attributes
+RP/1/RP0/CPU0:May 11 15:28:46.640 : exec[65823]: Returning 1 attributes
+RP/1/RP0/CPU0:May 11 15:28:46.642 : exec[65823]: Extracting results from the server's reply
+RP/1/RP0/CPU0:May 11 15:28:46.642 : exec[65823]: Authorization status returned by server: FAIL
+RP/1/RP0/CPU0:May 11 15:28:46.643 : exec[65823]: Now going to update user idle time based on authorization
+RP/1/RP0/CPU0:May 11 15:28:46.644 : exec[65823]: User's idletime is not configured 0
+RP/1/RP0/CPU0:May 11 15:28:46.645 : exec[65823]: Authorization request for getting taskmap failed, status FAIL, msg
+RP/1/RP0/CPU0:May 11 15:28:49.054 : adminexec[65824]: item_name = ________/________/vty/100/state/connection/host
+RP/1/RP0/CPU0:May 11 15:28:49.081 : adminexec[65824]: Looking host address in ________/________/vty/100/state/connection/host
+RP/1/RP0/CPU0:May 11 15:28:49.111 : adminexec[65824]: Looking host family in ________/________/vty/100/state/connection/family
+RP/1/RP0/CPU0:May 11 15:28:49.149 : adminexec[65824]: Got remote address 192.168.116.8 (length 13)
+RP/1/RP0/CPU0:May 11 15:28:49.155 : adminexec[65824]: Add remote addr attribute - 192.168.116.8 (length 13)
+RP/1/RP0/CPU0:May 11 15:28:50.671 : adminexec[65824]: Authorization not configured, for this line at ________/________/vty/100/cfg/aaa/authorization/commands, using 'default' methodlist
+RP/1/RP0/CPU0:May 11 15:28:50.749 : adminexec[65824]: Add remote addr attribute - 192.168.116.8 (length 13)
+RP/1/RP0/CPU0:May 11 15:28:50.751 : adminexec[65824]: Authorization message composed successfully
+RP/1/RP0/CPU0:May 11 15:28:50.753 : adminexec[65824]: Sending authorization request message to server
+RP/1/RP0/CPU0:May 11 15:28:50.846 : adminexec[65824]: Interpreting the authorization reply
+RP/1/RP0/CPU0:May 11 15:28:50.849 : adminexec[65824]: Reply buffer length: 504 - 24 = 480 bytes
+RP/1/RP0/CPU0:May 11 15:28:50.851 : adminexec[65824]: Unpacking the AV list from the reply data
+RP/1/RP0/CPU0:May 11 15:28:50.854 : adminexec[65824]: [Authorization reply attributes] avpair list 'Authorization Request' count 13      AAA_SERVICE_TYPE_ATTR (262/4) * cmd      AAA_AUTHEN_OPTION_ATTR (43/4) * <Unknown type value>      AAA_METHODLIST_ATTR (17/8) * default (length 8)      AAA_USERNAME_ATTR (257/8) * teamops (length 8)      AAA_AUTHEN_METHOD_ATTR (39/4) * tacacs+      AAA_TTYNAME_ATTR (20/12) * /dev/vty100 (length 12)      AAA_REMOTE_ADDR_ATTR (37/13) * 192.168.116.8 (length 13)      AAA_CMD_ATTR (36/35) * show controllers fabric plane all       AAA_SESSIONID_ATTR (26/4) * 1467491535      AAA_SEQNUM_ATTR (27/4) * 1      AAA_STATUS_ATTR (2/4) * FAIL      AAA_USERGROUPS_ATTR (50/27) * root-system, cisco-support (length 27)      AAA_TASKMAP_ATTR (44/72) * -268435457
+RP/1/RP0/CPU0:May 11 15:28:50.854 : adminexec[65824]: Authorization reply had 0 attributes
+RP/1/RP0/CPU0:May 11 15:28:50.855 : adminexec[65824]: Returning 0 attributes
+RP/1/RP0/CPU0:May 11 15:28:50.856 : adminexec[65824]: Extracting results from the server's reply
+RP/1/RP0/CPU0:May 11 15:28:50.856 : adminexec[65824]: Authorization status returned by server: FAIL
+RP/1/RP0/CPU0:May 11 15:28:50.857 : adminexec[65824]: Now going to update user idle time based on authorization
+RP/1/RP0/CPU0:May 11 15:28:50.857 : adminexec[65824]: User's idletime is not configured 0
+RP/1/RP0/CPU0:May 11 15:28:52.448 : adminexec[65824]: Authorization not configured, for this line at ________/________/vty/100/cfg/aaa/authorization/commands, using 'default' methodlist
+RP/1/RP0/CPU0:May 11 15:28:52.467 : adminexec[65824]: Add remote addr attribute - 192.168.116.8 (length 13)
+RP/1/RP0/CPU0:May 11 15:28:52.467 : adminexec[65824]: Authorization message composed successfully
+RP/1/RP0/CPU0:May 11 15:28:52.469 : adminexec[65824]: Sending authorization request message to server
+RP/1/RP0/CPU0:May 11 15:28:52.556 : adminexec[65824]: Interpreting the authorization reply
+RP/1/RP0/CPU0:May 11 15:28:52.557 : adminexec[65824]: Reply buffer length: 488 - 24 = 464 bytes
+RP/1/RP0/CPU0:May 11 15:28:52.558 : adminexec[65824]: Unpacking the AV list from the reply data
+RP/1/RP0/CPU0:May 11 15:28:52.558 : adminexec[65824]: [Authorization reply attributes] avpair list 'Authorization Request' count 13      AAA_SERVICE_TYPE_ATTR (262/4) * cmd      AAA_AUTHEN_OPTION_ATTR (43/4) * <Unknown type value>      AAA_METHODLIST_ATTR (17/8) * default (length 8)      AAA_USERNAME_ATTR (257/8) * teamops (length 8)      AAA_AUTHEN_METHOD_ATTR (39/4) * tacacs+      AAA_TTYNAME_ATTR (20/12) * /dev/vty100 (length 12)      AAA_REMOTE_ADDR_ATTR (37/13) * 192.168.116.800 (length 13)      AAA_CMD_ATTR (36/20) * configure terminal       AAA_SESSIONID_ATTR (26/4) * 793060560      AAA_SEQNUM_ATTR (27/4) * 1      AAA_STATUS_ATTR (2/4) * FAIL      AAA_USERGROUPS_ATTR (50/27) * root-system, cisco-support (length 27)      AAA_TASKMAP_ATTR (44/72) * -268435457
+RP/1/RP0/CPU0:May 11 15:28:52.558 : adminexec[65824]: Authorization reply had 0 attributes
+RP/1/RP0/CPU0:May 11 15:28:52.559 : adminexec[65824]: Returning 0 attributes
+RP/1/RP0/CPU0:May 11 15:28:52.559 : adminexec[65824]: Extracting results from the server's reply
+RP/1/RP0/CPU0:May 11 15:28:52.559 : adminexec[65824]: Authorization status returned by server: FAIL
+RP/1/RP0/CPU0:May 11 15:28:52.560 : adminexec[65824]: Now going to update user idle time based on authorization
+RP/1/RP0/CPU0:May 11 15:28:52.560 : adminexec[65824]: User's idletime is not configured 0
+RP/1/RP0/CPU0:May 11 15:28:54.341 : adminexec[65824]: Add remote addr attribute - 192.168.116.8 (length 13)
+ 
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#RP/1/RP0/CPU0:May 11 15:28:55.556 : fab_detect.tcl[65822]: EEM policy fab_detect detected a Fabric Error and has SHUTDOWN CARD: 1/RP0/CPU0
+ 
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#RP/1/RP0/CPU0:May 11 15:28:58.405 : exec[65823]: Authorization not configured, for this line at ________/________/vty/100/cfg/aaa/authorization/exec, using 'default' methodlist
+RP/1/RP0/CPU0:May 11 15:28:58.506 : exec[65823]: item_name = ________/________/vty/100/state/connection/host
+RP/1/RP0/CPU0:May 11 15:28:58.576 : exec[65823]: Looking host address in ________/________/vty/100/state/connection/host
+RP/1/RP0/CPU0:May 11 15:28:58.645 : exec[65823]: Looking host family in ________/________/vty/100/state/connection/family
+RP/1/RP0/CPU0:May 11 15:28:58.702 : exec[65823]: Got remote address 192.168.116.8 (length 13)
+RP/1/RP0/CPU0:May 11 15:28:58.709 : exec[65823]: Add remote addr attribute - 192.168.116.8 (length 13)
+RP/1/RP0/CPU0:May 11 15:28:58.711 : exec[65823]: Authorization message composed successfully
+RP/1/RP0/CPU0:May 11 15:28:58.713 : exec[65823]: Sending authorization request message to server
+unde all
+RP/1/RP0/CPU0:May 11 15:29:00.989 : exec[65821]: Add remote addr attribute - 192.205.220.50 (length 14)
+RP/1/RP0/CPU0:May 11 15:29:00.990 : exec[65821]: Authorization message composed successfully
+RP/1/RP0/CPU0:May 11 15:29:00.991 : exec[65821]: Sending authorization request message to server
+RP/1/RP0/CPU0:May 11 15:29:01.006 : tacacsd[553]: %SECURITY-TACACSD-6-SERVER_DOWN : TACACS+ server 192.168.45.152/49 is DOWN - Socket 27: Resource temporarily unavailable
+RP/1/RP0/CPU0:May 11 15:29:01.140 : exec[65823]: Interpreting the authorization reply
+RP/1/RP0/CPU0:May 11 15:29:01.143 : exec[65823]: Reply buffer length: 468 - 24 = 444 bytes
+RP/1/RP0/CPU0:May 11 15:29:01.144 : exec[65823]: Unpacking the AV list from the reply data
+RP/1/RP0/CPU0:May 11 15:29:01.145 : exec[65821]: Interpreting the authorization reply
+RP/1/RP0/CPU0:May 11 15:29:01.147 : exec[65823]: [Authorization reply attributes] avpair list 'Authorization Request' count 13      AAA_SERVICE_TYPE_ATTR (262/4) * exec      AAA_TYPE_ATTR (3/4) * AUTHOR SHELL      AAA_AUTHEN_OPTION_ATTR (43/4) * <Unknown type value>      AAA_METHODLIST_ATTR (17/8) * default (length 8)      AAA_USERNAME_ATTR (257/8) * teamops (length 8)      AAA_AUTHEN_METHOD_ATTR (39/4) * tacacs+      AAA_TTYNAME_ATTR (20/12) * /dev/vty100 (length 12)      AAA_REMOTE_ADDR_ATTR (37/13) * 192.168.116.8 (length 13)      AAA_SESSIONID_ATTR (26/4) * 1121002706      AAA_SEQNUM_ATTR (27/4) * 1      AAA_STATUS_ATTR (2/4) * FAIL      AAA_USERGROUPS_ATTR (50/27) * root-system, cisco-support (length 27)      AAA_TASKMAP_ATTR (44/72) [out] * -268435457
+RP/1/RP0/CPU0:May 11 15:29:01.147 : exec[65821]: Reply buffer length: 468 - 24 = 444 bytes
+RP/1/RP0/CPU0:May 11 15:29:01.148 : exec[65823]: Authorization reply had 1 attributes
+RP/1/RP0/CPU0:May 11 15:29:01.148 : exec[65821]: Unpacking the AV list from the reply data
+RP/1/RP0/CPU0:May 11 15:29:01.149 : exec[65823]: Returning 1 attributes
+RP/1/RP0/CPU0:May 11 15:29:01.149 : exec[65821]: [Authorization reply attributes] avpair list 'Authorization Request' count 13      AAA_SERVICE_TYPE_ATTR (262/4) * cmd      AAA_AUTHEN_OPTION_ATTR (43/4) * <Unknown type value>      AAA_METHODLIST_ATTR (17/8) * default (length 8)      AAA_USERNAME_ATTR (257/8) * csco-se (length 8) AAA_AUTHEN_METHOD_ATTR (39/4) * tacacs+      AAA_TTYNAME_ATTR (20/10) * /dev/vty1 (length 10)      AAA_REMOTE_ADDR_ATTR (37/14) * 192.205.220.50 (length 14)      AAA_PASSWORD_ATTR (258/9) * *      AAA_CMD_ATTR (36/13) * undebug all       AAA_SESSIONID_ATTR (26/4) * 1000613075      AAA_SEQNUM_ATTR (27/4) * 1      AAA_STATUS_ATTR (2/4) * PASS      AAA_TASKMAP_ATTR (44/72) * 0
+RP/1/RP0/CPU0:May 11 15:29:01.149 : exec[65823]: Extracting results from the server's reply
+RP/1/RP0/CPU0:May 11 15:29:01.150 : exec[65821]: Authorization reply had 0 attributes
+RP/1/RP0/CPU0:May 11 15:29:01.150 : exec[65823]: Authorization status returned by server: FAIL
+RP/1/RP0/CPU0:May 11 15:29:01.150 : exec[65821]: Returning 0 attributes
+RP/1/RP0/CPU0:May 11 15:29:01.151 : exec[65823]: Now going to update user idle time based on authorization
+RP/1/RP0/CPU0:May 11 15:29:01.151 : exec[65821]: Extracting results from the server's reply
+RP/1/RP0/CPU0:May 11 15:29:01.151 : exec[65823]: User's idletime is not configured 0
+RP/1/RP0/CPU0:May 11 15:29:01.152 : exec[65821]: Authorization status returned by server: PASS
+RP/1/RP0/CPU0:May 11 15:29:01.152 : exec[65823]: Authorization request for getting taskmap failed, status FAIL, msg
+RP/1/RP0/CPU0:May 11 15:29:01.152 : exec[65821]: Now going to update user idle time based on authorization
+RP/1/RP0/CPU0:May 11 15:29:01.153 : exec[65821]: User's idletime is not configured 0
+RP/1/RP0/CPU0:May 11 15:29:01.189 : exec[65821]: Add remote addr attribute - 192.205.220.50 (length 14)
+Tue May 11 15:29:01.262 UTC
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#
+RP/1/RP0/CPU0:JC22CRS#unde all
+Tue May 11 15:29:05.335 UTC
+RP/1/RP0/CPU0:JC22CRS#RP/1/RP0/CPU0:May 11 15:29:06.376 : fab_detect.tcl[65822]: EEM policy fab_detect detected Fabric Error on card 1/RP0/CPU0 yet harddisk:/eem/fab_detect_run_flag exists No Action Taken!
+ 
+RP/1/RP0/CPU0:JC22CRS#

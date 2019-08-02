@@ -1,0 +1,71 @@
+RP/0/0/CPU0:XR_ROUTER(admin)#attach location 0/2/cpu0
+ 
+attach: Starting session 0 to nodeid 0/2/CPU0
+ 
+attach: Type "exit<CR>" to quit.
+ 
+ksh-LC>
+ksh-LC>echo "test3 rx_xbma[77]: %L2-E3INGRESSQ-4-INTERRUPT :  PLIM error: reg 0x2000 end of test" > /dev/syslog
+ksh-LC>LC/0/2/CPU0:Apr 29 14:06:10.153 : syslog_dev[79]: syslog_dev: test3 rx_xbma[77]: %L2-E3INGRESSQ-4-INTERRUPT :  PLIM error: reg 0x2000 end of test
+ 
+ksh-LC>
+ksh-LC>RP/0/0/CPU0:Apr 29 14:06:13.989 : e3_fail_detect.tcl[65772]: EEM policy e3_fail_detect detected an Engine 3 LC failure 0/2/CPU0 yet disk0:/eem/e3_fail_detect_run_flag exists No Action Taken!
+ 
+ksh-LC>
+ksh-LC>exit
+Terminating attach to slot 2..
+RP/0/0/CPU0:XR_ROUTER(admin)#exit
+RP/0/0/CPU0:XR_ROUTER#dir disk0:/eem
+                                                                                                                                             
+Directory of disk0:/eem
+ 
+506134656   -rwx  1098        Fri Feb 12 22:57:02 2010  show_clock.tcl
+506134752   -rwx  247         Tue Apr 27 23:50:52 2010  show_clock.out
+506134848   -rwx  1947        Thu Mar  4 17:09:08 2010  FileSizeCheck.tcl
+506134944   -rwx  1655        Wed Feb 17 23:40:34 2010  FileSizeCheck_stop.tcl
+506135008   -rwx  3373        Thu Mar  4 22:00:45 2010  att1.tcl
+506135072   -rwx  1325        Thu Mar  4 22:34:29 2010  sh_ver.tcl
+506135168   -rwx  7636        Thu Apr 29 14:00:57 2010  e3_fail_detect.tcl
+506135264   -rwx  1765        Thu Apr 29 14:06:13 2010  e3_fail_detect.log  <<<<<<
+506135360   -rwx  42          Wed Apr 28 19:46:15 2010  e3_fail_detect_run_flag  <<<<<<
+ 
+1024507904 bytes total (341196800 bytes free)
+RP/0/0/CPU0:XR_ROUTER#more disk0:/eem/e3_fail_detect.log
+*Timestamp = 14:06:10 UTC Thu Apr 29 2010
+Cisco Engine 3 LC Failure Detection Script
+Designed for: IOX Embedded Event Manager (EEM)
+by: Scott Search (ssearch@cisco.com)
+ 
+Node: XR_ROUTER
+SYSLOG MSG:
+LC/0/2/CPU0: syslog_dev[79]: syslog_dev: test3 rx_xbma[77]: %L2-E3INGRESSQ-4-INTERRUPT :  PLIM error: reg 0x2000 end of test
+ 
+Suspect location: 0/2/CPU0
+ 
+ 
+*Timestamp = 14:06:13 UTC Thu Apr 29 2010
+EEM policy e3_fail_detect detected an Engine 3 LC failure 0/2/CPU0 yet disk0:/eem/e3_fail_detect_run_flag exists No Action Taken!
+Delete disk0:/eem/e3_fail_detect_run_flag in order to activate the EEM e3_fail_detect script.
+ 
+The XR_ROUTER node experienced the following syslog:
+LC/0/2/CPU0: syslog_dev[79]: syslog_dev: test3 rx_xbma[77]: %L2-E3INGRESSQ-4-INTERRUPT :  PLIM error: reg 0x2000 end of test
+ 
+ 
+BEFORE admin show platform Output:
+Node            Type            PLIM            State           Config State
+-----------------------------------------------------------------------------
+0/0/CPU0        PRP(Active)     N/A             IOS XR RUN      PWR,NSHUT,MON
+0/1/CPU0        PRP             N/A             Card Present    PWR,NSHUT,MON
+0/2/CPU0        L3LC Eng 3      GE-4            IOS XR RUN      PWR,NSHUT,MON
+0/3/CPU0        L3LC Eng 2      GE-3            In Reset        PWR,NSHUT,MON
+0/4/CPU0        L3LC Eng 0      OC12-POS        In Reset        PWR,NSHUT,MON
+0/16/CPU0       CSC(P)          N/A             PWD             PWR,NSHUT,MON
+0/18/CPU0       GSR8-SFC        N/A             PWD             PWR,NSHUT,MON
+0/19/CPU0       GSR8-SFC        N/A             PWD             PWR,NSHUT,MON
+0/20/CPU0       GSR8-SFC        N/A             PWD             PWR,NSHUT,MON
+0/24/CPU0       PSAC8           N/A             PWD             PWR,NSHUT,MON
+RP/0/0/CPU0:XR_ROUTER(admin)#
+ 
+
+
+RP/0/0/CPU0:XR_ROUTER#

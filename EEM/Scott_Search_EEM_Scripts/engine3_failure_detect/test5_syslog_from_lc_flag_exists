@@ -1,0 +1,15 @@
+RP/0/0/CPU0:XR_ROUTER(admin)#atta lo 0/2/cpu0
+ 
+attach: Starting session 0 to nodeid 0/2/CPU0
+ 
+attach: Type "exit<CR>" to quit.
+ 
+ksh-LC>
+ksh-LC>echo "test5 rx_xbma[77]: %L2-E3INGRESSQ-4-INTERRUPT :  PLIM error: reg 0x2000" > /dev/syslog
+ksh-LC>LC/0/2/CPU0:Apr 29 15:32:35.074 : syslog_dev[79]: syslog_dev: test5 rx_xbma[77]: %L2-E3INGRESSQ-4-INTERRUPT :  PLIM error: reg 0x2000
+ 
+ksh-LC>
+ksh-LC>eRP/0/0/CPU0:Apr 29 15:32:38.849 : e3_fail_detect.tcl[65772]: EEM policy e3_fail_detect detected an Engine 3 LC failure 0/2/CPU0 yet disk0:/eem/e3_fail_detect_run_flag exists No Action Taken!
+xit
+Terminating attach to slot 2..
+RP/0/0/CPU0:XR_ROUTER(admin)#

@@ -1,0 +1,143 @@
+RP/0/7/CPU0:engco102me1(config)#event manager policy bgp_bounce.tcl username eem-user                  
+RP/0/7/CPU0:engco102me1(config)#commit
+Wed Sep 12 18:20:15.222 GMT
+RP/0/7/CPU0:Sep 12 18:20:16.575 : eem_policy_dir[196]: %HA-HA_EM-6-FMPD_POLICY_REG_SUCC : fh_reg_unreg_policy: Policy 'bgp_bounce.tcl' registered successfully, by user eem-user, with persist time 3600 and type 2 
+RP/0/8/CPU0:Sep 12 18:20:16.580 : eem_policy_dir[196]: %HA-HA_EM-4-FMPD_POLICY_NOT_EXIST : Policy file disk0:/eem/bgp_bounce.tcl could not be found on RP/0/8/CPU0: 
+RP/0/7/CPU0:Sep 12 18:20:18.597 : config[65838]: %MGBL-CONFIG-6-DB_COMMIT : Configuration committed by user 'cisco'. Use 'show configuration commit changes 1000000080' to view the changes. 
+RP/0/7/CPU0:engco102me1(config)#
+RP/0/7/CPU0:engco102me1(config)#end
+RP/0/7/CPU0:Sep 12 18:20:18.805 : config[65838]: %MGBL-SYS-5-CONFIG_I : Configured from console by cisco on vty0 (10.21.117.185) 
+RP/0/7/CPU0:engco102me1#
+RP/0/7/CPU0:engco102me1#
+RP/0/7/CPU0:engco102me1#sh event mana pol reg
+Wed Sep 12 18:20:25.735 GMT
+No.  Class     Type    Event Type          Trap  Time Registered           Name
+1    script    user    syslog              Off   Wed Sep 12 18:20:16 2012  bgp_bounce.tcl
+ pattern {ROUTING-BGP-5-ADJCHANGE.*neighbor.*Down.*Interface flap.*VRF: 13979:21111}
+ nice 0 queue-priority normal maxrun 240.000 scheduler rp_primary Secu none
+ persist_time: 3600 seconds,  username: eem-user
+
+RP/0/7/CPU0:engco102me1#
+RP/0/7/CPU0:engco102me1#
+RP/0/7/CPU0:engco102me1#
+RP/0/7/CPU0:engco102me1#
+RP/0/7/CPU0:engco102me1#sh run router bgp 13979 vrf 13979:21111 neighbor 12.0.3.2 
+Wed Sep 12 18:20:46.872 GMT
+router bgp 13979
+ vrf 13979:21111
+  neighbor 12.0.3.2
+   remote-as 3
+   address-family ipv4 unicast
+    route-policy PASSALL in
+    route-policy PASSALL out
+   !
+  !
+ !
+!
+
+RP/0/7/CPU0:engco102me1#
+RP/0/7/CPU0:engco102me1#LC/0/6/CPU0:Sep 12 18:20:59.308 : ifmgr[182]: %PKT_INFRA-LINK-3-UPDOWN : Interface GigabitEthernet0/6/0/0, changed state to Down 
+LC/0/6/CPU0:Sep 12 18:20:59.309 : ifmgr[182]: %PKT_INFRA-LINEPROTO-5-UPDOWN : Line protocol on Interface GigabitEthernet0/6/0/0, changed state to Down 
+RP/0/8/CPU0:Sep 12 18:20:59.326 : bgp[1046]: %ROUTING-BGP-5-NBR_NSR_DISABLED_STANDBY : NSR disabled on neighbor 12.0.3.2 on standby due to Interface flap (VRF: 13979:21111) 
+RP/0/7/CPU0:Sep 12 18:20:59.330 : bgp[1046]: %ROUTING-BGP-5-ADJCHANGE : neighbor 12.0.3.2 Down - Interface flap (CEASE notification sent - administrative shutdown) (VRF: 13979:21111) 
+
+******* BGP peer down here. EEM script started ********
+
+RP/0/7/CPU0:Sep 12 18:21:00.495 : tclsh[65838]: %HA_EM-6-LOG: bgp_bounce.tcl: EEM policy 7/11 bgp_bounce.tcl has started 
+LC/0/6/CPU0:Sep 12 18:21:01.669 : ifmgr[182]: %PKT_INFRA-LINK-3-UPDOWN : Interface GigabitEthernet0/6/0/0, changed state to Up 
+LC/0/6/CPU0:Sep 12 18:21:01.674 : ifmgr[182]: %PKT_INFRA-LINEPROTO-5-UPDOWN : Line protocol on Interface GigabitEthernet0/6/0/0, changed state to Up 
+
+RP/0/7/CPU0:engco102me1#
+RP/0/7/CPU0:engco102me1#RP/0/7/CPU0:Sep 12 18:21:05.964 : config[65840]: %MGBL-CONFIG-6-DB_COMMIT : Configuration committed by user 'eem-user'. Use 'show configuration commit changes 1000000081' to view the changes. 
+
+RP/0/7/CPU0:engco102me1#
+RP/0/7/CPU0:engco102me1#sh run router bgp 13979 vrf 13979:21111 neighbor 12.0.3.2 
+Wed Sep 12 18:21:10.162 GMT
+router bgp 13979
+ vrf 13979:21111
+  neighbor 12.0.3.2
+   remote-as 3
+   shutdown  <<<<<<<<
+   address-family ipv4 unicast
+    route-policy PASSALL in
+    route-policy PASSALL out
+   !
+  !
+ !
+!
+
+RP/0/7/CPU0:engco102me1#
+RP/0/7/CPU0:engco102me1#sh run router bgp 13979 vrf 13979:21111 neighbor 12.0.3.2 
+Wed Sep 12 18:21:16.172 GMT
+router bgp 13979
+ vrf 13979:21111
+  neighbor 12.0.3.2
+   remote-as 3
+   shutdown  <<<<<<<<
+   address-family ipv4 unicast
+    route-policy PASSALL in
+    route-policy PASSALL out
+   !
+  !
+ !
+!
+
+RP/0/7/CPU0:engco102me1#sh run router bgp 13979 vrf 13979:21111 neighbor 12.0.3.2 
+Wed Sep 12 18:21:22.976 GMT
+router bgp 13979
+ vrf 13979:21111
+  neighbor 12.0.3.2
+   remote-as 3
+   shutdown  <<<<<<<<
+   address-family ipv4 unicast
+    route-policy PASSALL in
+    route-policy PASSALL out
+   !
+  !
+ !
+!
+
+RP/0/7/CPU0:engco102me1#RP/0/7/CPU0:Sep 12 18:21:28.584 : config[65840]: %MGBL-CONFIG-6-DB_COMMIT : Configuration committed by user 'eem-user'. Use 'show configuration commit changes 1000000082' to view the changes. 
+
+******* After 20 seconds the EEM script performs a 'no shutdown' for the BGP peer **********
+
+RP/0/7/CPU0:Sep 12 18:21:28.986 : config[65840]: %MGBL-SYS-5-CONFIG_I : Configured from console by console on vty100 (0.0.0.0) 
+RP/0/7/CPU0:Sep 12 18:21:29.247 : tclsh[65838]: %HA_EM-6-LOG: bgp_bounce.tcl: 7/11 Customer BGP Bounce - Sending email to: ssearch@cisco.com 
+sh run router bgp 13979 vrf 13979:21111 neighbor 12.0.3.2 
+Wed Sep 12 18:21:29.329 GMT
+RP/0/7/CPU0:Sep 12 18:21:29.369 : syslog_dev[87]: noscan: smtp_send_email: error connecting to mail server: 
+RP/0/7/CPU0:Sep 12 18:21:29.370 : syslog_dev[87]: noscan: cannot connect to all the candidate mail servers 
+RP/0/7/CPU0:Sep 12 18:21:29.374 : tclsh[65838]: %HA_EM-6-LOG: bgp_bounce.tcl: EEM policy 7-11_bgp_bounce has bounced BGP peer: 12.0.3.2 
+router bgp 13979
+ vrf 13979:21111
+  neighbor 12.0.3.2
+   remote-as 3
+   address-family ipv4 unicast
+    route-policy PASSALL in
+    route-policy PASSALL out
+   !
+  !
+ !
+!
+
+RP/0/7/CPU0:engco102me1#
+RP/0/7/CPU0:engco102me1#sh run router bgp 13979 vrf 13979:21111 neighbor 12.0.3.2 
+Wed Sep 12 18:21:32.836 GMT
+router bgp 13979
+ vrf 13979:21111
+  neighbor 12.0.3.2
+   remote-as 3
+   address-family ipv4 unicast
+    route-policy PASSALL in
+    route-policy PASSALL out
+   !
+  !
+ !
+!
+
+RP/0/7/CPU0:engco102me1#
+RP/0/7/CPU0:engco102me1#RP/0/7/CPU0:Sep 12 18:21:35.328 : bgp[1046]: %ROUTING-BGP-5-ADJCHANGE : neighbor 12.0.3.2 Up (VRF: 13979:21111) 
+
+******* BGP peer comes back up *********
+
+RP/0/7/CPU0:engco102me1#

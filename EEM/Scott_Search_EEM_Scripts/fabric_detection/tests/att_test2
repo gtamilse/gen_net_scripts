@@ -1,0 +1,55 @@
+event manager environment _output_log eem_fabric_detect.log
+event manager environment _storage_location harddisk:/eem
+event manager directory user policy harddisk:/eem
+event manager policy fab_detect.tcl username teamops type user
+!
+taskgroup tg1
+ inherit taskgroup root-system
+ inherit taskgroup cisco-support
+ description Privileges for tg1
+!
+taskgroup tg2
+ task read lpts
+ task write network
+ inherit taskgroup operator
+ description Priviledges for tg2
+!
+taskgroup teamops
+ inherit taskgroup superuser
+ inherit taskgroup cisco-support
+ description Unrestricted Access - Operations
+!
+taskgroup superuser
+ inherit taskgroup root-system
+ inherit taskgroup cisco-support
+ description Unrestricted Access - SuperUser
+!
+usergroup ug1
+ taskgroup tg2
+ description Permission for ug1
+!
+usergroup ug2
+ taskgroup tg1
+ description Permission for ug2
+!
+usergroup priv13
+ taskgroup superuser
+!
+usergroup teamops
+ taskgroup teamops
+!
+usergroup superuser
+ taskgroup superuser
+!
+!
+aaa accounting exec default start-stop group tacacs+ none
+aaa accounting commands console start-stop group tacacs+ none
+aaa accounting commands default start-stop group tacacs+ none
+aaa authorization exec console group tacacs+ local none
+aaa authorization exec default group tacacs+ local none
+aaa authorization commands console group tacacs+ none
+aaa authorization commands default group tacacs+ none
+aaa authorization eventmanager default local
+aaa authentication login CBB group tacacs+ local
+aaa authentication login console group tacacs+ local
+aaa authentication login default group tacacs+ local

@@ -1,0 +1,46 @@
+#!/usr/bin/tclsh
+
+proc clean_string {line} {
+  # Trim up the line remove extra space/tabs:
+  regsub -all {[ \r\t\n]+} $line " " line
+  # Remove any leading white space:
+  regsub -all {^[ ]} $line "" line
+  # Remove any ending white space:
+  regsub -all {[ ]$} $line "" line
+  
+  return $line
+}
+
+
+proc get_transport_vrf {output} {
+  set transport_vrf ""
+
+  foreach line [split $output "\n"] {
+    set line [clean_string $line]
+  
+    if {$line ne ""} {
+      if {[regexp {^Locator table: vrf } $line]} {
+        set transport_vrf [lindex [split $line " "] end]
+      }
+    }
+  }
+
+  return $transport_vrf
+}
+
+
+
+
+set output "MSMR#show lisp 1
+Router-lisp ID:        1
+Locator table:         vrf cust1-rloc
+EID instance count:    2
+MSMR#
+#  
+"
+
+set transport_vrf [get_transport_vrf $output]
+
+puts "\ntransport_vrf: $transport_vrf\n"
+
+

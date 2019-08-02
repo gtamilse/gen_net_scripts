@@ -1,0 +1,65 @@
+SR:  621161397
+
+
+
+set cmd "show interface transceiver details | inc \"ther|Tx Power\""
+ event syslog pattern "Configured from vty by admin"
+
+
+
+
+
+event manager applet 7k_PowerCheck
+ event syslog pattern "ETHPORT-5-IF_ADMIN_UP: Interface Ethernet"
+  action 0.1 cli enable
+  action 0.2 cli show interface transceiver details | inc "ther|Tx Power" > bootflash:/eem/interface_transceiver_details.txt
+
+
+
+no event manager applet 7k_PowerCheck
+
+
+
+
+
+
+
+event manager applet high_CPU_5_1
+  event snmp oid 1.3.6.1.4.1.9.9.109.1.1.1.1.6.1 get-type exact entry-op ge entry-val 4 exit-op lt exit-val 3 poll-interval 20
+  action 0.1 syslog priority notifications msg High CPU Detected-disabling L3 Flow
+  action 0.2 cli enable
+  action 0.3 cli tclsh bootflash:/nfd-test.tcl
+  action 0.4 cli exit
+
+
+
+
+event manager applet highcputest
+  event snmp oid 1.3.6.1.4.1.9.9.109.1.1.1.1.6.1 get-type exact entry-op ge entry-val 2 poll-interval 1
+    action  0.1 syslog msg High CPU Test 
+    action  0.2 cli enable
+    action  0.3 cli show process cpu sort >> bootflash:cputest.txt
+    action  0.4 cli show process cpu hist >> bootflash:cputest.txt
+    action  0.5 cli exit
+
+
+###############################################################################
+
+
+Copy the TCL script:  7k_BFD_CMD_Collection.tcl
+To the bootflash:/scripts   directory
+
+Then make the following configuration change in the 7k:
+
+
+event manager applet BFD_collections
+  event syslog pattern ".*BGP-5-ADJCHANGE:.* "
+  action 0.1 cli enable
+  action 0.2 cli tclsh bootflash:/scripts/7k_BFD_CMD_Collection.tcl
+  action 0.3 cli exit
+
+
+###############################################################################
+
+
+

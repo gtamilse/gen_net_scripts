@@ -1,0 +1,40 @@
+#!/usr/bin/tclsh
+
+set show_module "ALPSGAGDMZ01# show system internal ethpm info module | grep -i vqi
+    LTL(0x1e6), VQI(0x42), LDI(0), IOD(0x37)
+    LTL(0x1ea), VQI(0x46), LDI(0x4), IOD(0x38)
+    LTL(0xdb), VQI(0xe7), LDI(0x3), IOD(0x94)
+    LTL(0x1ee), VQI(0x4a), LDI(0x8), IOD(0x39)
+    LTL(0x1f2), VQI(0x4e), LDI(0xc), IOD(0x3a)
+    LTL(0x1f6), VQI(0x52), LDI(0x10), IOD(0x3b)
+    LTL(0x1fa), VQI(0x56), LDI(0x14), IOD(0x3c)
+    LTL(0x1fe), VQI(0x5a), LDI(0x18), IOD(0x3d)
+ 
+"
+
+set VQI "e7"
+set update_VQI "0x$VQI"
+set LTL ""
+set LTLs ""
+
+puts ""
+puts "update_VQI: $update_VQI"
+puts ""
+
+
+foreach line [split $show_module "\n"] {
+  regsub -all {[ \r\t\n]+} $line " " line
+  regsub -all {^[ ]} $line "" line
+  regsub -all {[ ]$} $line "" line
+
+  if {[regexp "VQI\\($update_VQI" $line]} {
+    puts "LINE: $line"
+    regexp {^LTL\((0x.*?)\)\,} $line - LTL
+    puts "LTL: $LTL"
+    lappend LTLs $LTL
+  }
+}
+
+exit
+
+

@@ -1,0 +1,59 @@
+#!/usr/bin/tclsh
+
+set syslog "RP/0/7/CPU0:engco102me1#sh log last 20 | inc Gigabit|Up
+Thu Oct 25 14:06:57.918 GMT
+LC/0/0/CPU0:Oct 25 14:04:13.815 : ifmgr\[182\]: %PKT_INFRA-LINK-3-UPDOWN : Interface GigabitEthernet0/0/0/0, changed state to Down 
+LC/0/0/CPU0:Oct 25 14:04:13.816 : ifmgr\[182\]: %PKT_INFRA-LINEPROTO-5-UPDOWN : Line protocol on Interface GigabitEthernet0/0/0/0, changed state to Down 
+LC/0/0/CPU0:Oct 25 14:04:13.824 : ifmgr\[182\]: %PKT_INFRA-LINK-3-UPDOWN : Interface GigabitEthernet0/0/0/0, changed state to Up 
+LC/0/0/CPU0:Oct 25 14:04:13.839 : ifmgr\[182\]: %PKT_INFRA-LINEPROTO-5-UPDOWN : Line protocol on Interface GigabitEthernet0/0/0/0, changed state to Up 
+RP/0/7/CPU0:Oct 25 14:04:23.774 : ospf\[1011\]: %ROUTING-OSPF-5-ADJCHG : Process 2, Nbr 12.123.60.1 on GigabitEthernet0/0/0/0 in area 2.2.2.2 from LOADING to FULL, Loading Done,vrf default vrfid 0x60000000 
+RP/0/7/CPU0:engco102me1#"
+
+puts "\n"
+
+set Interface "GigabitEthernet0/0/0/0"
+set interface_Up 0
+set interface_Down 0
+
+set kont 0
+set output [split $syslog "\n"]
+foreach line $output {
+  # Trim up the line remove extra space/tabs etc:
+  regsub -all {[ \r\t\n]+} $syslog " " syslog
+  # Remove any leading white space:
+  regsub -all {^[ ]} $syslog "" syslog
+  # Remove any ending white space:
+  regsub -all {[ ]$} $syslog "" syslog
+
+  if {([regexp "Line protocol on Interface Gig" $line] && [regexp "state to Down" $line])} {
+    if {[regexp $Interface $line]} {
+      puts "LINE: $line"
+      set interface_Down $kont
+    }
+  }
+
+  if {([regexp "Line protocol on Interface Gig" $line] && [regexp "state to Up" $line])} {
+    if {[regexp $Interface $line]} {
+      puts "LINE: $line"
+      set interface_Up $kont
+    }
+  }
+  incr kont
+}
+
+puts "\ninterface_Down: $interface_Down"
+puts "\ninterface_Up: $interface_Up"
+puts "\n"
+
+#regexp {ATM(\d+\/\d+\/\d+\/\d+).*} $syslog - location
+#regexp {neighbor (\d+\.\d+\.\d+\.\d+)} $syslog - IP
+#regexp {Interface (GigabitEthernet\d+\/\d+\/\d+\/\d+), changed} $syslog - interface
+
+;#  foreach syslog $rec {
+;#    if {[regexp {^time_sec} $syslog]} {
+;#      if {[llength $concat_string] > 4} {
+;#        if {([regexp $pattern1 $concat_string] && [regexp $pattern2 $concat_string])} {
+;#          set time_rec [lindex $concat_string 0]
+;#          #set location [ lindex [split $location ":"] 0 ]
+;#          #if {[string is double -strict $time_rec] || [string is digit -strict $time_rec]} {
+;#            #if {[regexp -nocase "cpu0$" $location]} {

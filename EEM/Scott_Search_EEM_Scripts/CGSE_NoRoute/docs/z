@@ -1,0 +1,20 @@
+RP/0/RP0/CPU0:rmonc401cts#show run service cgn cgse1
+service cgn cgse1
+ service-location preferred-active 0/6/CPU0
+ service-type tunnel v6rd v6RD1
+  tos 0
+  path-mtu 1472
+  br
+   ipv6-prefix 2602:300::/28
+   source-address 12.83.49.81
+   unicast address 2602:300:c533:1510::27
+  !
+  address-family ipv4
+   interface ServiceApp41
+  !
+  address-family ipv6
+   interface ServiceApp61
+  !
+ !
+!
+

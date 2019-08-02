@@ -1,0 +1,138 @@
+#!/usr/bin/tclsh
+
+set syslogs "LC/0/3/CPU0:May  5 00:19:10.713 : tx_xbma\[87\]: %L2-QM_E5-3-SANITY_WARNING : QM Buffer Depletion: Out of pool qelem range head (118456) tail (503) in FrFab FreeQ pool# 2"
+
+#set syslogs "LC/0/6/CPU0:May 11 08:52:11.247 : tx_xbma\[85\]: %L2-QM_E5-3-SANITY_WARNING : QM Buffer Depletion: Out of pool qelem range head (36938) tail (194694) in FrFab FreeQ pool# 1"
+
+#set syslogs "LC/0/6/CPU0:May 11 08:58:11.283 : tx_xbma\[85\]: %L2-QM_E5-3-SANITY_WARNING : QM Buffer Depletion: Out of pool qelem range head (135579) tail (77068) in FrFab FreeQ pool# 1"
+
+
+# head: 118456
+# tail: 503
+# Location Extracted(2): LC/0/3/CPU0
+
+proc get_location_head_tail {line} {
+  set head_pool ""
+  set tail_pool ""
+  set run_first ""
+  set location ""
+  set pool 0
+  set head 0
+  set tail 0
+
+  regsub -all {[ \r\t\n]+} $line " " line
+  regsub -all {^[ ]} $line "" line
+  regsub -all {[ ]$} $line "" line
+
+  if {[regexp "QM Buffer Depletion: Out of pool qelem range head" $line]} {
+    regexp { range head \((\d+)\) tail \((\d+)\) in} $line - head tail
+    regexp { FreeQ pool\# (\d+)} $line - pool
+  }
+
+  if {[regexp {^time_sec} $line]} {
+    regexp "\{(.*): .*" $line - msg
+    set location [ lindex [split $msg ":"] 0 ]
+    regsub {^LC\/} $location "" location
+  } else {
+    set location [ lindex [split $line ":"] 0 ]
+    regsub {^LC\/} $location "" location
+  }
+
+  if {$head > 260 && $head <= 118107} {
+    # pool 1
+    set head_pool 1
+  } elseif {$head > 118107 && $head <= 194053} {
+    # pool 2
+    set head_pool 2 
+  } elseif {$head > 194053 && $head <= 243810} {
+    # pool 3 
+    set head_pool 3
+  } elseif {$head > 243810 && $head <= 254285} {
+    # pool 4 
+    set head_pool 4
+  } elseif {$head > 254285 && $head <= 262141} {
+    # pool 5 
+    set head_pool 5
+  }
+
+  if {$tail > 260 && $tail <= 118107} {
+    # pool 1
+    set tail_pool 1
+  } elseif {$tail > 118107 && $tail <= 194053} {
+    # pool 2
+    set tail_pool 2 
+  } elseif {$tail > 194053 && $tail <= 243810} {
+    # pool 3 
+    set tail_pool 3
+  } elseif {$tail > 243810 && $tail <= 254285} {
+    # pool 4 
+    set tail_pool 4
+  } elseif {$tail > 254285 && $tail <= 262141} {
+    # pool 5 
+    set tail_pool 5
+  }
+   
+  puts "head_pool: $head_pool"
+  puts "tail_pool: $tail_pool"
+
+  if {$head_pool != $pool} {
+    set run_first "head"
+  } elseif {$tail_pool != $pool} {
+    set run_first "tail"
+  }
+  puts "run_first: $run_first"
+  
+
+  return [list $location $head $tail $pool $run_first]
+} ;# get_location_head_tail
+
+
+set elements [get_location_head_tail $syslogs]
+set location   [lindex $elements 0]
+set head       [lindex $elements 1]
+set tail       [lindex $elements 2]
+set pool       [lindex $elements 3]
+set run_first  [lindex $elements 4]
+
+puts ""
+puts "location: $location"
+puts "head: $head"
+puts "tail: $tail"
+puts "pool: $pool"
+puts ""
+
+
+if {$location != "" && $head != 0 && $tail != 0} {
+  puts "All exist. Continuing...."
+
+  set head_plus10  [expr $head + 10]
+  set head_minus10 [expr $head - 10]
+  set tail_plus10  [expr $tail + 10]
+  set tail_minus10 [expr $tail - 10]
+
+  puts "head_plus10: $head_plus10"
+  puts "head_minus10: $head_minus10"
+  puts ""
+  puts "tail_plus10: $tail_plus10"
+  puts "tail_minus10: $tail_minus10"
+  puts ""
+
+  set CMDs ""
+  if {$run_first == "head"} {
+    lappend CMDs "HEAD - show controller egressq qelem $head_minus10 $head_plus10 location $location"
+    lappend CMDs "show controller egressq qelem $tail_minus10 $tail_plus10 location $location"
+  } else {
+    lappend CMDs "TAIL - show controller egressq qelem $tail_minus10 $tail_plus10 location $location"
+    lappend CMDs "show controller egressq qelem $head_minus10 $head_plus10 location $location"
+  }
+
+  foreach cmd $CMDs {
+    puts "cmd: $cmd"
+  }
+
+
+} else {
+  puts "Not working"
+}
+
+puts ""

@@ -1,0 +1,22 @@
+route-map matchtagonly permit 10
+ match tag 100
+!
+route-map set-site-communities permit 10
+ match tag 100
+ set community 100
+!
+route-map set-site-communities permit 20
+ match tag 200
+ set community 200 10000 additive
+!
+route-map set-site-communities permit 10000
+ set community 10000
+!
+route-map bgp-drop-all deny 10
+!
+route-map select-site permit 10
+!
+route-map from-site-p1c1m2 permit 10
+ match tag 100
+ set community 100 additive
+end

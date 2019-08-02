@@ -1,0 +1,42 @@
+EEM fab_detect script working process:
+
+1. Script waits for the following message:
+
+sysmgr.*sfe_drvr.*abnormally terminated.*restart scheduled
+
+2. Once the above syslog message is detected the script is triggered.
+3. At the beginning of the script the script verifies the following eem
+   environment variables are set:
+
+_storage_location
+_output_log
+
+4. The script next opens the script output logging file and timestamps the beginning of the log file:
+
+$_storage_location/$_output_log
+
+5. Opens a cli connection to the router.
+6. Extracts the full syslog message and parses out the fabric card attribute.
+7. Writes this information to the output log file.
+8. Enters XR admin mode and captures the 'show controllers fabric plane all' output and writes this
+   information to the output log file.  The script also parses this output for any currently down
+   fabric cards.
+9. Next the script verifies if the $fab_detect_run_flag file exists.  If the file exists the script
+   logs this outcome to the output log file, generates a syslog message and exits.  If the run_flag
+   file does not exist the script continues.
+10. If the run_flag file does not exist the script creates the run_flag file and places a timestamp
+    within the file.
+11. As long as the run_flag file did not previously exist the script enters admin configure terminal
+    and proceeds with the fabric card shutdown:
+
+admin
+config t
+hw-mod shut loc <fabric location>
+commit
+end
+
+12. Currently disabled, the script at this point would craft up the generated email message.
+13. Updates the output log file with the actions taken and closes the file.
+14. Generates a syslog message indicating the fabric card shutdown.
+
+

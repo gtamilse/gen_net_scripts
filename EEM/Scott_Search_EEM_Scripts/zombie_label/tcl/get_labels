@@ -1,0 +1,39 @@
+#!/usr/bin/tclsh
+
+proc get_labels {output} {
+  set labels
+
+  foreach line [split $output "\n"] {
+    regsub -all {[ \r\t\n]+} $line " " line
+    regsub -all {^[ ]} $line "" line
+    regsub -all {[ ]$} $line "" line
+
+    if {[regexp "show mpls" $line]} { continue }
+
+    set label [lindex [split $line " "] 1]
+
+    if {$label != "" && [regexp "zombie" $line]} {       
+      lappend labels $label
+    }
+  }
+  return $labels
+} ;# get_labels
+
+
+puts ""
+set labels ""
+
+set output "RP/0/7/CPU0:chsct306me1#show mpls label table private | i Zombie
+0     23781   None                         Zombie
+0     1048148 None                         Zombie
+0     1048162 None                         Zombie
+0     1048494 None                         Zombie"
+
+
+
+set labels [get_labels $output]
+
+
+puts ""
+
+

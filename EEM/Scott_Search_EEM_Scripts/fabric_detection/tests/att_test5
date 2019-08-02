@@ -1,0 +1,101 @@
+RP/0/RP0/CPU0:JC21CRS#sh run | inc fab_det
+Wed Jun 23 21:24:06.597 UTC
+Building configuration...
+event manager policy fab_detect.tcl username eem-user type user
+RP/0/RP0/CPU0:JC21CRS#conf t
+Wed Jun 23 21:24:17.317 UTC
+RP/0/RP0/CPU0:JC21CRS(config)#no event manager policy fab_detect.tcl username eem-user type user
+RP/0/RP0/CPU0:JC21CRS(config)#commit
+RP/0/RP0/CPU0:JC21CRS(config)#event manager policy fab_detect.tcl username eem-user type user
+RP/0/RP0/CPU0:JC21CRS(config)#term mon
+                                ^
+% Invalid input detected at '^' marker.
+RP/0/RP0/CPU0:JC21CRS(config)#do term mon
+Wed Jun 23 21:24:35.003 UTC
+RP/0/RP0/CPU0:JC21CRS(config)#
+RP/0/RP0/CPU0:JC21CRS(config)#commit
+RP/0/RP0/CPU0:Jun 23 21:24:39.461 : redcon[361]: %HA-REDCON-1-STANDBY_NOT_READY : standby card is NOT ready
+RP/0/RP1/CPU0:Jun 23 21:24:39.473 : redcon[361]: %HA-REDCON-1-STANDBY_NOT_READY : standby card is NOT ready
+RP/0/RP0/CPU0:Jun 23 21:24:39.493 : eem_script_dir[179]: %HA-HA_EEM-6-EEMSD_POLICY_REG_SUCC : Policy 'fab_detect.tcl' registered successfully, by user eem-user, with persist time 3600 and type 1
+RP/0/RP1/CPU0:Jun 23 21:24:39.521 : eem_script_dir[179]: %HA-HA_EEM-4-EEMSD_POLICY_NOT_EXIST : Policy file harddisk:/eem/fab_detect.tcl could not be found on RP/0/RP1/CPU0:
+RP/0/RP0/CPU0:Jun 23 21:24:41.180 : config[65839]: %MGBL-CONFIG-6-DB_COMMIT : Configuration committed by user 'csco-se'. Use 'show configuration commit changes 1000000776' to view the changes.
+RP/0/RP0/CPU0:JC21CRS(config)#
+RP/0/RP0/CPU0:JC21CRS(config)#
+RP/0/RP0/CPU0:JC21CRS(config)#
+RP/0/RP0/CPU0:JC21CRS(config)#end
+RP/0/RP0/CPU0:Jun 23 21:24:44.241 : config[65839]: %MGBL-SYS-5-CONFIG_I : Configured from console by csco-se on vty2 (192.205.220.50)
+RP/0/RP0/CPU0:JC21CRS#
+RP/0/RP0/CPU0:JC21CRS#
+RP/0/RP0/CPU0:JC21CRS#dir harddisk:/eemRP/0/RP0/CPU0:Jun 23 21:24:49.463 : redcon[361]: %HA-REDCON-1-STANDBY_READY : standby card is ready
+ 
+Wed Jun 23 21:24:50.594 UTC
+                                                                                                                             
+Directory of harddisk:/eem
+ 
+3500343392  -rwx  1907        Fri Mar  5 21:56:00 2010  te-show.tcl
+3500343488  -rwx  10022       Wed Jun 23 21:23:00 2010  fab_detect.tcl
+ 
+39929724928 bytes total (36245131264 bytes free)
+RP/0/RP0/CPU0:JC21CRS#
+RP/0/RP0/CPU0:JC21CRS#
+RP/0/RP0/CPU0:JC21CRS#run attach 0/SM7/SP
+Wed Jun 23 21:25:04.044 UTC
+ 
+attach: Starting session 1 to node 0/SM7/SP
+# echo "sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled" > /dev/syslog
+# SP/0/SM7/SP:Jun 23 21:25:42.597 : syslog_dev[75]: syslog_dev: sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled
+ 
+# exit
+Terminating attach to node 0/SM7/SP..
+RP/0/RP0/CPU0:JC21CRS#
+RP/0/RP0/CPU0:JC21CRS#
+RP/0/RP0/CPU0:JC21CRS#RP/0/RP0/CPU0:Jun 23 21:25:58.175 : config[65844]: %MGBL-CONFIG-6-DB_COMMIT_ADMIN : Configuration committed by user 'eem-user'. Use 'show configuration commit changes 2000000003' to view the changes.
+RP/0/RP0/CPU0:Jun 23 21:25:58.440 : fsdb_aserver[208]: %FABRIC-FSDB-1-PLANE_UPDOWN : Plane 7 state changed to MCAST_DOWN;
+RP/0/RP0/CPU0:Jun 23 21:25:58.441 : fsdb_aserver[208]: %FABRIC-FSDB-6-PLANE_RACK_MCAST_DOWN : Plane 7 reported in multicast-down state by rack(s) 0
+RP/0/RP0/CPU0:Jun 23 21:25:58.443 : fsdb_aserver[208]: %FABRIC-FSDB-6-PLANE_GROUP_DISABLED : Disabled fabric traffic from group 0 of rack 0 in plane 7. 0 links up. Threshold 1
+LC/0/2/CPU0:Jun 23 21:25:58.443 : ingressq[170]: %FABRIC-INGRESSQ-6-LINK_DOWN : Ingressq: Link 15 has been administratively shut down.
+LC/0/6/CPU0:Jun 23 21:25:58.443 : ingressq[170]: %FABRIC-INGRESSQ-6-LINK_DOWN : Ingressq: Link 23 has been administratively shut down.
+LC/0/9/CPU0:Jun 23 21:25:58.440 : fabricq_mgr[148]: %FABRIC-FABRICQ-4-ERR_ASIC_MBE : Fabricq Asic 0 detected multibit error(s). Details: FI Link 31
+LC/0/5/CPU0:Jun 23 21:25:58.446 : ingressq[170]: %FABRIC-INGRESSQ-6-LINK_DOWN : Ingressq: Link 15 has been administratively shut down.
+LC/0/3/CPU0:Jun 23 21:25:58.446 : ingressq[170]: %FABRIC-INGRESSQ-6-LINK_DOWN : Ingressq: Link 23 has been administratively shut down.
+LC/0/0/CPU0:Jun 23 21:25:58.450 : ingressq[170]: %FABRIC-INGRESSQ-6-LINK_DOWN : Ingressq: Link 31 has been administratively shut down.
+LC/0/7/CPU0:Jun 23 21:25:58.451 : ingressq[170]: %FABRIC-INGRESSQ-6-LINK_DOWN : Ingressq: Link 23 has been administratively shut down.
+RP/0/RP0/CPU0:Jun 23 21:25:58.459 : fsdb_aserver[208]: %FABRIC-FSDB-1-PLANE_UPDOWN : Plane 7 state changed to DOWN;
+LC/0/10/CPU0:Jun 23 21:25:58.465 : ingressq[170]: %FABRIC-INGRESSQ-6-LINK_DOWN : Ingressq: Link 31 has been administratively shut down.
+RP/0/RP1/CPU0:Jun 23 21:25:58.469 : ingressq[266]: %FABRIC-INGRESSQ-6-LINK_DOWN : Ingressq: Link 7 has been administratively shut down.
+LC/0/13/CPU0:Jun 23 21:25:58.468 : ingressq[170]: %FABRIC-INGRESSQ-6-LINK_DOWN : Ingressq: Link 23 has been administratively shut down.
+LC/0/8/CPU0:Jun 23 21:25:58.466 : ingressq[170]: %FABRIC-INGRESSQ-6-LINK_DOWN : Ingressq: Link 15 has been administratively shut down.
+LC/0/9/CPU0:Jun 23 21:25:58.461 : ingressq[170]: %FABRIC-INGRESSQ-6-LINK_DOWN : Ingressq: Link 23 has been administratively shut down.
+RP/0/RP0/CPU0:Jun 23 21:25:58.465 : ingressq[266]: %FABRIC-INGRESSQ-6-LINK_DOWN : Ingressq: Link 7 has been administratively shut down.
+SP/0/SM7/SP:Jun 23 21:25:58.431 : sfe_drvr[111]: %FABRIC-FABRIC_SRVR-3-RESET_ALL_ASICS : FDI request to reset all the ASICs on the fabric board.
+RP/0/RP0/CPU0:Jun 23 21:26:00.626 : shelfmgr[380]: %PLATFORM-SHELFMGR-3-POWERDOWN_RESET : Node 0/SM7/SP is powered off due to admin power off request
+RP/0/RP0/CPU0:Jun 23 21:26:00.635 : invmgr[225]: %PLATFORM-INV-6-NODE_STATE_CHANGE : Node: 0/SM7/SP, state: UNPOWERED
+ 
+RP/0/RP0/CPU0:JC21CRS#
+RP/0/RP0/CPU0:JC21CRS#RP/0/RP0/CPU0:Jun 23 21:26:02.601 : config[65844]: %MGBL-SYS-5-CONFIG_I : Configured from console by console on vty100 (0.0.0.0)
+ 
+RP/0/RP0/CPU0:JC21CRS#RP/0/RP0/CPU0:Jun 23 21:26:04.373 : fab_detect.tcl[65843]: EEM policy fab_detect detected a Fabric Error and has SHUTDOWN CARD: 0/SM7/SP
+ 
+RP/0/RP0/CPU0:JC21CRS#admin
+Wed Jun 23 21:26:06.689 UTC
+RP/0/RP0/CPU0:JC21CRS(admin)#
+RP/0/RP0/CPU0:JC21CRS(admin)#sh platform | in SM7
+Wed Jun 23 21:26:13.403 UTC
+0/SM7/SP        FC/S(SP)        N/A             UNPOWERED       NPWR,NSHUT,MON
+RP/0/RP0/CPU0:JC21CRS(admin)#sh run | inc SM7
+Wed Jun 23 21:26:21.453 UTC
+Building configuration...
+hw-module power disable location 0/SM7/SP
+RP/0/RP0/CPU0:JC21CRS(admin)#
+RP/0/RP0/CPU0:JC21CRS(admin)#conf t
+Wed Jun 23 21:26:25.433 UTC
+Current Configuration Session  Line       User     Date                     Lock
+00000201-0006a118-00000000     snmp       hfr-owne Fri May 28 18:43:04 2010
+RP/0/RP0/CPU0:JC21CRS(admin-config)#no hw-module power disable location 0/SM7/SP
+RP/0/RP0/CPU0:JC21CRS(admin-config)#commit
+RP/0/RP0/CPU0:Jun 23 21:26:39.892 : config[65840]: %MGBL-CONFIG-6-DB_COMMIT_ADMIN : Configuration committed by user 'csco-se'. Use 'show configuration commit changes 2000000004' to view the changes.
+RP/0/RP0/CPU0:JC21CRS(admin-config)#
+RP/0/RP0/CPU0:JC21CRS(admin-config)#
+RP/0/RP0/CPU0:JC21CRS(admin-config)#end
+RP/0/RP0/CPU0:Jun 23 21:26:46.373 : config[65840]: %MGBL-SYS-5-CONFIG_I : Configured from console by csco-se on vty2 (192.205.220.50)
+RP/0/RP0/CPU0:JC21CRS(admin)#

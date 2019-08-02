@@ -1,0 +1,28 @@
+#!/usr/bin/tclsh
+
+set date [clock format [clock sec] -format "%T %Z %a %b %d %Y"]
+set stamp [clock format [clock sec] -format "%T_%b_%d_%Y"]
+regsub -all {:} $stamp "." stamp
+
+puts ""
+puts "stamp: $stamp"
+
+set node "engco102me1"
+
+set LogFile "$node.LISP_DefineEID.$stamp"
+
+puts "LogFile: $LogFile"
+
+
+if [catch {open "$LogFile" "w"} result] {
+    error $result
+}
+set FH $result
+
+puts $FH "this is a test"
+
+close $FH
+
+puts ""
+
+

@@ -1,0 +1,47 @@
+#!/usr/bin/tclsh
+
+set syslog_msg "LC/1/5/CPU0:Jan 17 04:36:56.849 : fabio_svr\[167\]: %PKT_INFRA-PQMON-6-QUEUE_DROP : Taildrop on QAD queue 8 owned by netio (jid=268)"
+
+
+proc get_location {line} {
+  set location ""
+
+  regsub -all {[ \r\t\n]+} $line " " line
+  regsub -all {^[ ]} $line "" line
+  regsub -all {[ ]$} $line "" line
+
+  set location [ lindex [split $line ":"] 0 ]
+  regsub -all {^LC\/} $location "" location
+
+  return $location
+} ;# get_location
+
+
+
+
+
+
+set location [get_location $syslog_msg]
+
+set cmds ""
+
+lappend cmds "tem len 0"
+lappend cmds "term exec prompt timestamp"
+lappend cmds "show spp buffer location $location "
+lappend cmds "show spp client detail location $location  | inc allocator"
+lappend cmds "show process block location $location"
+
+puts ""
+
+# Run static cemmands listed above
+#foreach CMD $cmds {
+#}
+
+foreach CMD [split $cmds " "] {
+  if {$CMD == ""} { continue }
+  puts $CMD
+}
+
+puts ""
+
+

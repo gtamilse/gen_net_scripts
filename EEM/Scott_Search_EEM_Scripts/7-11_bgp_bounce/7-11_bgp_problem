@@ -1,0 +1,62 @@
+
+vrf 13979:32545
+  description EVPN3 | 7-ELEVEN | 7-11 STORES |
+ address-family ipv4 unicast
+  import route-target
+   13979:16180 
+   13979:103000 
+   13979:103010 
+   13979:103500 
+   13979:103510 
+  !
+  export route-policy To_NM_VPN
+  export route-target
+   13979:16180 
+  !
+  maximum prefix 40000 75
+ !
+!
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+interface  Serial 0/1/0/0/1/25:1 
+  description MNX | 7-ELEVEN | VIRGINIA BEACH | VA | DEEC.911969..ATI | 2869956 | 0 | 0 | USA | NB-IPVPN | |
+  bandwidth 512
+  vrf 13979:32545
+  ipv4 address 10.242.91.113/30
+  no ipv4 redirects
+  encapsulation ppp
+  service-policy output V4_Ex_0:60:30:10_out_1M
+  service-policy input V4_Ex_0:60:30:10_in
+  no shutdown
+!
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+router bgp 13979
+vrf 13979:32545
+ rd 13979:159119
+ default-information originate 
+ address-family ipv4 unicast
+  redistribute connected
+  redistribute static
+  maximum-paths eibgp 6
+ !
+ neighbor 10.242.94.6
+  remote-as 46017
+  description customer 7-ELEVEN
+  use neighbor-group REST_ROUTE
+  address-family ipv4 unicast
+ !
+ neighbor 10.242.93.202
+  remote-as 46002
+  description customer 7-ELEVEN
+  use neighbor-group REST_ROUTE
+  address-family ipv4 unicast
+ !
+ neighbor 10.242.92.242
+  remote-as 45948
+  description customer 7-ELEVEN
+  use neighbor-group REST_ROUTE
+  address-family ipv4 unicast
+ !

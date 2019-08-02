@@ -1,0 +1,23 @@
+#!/usr/bin/tclsh
+
+set syslog "LC/0/0/CPU0:Oct 24 18:24:32.438 : ifmgr\[182\]: %PKT_INFRA-LINK-3-UPDOWN : Interface GigabitEthernet0/0/0/0, changed state to Down"
+
+
+# Trim up the line remove extra space/tabs etc:
+regsub -all {[ \r\t\n]+} $syslog " " syslog
+# Remove any leading white space:
+regsub -all {^[ ]} $syslog "" syslog
+# Remove any ending white space:
+regsub -all {[ ]$} $syslog "" syslog
+
+
+#regexp {ATM(\d+\/\d+\/\d+\/\d+).*} $syslog - location
+#regexp {neighbor (\d+\.\d+\.\d+\.\d+)} $syslog - IP
+
+regexp {Interface (GigabitEthernet\d+\/\d+\/\d+\/\d+), changed} $syslog - interface
+
+puts "\n"
+puts "syslog:\n$syslog\n\n"
+puts "\n"
+puts "interface: $interface\n"
+puts "\n"

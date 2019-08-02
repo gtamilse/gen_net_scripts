@@ -1,0 +1,57 @@
+RP/0/RP0/CPU0:crs1#sh run
+Mon Apr  5 01:26:08.767 UTC
+Building configuration...
+!! IOS XR Configuration 0.0.0
+!! Last configuration change at Mon Apr  5 01:25:17 2010 by lab
+!
+hostname crs1
+event manager environment _output_log eem_fabric_detect.log
+event manager environment _storage_location harddisk:/eem
+event manager directory user policy harddisk:/eem
+event manager policy bcc.tcl username lab type user
+event manager policy fab_detect.tcl username eem-user type user
+telnet vrf default ipv4 server max-servers 10
+domain name cisco.com
+username lab
+ group root-lr
+ group netadmin
+ group operator
+ group sysadmin
+ group root-system
+ group serviceadmin
+ group cisco-support
+ secret 5 $1$fEwV$26Q05CHvERNNsdG6typ87/
+!
+username eem-user
+ group root-system
+ group cisco-support
+!
+aaa authorization exec default group tacacs+ none
+aaa authorization exec eem-user local
+aaa authorization commands default group tacacs+ none
+aaa authorization commands eem-user none
+aaa authorization eventmanager default local
+aaa authorization eventmanager eem-user local
+aaa authentication login CBB local
+aaa authentication login default group tacacs+
+aaa authentication login eem-user local
+line template CBB
+ login authentication CBB
+!
+line console
+ timestamp
+ exec-timeout 0 0
+ width 80
+ length 52
+!
+line default
+ exec-timeout 0 0
+!
+line template eem-user
+ authorization exec eem-user
+ authorization commands eem-user
+!
+vty-pool eem 100 110 line-template eem-user
+vty-pool default 0 33 line-template CBB
+interface Bundle-Ether88
+

@@ -1,0 +1,8 @@
+event manager environment _email_to ssearch@cisco.com
+event manager environment _domainname cisco.com
+event manager environment _email_from ssearch@cisco.com
+event manager environment _email_server 9.3.3.249
+!
+event manager environment _BGP_stale_recovery_storage_location harddisk:/eem
+event manager directory user policy harddisk:/eem
+event manager policy BGP_stale_recovery.tcl username cisco type user

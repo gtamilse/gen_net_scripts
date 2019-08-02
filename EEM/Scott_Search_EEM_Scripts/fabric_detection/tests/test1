@@ -1,0 +1,112 @@
+Register the eem policy:
+
+RP/0/RP1/CPU0:PSL-CRS2(config)#event manager policy fab_detect.tcl username cisco type user
+RP/0/RP1/CPU0:PSL-CRS2(config)#commit
+
+If the policy header line syntax is correct you will receive the message "registered successfully":
+
+RP/0/RP1/CPU0:Apr  9 16:55:56.923 UTC0: eem_script_dir[174]: %HA-HA_EEM-6-EEMSD_POLICY_REG_SUCC : Policy 'fab_detect.tcl' registered successfully, by user cisco, with persist time 3600 and type 1
+
+
+Below I am deleting the old fab_detect.tcl policy output log file:
+
+RP/0/RP1/CPU0:PSL-CRS2#dele harddisk:/eem/eem_fab*
+Delete harddisk:/eem/eem_fabric_detect.log[confirm]
+
+
+Next I generate the test syslog message the fab_detect.tcl policy is searching for:
+
+run echo "Testing sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart schedu$
+
+Syslog MSG:
+
+#RP/0/RP1/CPU0:Apr  9 16:57:04.868 UTC0: syslog_dev[83]: syslog_dev: Testing sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled this is a test
+ 
+
+Below is the syslog message that the fab_detect.tcl policy generates at the end of the eem script:
+
+RP/0/RP1/CPU0:PSL-CRS2#RP/0/RP1/CPU0:Apr  9 16:57:12.490 UTC0: fab.tcl[65803]: Fabric Error Detection - Completed
+
+
+Below is verifying the output log file was created:
+ 
+RP/0/RP1/CPU0:PSL-CRS2#dir harddisk:/eem
+Directory of harddisk:/eem
+ 
+63570048    -rwx  4442        Fri Apr  9 16:46:43 2010  fab_detect.tcl
+63570144    -rwx  1769        Fri Apr  9 16:57:12 2010  eem_fabric_detect.log <<<
+63570208    -rwx  4123        Fri Apr  9 16:55:15 2010  fab.tcl
+ 
+59894611968 bytes total (59890245632 bytes free)
+RP/0/RP1/CPU0:PSL-CRS2#
+
+
+Some of the test output I logged to the output log file:
+
+RP/0/RP1/CPU0:PSL-CRS2#more harddisk:/eem/eem_fabric_detect.log
+*Timestamp = 16:57:06 UTC Fri Apr 09 2010
+Cisco Fabric Error Detection Script
+Designed for: IOX Embedded Event Manager (EEM)
+by: Scott Search (ssearch@cisco.com)
+ 
+
+Node: PSL-CRS2
+SYSLOG MSG: RP/0/RP1/CPU0: syslog_dev[83]: syslog_dev: Testing sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled this is a test
+ 
+nodename: 0/RP1/CPU0
+
+Id: 0 - Admin: UP - Oper: UP
+Id: 1 - Admin: UP - Oper: UP
+Id: 2 - Admin: UP - Oper: UP
+Id: 3 - Admin: UP - Oper: UP
+ 
+Down Fabric Plane:
+ 
+EMAIL DATA BELOW SENT TO: ssearch@cisco.com
+ 
+Mailservername: 9.3.3.249
+From: ssearch@cisco.com
+To: ssearch@cisco.com
+Cc:
+Subject: Node PSL-CRS2 Fabric Error Detection
+ 
+Fabric Plane All Output:
+  Flags: P - plane admin down,       p - plane oper down
+         C - card admin down,        c - card  oper down
+         L - link port admin down,   l - linkport oper down
+         A - asic admin down,        a - asic oper down
+         B - bundle port admin Down, b - bundle port oper down
+         I - bundle admin down,      i - bundle oper down
+         N - node admin down,        n - node down
+         o - other end of link down  d - data down
+         f - failed component downstream
+         m - plane multicast down,   s - link port permanently shutdown
+         t - no barrier input
+ 
+ Plane  Admin   Oper
+ Id     State   State
+ --------------------
+ 0      UP      UP
+ 1      UP      UP
+ 2      UP      UP
+ 3      UP      UP
+RP/0/RP1/CPU0:PSL-CRS2(admin)#
+ 
+ 
+SYSLOG MSG: RP/0/RP1/CPU0: syslog_dev[83]: syslog_dev: Testing sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled this is a test
+ 
+ 
+Extracted nodename: 0/RP1/CPU0
+
+*Timestamp = 16:57:12 UTC Fri Apr 09 2010
+
+
+Just a quick verification that the eem policy is present:
+
+RP/0/RP1/CPU0:PSL-CRS2#sh even man pol reg
+No.  Type    Event Type          Time Registered           Name
+1    user    syslog              Fri Apr  9 16:55:56 2010  fab.tcl
+ pattern {sysmgr.*sfe_drvr.*abnormally terminated.*restart scheduled}
+ nice 0 priority normal maxrun_sec 20 maxrun_nsec 0
+persist_time: 3600 seconds,  username: cisco
+RP/0/RP1/CPU0:PSL-CRS2#

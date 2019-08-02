@@ -1,0 +1,235 @@
+::cisco::eem::event_register_syslog pattern "QM Buffer Depletion: Out of pool qelem range head .* tail .* in FrFab FreeQ pool" maxrun 300
+
+#------------------------------------------------------------------
+# QM_Buffer_collections EEM Script
+#
+# May 2015 - Scott Search (ssearch@cisco.com)
+#
+# This EEM script will be triggered off the following syslog message:
+#   "QM Buffer Depletion: Out of pool qelem range head (118456) tail (503) in FrFab FreeQ pool"
+#
+# Once this syslog message is received on the router the EEM script will collect some captures
+# requiring the head and tail integer values from the syslog message.
+#
+# EEM Script is dependent on the following event manager environment variables:
+#   _QM_Buffer_storage_location <storage>  -Disk/hardisk storage location "harddisk:/eem"
+#
+# Email Option
+# To activate the email option the following event manager environment variables must be set:
+#   _email_server    _email_from
+#   _email_to        _domainname
+#
+#
+# EEM Script Logic:
+#
+#
+# Copyright (c) 2015 by cisco Systems, Inc.
+# All rights reserved.
+#------------------------------------------------------------------
+#
+namespace import ::cisco::eem::*
+namespace import ::cisco::lib::*
+ 
+##########################################################################################
+# Set the pattern the script will filter on (maybe set within the eem environment vars):
+##########################################################################################
+set pattern "QM Buffer Depletion: Out of pool qelem range head (yyy) tail (zzz) in FrFab FreeQ pool"
+
+##################################
+# Verify the environment vars:
+##################################
+# Storage location:
+if {![info exists _QM_Buffer_storage_location]} {
+  set result "EEM policy error: environment var _QM_Buffer_storage_location not set"
+  error $result $errInfo
+}
+
+# Below var flag is used to verify if the QM_Buffer_collections.tcl script has run previously:
+set run_flag "$_QM_Buffer_storage_location/QM_Buffer_run_flag"
+
+##################################
+# PROCs:
+##################################
+proc get_location_head_tail {syslogs} {
+  set location ""
+  set head 0
+  set tail 0
+
+  foreach line [split $syslogs "\n"] {
+    regsub -all {[ \r\t\n]+} $line " " line
+    regsub -all {^[ ]} $line "" line
+    regsub -all {[ ]$} $line "" line
+
+    if {[regexp "QM Buffer Depletion: Out of pool qelem range head" $line]} {
+      regexp { range head \((\d+)\) tail \((\d+)\) in} $line - head tail
+    }
+
+    if {[regexp {^time_sec} $line]} {
+      regexp "\{(.*): .*" $line - msg
+      set location [ lindex [split $msg ":"] 0 ]
+      regsub {^LC\/} $location "" location
+    } else {
+      set location [ lindex [split $line ":"] 0 ]
+      regsub {^LC\/} $location "" location
+    }
+  }
+  return [list $location $head $tail]
+} ;# get_location_head_tail
+
+
+proc send_syslog {msg repeat} {
+  set kont 0
+
+  while {$kont < $repeat} {
+    action_syslog msg $msg
+    incr kont
+  }
+} ;# send_syslog
+
+
+proc send_email {node syslog_msg msg} {
+  global FH
+  global _email_to _email_from
+  global _email_server _domainname
+  global email_subject
+
+  action_syslog msg "Sending QM Buffer Collections run notification to $_email_to"
+
+  foreach recipient [split $_email_to " "] {
+    set email [format "Mailservername: %s" "$_email_server"]
+    set email [format "%s\nFrom: %s" "$email" "$_email_from"]
+    set email [format "%s\nTo: %s" "$email" "$recipient"]
+    set email [format "%s\nCc: %s" "$email" ""]
+    set email [format "%s\nSubject: %s\n" "$email" $email_subject]
+
+    # Email BODY:
+    set email [format "%s\n%s" "$email" "The $node node run the QM_Buffer_collections EEM script for syslog:"]
+    set email [format "%s\n%s\n\n" "$email" "$syslog_msg"]
+    set email [format "%s\n%s" "$email" "$msg"]
+   
+    # Send email message:
+    if [catch {smtp_send_email $email} result] {
+      puts "smtp_send_email: $result"
+    }
+ 
+    puts $FH "EMAIL DATA BELOW SENT TO: $_email_to\n"
+    puts $FH $email
+  }
+} ;# send_email
+
+
+##################################
+# MAIN/main
+##################################
+global FH
+global _email_to _email_from
+global _email_server _domainname
+global email_subject
+
+set locations ""
+set head 0
+set tail 0
+
+# Capture the scripts start time:
+set time_now [clock seconds]
+
+set date_time [clock format $time_now -format "%m-%d-%Y_%H.%M.%S"]
+set date [clock format $time_now -format "%T %Z %a %b %d %Y"]
+
+set filename "QM_Buffer_collections.$date_time"
+set output_file "$_QM_Buffer_storage_location/$filename"
+
+# Open the output file (for write):
+if [catch {open $output_file w} result] {
+    error $result
+}
+set FH $result
+
+# Timestamp the script start time to the output log file:
+puts $FH "Start Timestamp: $date"
+
+# Log the nodes hostname to the output log file:
+set node [info hostname]
+set email_subject "**Node $node Possible QM Buffer Depletion detected**"
+puts $FH "Node: $node"
+
+# Set the array arr_einfo to the eem event_reqinfo
+array set arr_einfo [event_reqinfo]
+# Extract the syslog message the finally kicked off the EEM script:
+set syslog_msg $arr_einfo(msg)
+
+# If the $run_flag file exists exit from script:
+if [file exists $run_flag] {
+  set msg "EEM policy QM_Buffer_collections.tcl script failed to start Due to $run_flag exists No Action Taken!"
+  action_syslog msg $msg
+
+  set msg "$msg\nDelete $run_flag in order to activate the EEM QM_Buffer_collections.tcl script."
+  set msg "$msg\n\nThe $node node experienced the following syslog:"
+  set msg "$msg\n$syslog_msg"
+  puts $FH $msg
+  close $FH
+  exit
+}
+
+# Get the location, head and tail values from the triggering syslog_msg
+set elements [get_location_head_tail $syslog_msg]
+set location [lindex $elements 0]
+set head     [lindex $elements 1]
+set tail     [lindex $elements 2]
+
+
+if {$location != "" && $head != 0 && $tail != 0} {
+  # Create the $run_flag file
+  if [catch {open $run_flag w} result] {
+    error $result
+  }
+  set RUN $result
+  puts $RUN "Timestamp = $date"
+  close $RUN
+
+  set head_plus10  [expr $head + 10]
+  set head_minus10 [expr $head - 10]
+  set tail_plus10  [expr $tail + 10]
+  set tail_minus10 [expr $tail - 10]
+
+  # Open router connection
+  if [catch {cli_open} result] {
+    error $result $errorInfo
+  } else {
+    array set cli $result
+  }
+
+  set CMDs ""
+  lappend CMDs "show controller egressq qelem $tail_minus10 $tail_plus10 location $location"
+  lappend CMDs "show controller egressq qelem $head_minus10 $head_plus10 location $location"
+
+  puts $FH "\n"
+  puts $FH "Final Syslog Trigger:"
+  puts $FH $syslog_msg
+  puts $FH "\n"
+  puts $FH "EEM script will run the QM Buffer collection commands found below::\n"
+  puts $FH "\n"
+  puts $FH "Opening router connection"
+  puts $FH ""
+
+  foreach cmd $CMDs {
+    puts $FH "Running CMD: $cmd\n"
+
+    if [catch {cli_exec $cli(fd) $cmd} result] {
+      error $result $errorInfo
+    }
+    puts $FH "$result\n\n"
+  }
+}
+
+set msg "EEM script QM_Buffer_collections ($node) COMPLETED.  EEM script captures saved to file:\n$output_file"
+send_syslog $msg $repeat
+
+# Send an email message if all below exists:
+if {[info exists _email_server] && [info exists _domainname] && [info exists _email_from] && [info exists _email_to]} {
+  # Call on the send_email proc to generate an email message
+  send_email $node $syslog_msg $msg
+}
+
+close $FH
+

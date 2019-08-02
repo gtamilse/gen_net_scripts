@@ -1,0 +1,60 @@
+#!/usr/bin/tclsh
+
+set interface "GigabitEthernet0/0/0/0"
+
+set _40G_mappings "40G_mappings"
+
+if {[file exists $_40G_mappings]} {               
+  puts "\nMappings file exists, continuing\n\n"
+} else {
+  puts "\nFile does not exist\n"
+  exit
+}
+
+
+# Open file for read
+set OPEN_FH [open $_40G_mappings r]
+set file_contents [read $OPEN_FH]
+close $OPEN_FH
+
+set return_tunnel_int ""
+
+#  Process data file
+set contents [split $file_contents "\n"]
+foreach line $contents {
+  regsub -all {[ \r\t\n]+} $line " " line
+  regsub -all {^[ ]} $line "" line
+  regsub -all {[ ]$} $line "" line
+
+  set FortyGig_int [ lindex [split $line " "] 0 ]
+  set Tunnel_int   [ lindex [split $line " "] 1 ]
+
+  if {($FortyGig_int != "" && $Tunnel_int != "")} {
+    puts "FortyGig_int: $FortyGig_int  --- Tunnel_int: $Tunnel_int"
+  }
+
+  if {$FortyGig_int == $interface} {
+    puts "\n**Match**  interface: $interface  --- FortyGig_int: $FortyGig_int"
+    set return_tunnel_int $Tunnel_int
+  }
+}
+
+puts "\n\nreturn_tunnel_int: $return_tunnel_int\n\n"
+
+puts "\n\nDone ...\n\n"
+
+
+;#set ospf_ver "4.0.0"
+;#
+;#set test_list "nothing"
+;#
+;#if {[string compare $ospf_ver "4.1"] < 0} {
+;#  puts "Do not match 0"
+;#  set supportP2MP 0
+;#} else {
+;#  puts "match 1"
+;#  set supportP2MP 1
+;#}
+
+
+

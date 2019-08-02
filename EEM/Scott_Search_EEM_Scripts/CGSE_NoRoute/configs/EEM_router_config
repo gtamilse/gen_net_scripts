@@ -1,0 +1,43 @@
+
+event manager environment _QM_Buffer_storage_location disk0:/eem
+event manager directory user policy disk0:/eem
+event manager policy QM_Buffer_collections.tcl username eem-user   <<<< Register EEM script
+!
+!
+username eem-user
+ group root-system
+ group cisco-support
+!
+!
+aaa authorization exec eem-user local
+aaa authorization commands eem-user none
+aaa authorization eventmanager default local
+aaa authorization eventmanager eem-user local
+aaa authentication login eem-user local
+!
+!
+line template eem-user
+ authorization exec eem-user
+ authorization commands eem-user
+!
+vty-pool eem 100 110 line-template eem-user
+
+
+
+
+no aaa authentication login default group tacacs+ local-case
+no aaa authentication login eem-user none
+no aaa authentication enable default group tacacs+
+no aaa authorization exec default group tacacs+ local none 
+no aaa authorization exec eem-user none 
+no aaa authorization commands 0 eem-user none 
+no aaa authorization commands 1 default group tacacs+ none 
+no aaa authorization commands 1 eem-user none 
+no aaa authorization commands 15 default group tacacs+ none 
+no aaa authorization commands 15 eem-user none 
+no aaa accounting send stop-record authentication failure 
+no aaa accounting exec default start-stop group tacacs+
+no aaa accounting commands 1 default start-stop group tacacs+
+no aaa accounting commands 15 default start-stop group tacacs+
+no aaa accounting system default start-stop group tacacs+
+no aaa session-id common

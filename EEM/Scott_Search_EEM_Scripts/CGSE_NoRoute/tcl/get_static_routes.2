@@ -1,0 +1,70 @@
+#!/usr/bin/tclsh
+
+puts ""
+
+set syslogs "RP/0/RP0/CPU0:rmonc401cts#show run router static
+router static
+ maximum path ipv4 10000
+ address-family ipv4 unicast
+  12.83.49.81/32 12.83.67.106 tag 333
+  12.83.49.81/32 12.83.67.110 tag 333
+  10.20.30.40/32 12.83.67.106
+  240.240.240.240/16 12.83.67.106 tag 5050
+  151.164.255.113/32 12.83.103.4
+  192.0.2.1/32 Null0
+ !
+ address-family ipv6 unicast
+  2602:300::/28 2001:506:2001:fff:c534:369:0:2
+  2602:300::/28 2001:506:2001:fff:c534:36d:0:2
+  2602:300:c533:1510::/60 Null0
+  2602:300:c533:1510::/128 2001:506:2001:fff:c534:369:0:2
+  2602:300:c533:1510::/128 2001:506:2001:fff:c534:36d:0:2
+  2602:300:c533:1510::27/128 2001:506:2001:fff:c534:369:0:2
+  2602:300:c533:1510::29/128 2001:506:2001:fff:c534:36d:0:2
+  cafe:1880::/28 cafe:1890:c00:4601::2
+  cafe:188c:586:3010::/128 cafe:1890:c00:4601::2
+  cafe:188c:586:3010::2/128 cafe:1890:c00:4601::2
+ !
+!
+"
+
+set routes ""
+
+#set address_up "2001:506:2001:fff:c534:369:0:2"
+#set address_down "2001:506:2001:fff:c534:369:0:0"
+
+set address_up "cafe:1890:c00:4601::2"
+set address_down "cafe:1890:c00:4601::0"
+
+#orig   : cafe:1890:c00:4601::1
+
+#set address_up "12.83.67.106"
+#set address_down "12.83.67.104"
+
+puts ""
+puts "address_up: $address_up"
+puts "address_down: $address_down"
+puts ""
+
+
+foreach line [split $syslogs "\n"] {
+  regsub -all {[ \r\t\n]+} $line " " line
+  regsub -all {^[ ]} $line "" line
+  regsub -all {[ ]$} $line "" line
+
+  if {[regexp "$address_up" $line]} {
+    lappend routes $line
+  }
+
+  if {[regexp "$address_down" $line]} {
+    lappend routes $line
+  }
+}
+
+
+puts "routes:"
+foreach line $routes {
+  puts $line
+}
+
+puts ""

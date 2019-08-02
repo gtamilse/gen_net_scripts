@@ -1,0 +1,89 @@
+#!/usr/bin/tclsh
+
+puts ""
+
+proc clean_string {line} {
+  # Trim up the line remove extra space/tabs:
+  regsub -all {[ \r\t\n]+} $line " " line
+  # Remove any leading white space:
+  regsub -all {^[ ]} $line "" line
+  # Remove any ending white space:
+  regsub -all {[ ]$} $line "" line
+  
+  return $line
+}
+# clean_string
+
+
+proc examine_prefix {output} {
+  set RouteTag "NA"
+  set ETRaddress "NA"
+  set LocatorAddress "NA"
+  set locator 0
+
+  foreach line [split $output "\n"] {
+    set line [clean_string $line]
+  
+    if {$line ne ""} {
+      if {[regexp {^Routing table tag} $line]} {
+        set RouteTag [lindex [split $line " "] end]
+      }
+      if {[regexp {^ETR [0-9]+\.[0-9]+\.[0-9]+\.[0-9]+} $line]} {
+        regexp {([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)} $line ETRaddress
+      }
+      if {[regexp {^Locator Local} $line]} {
+        set locator 1
+      }
+      if {$locator == 1} {
+        if {[regexp {^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+} $line]} {
+          regexp {^([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)} $line LocatorAddress
+        }
+      }
+    }
+  }
+  return [list $RouteTag $ETRaddress $LocatorAddress]
+} 
+# examine_prefix
+
+
+set output "MSMR#show lisp 1 site 172.16.100.3/32 instance-id 101
+LISP Site Registration Information
+
+Site name: 0000
+Description: EEM-managed
+Allowed configured locators: any
+Requested EID-prefix:
+  EID-prefix: 172.16.100.3/32 instance-id 101
+    First registered:     02:15:34
+    Routing table tag:    999
+    Origin:               Dynamic, more specific of 0.0.0.0/0
+    Merge active:         No
+    Proxy reply:          No
+    TTL:                  1d00h
+    State:                complete
+    Registration errors:
+      Authentication failures:   0
+      Allowed locators mismatch: 0
+    ETR 172.16.1.2, last registered 00:00:15, no proxy-reply, map-notify
+                    TTL 1d00h, no merge, hash-function sha1, nonce 0xCA9A607C-0x0E974520
+                    state complete, no security-capability
+                    xTR-ID 0xFE78594D-0x51D6BCB2-0xE0A7FBE9-0x28CFC0AB
+                    site-ID unspecified
+      Locator      Local  State      Pri/Wgt  Scope
+      172.12.12.1  yes    up           1/1    IPv4 none
+MSMR#
+"
+
+
+set retval [examine_prefix $output]
+set RouteTag        [lindex $retval 0]
+set ETRaddress      [lindex $retval 1]
+set LocatorAddress  [lindex $retval 2]
+
+
+puts "RouteTag: $RouteTag"
+puts "ETRaddress: $ETRaddress"
+puts "LocatorAddress: $LocatorAddress"
+puts ""
+
+

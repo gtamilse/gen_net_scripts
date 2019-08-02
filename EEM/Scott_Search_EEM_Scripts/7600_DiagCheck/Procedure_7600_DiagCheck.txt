@@ -1,0 +1,36 @@
+
+Procedure to deploy EEM script 7600_DiagCheck.tcl:
+--------------------------------------------------
+
+1. Enable the TestFabricFlowControlStatus diag test on BOTH RSP SLOTS and schedule to run every 10 seconds.
+            diagnostic monitor module <> test TestFabricFlowControlStatus
+            diagnostic monitor interval module <> test TestFabricFlowControlStatus 00:00:10 0 0
+
+2. Create a /eem directory under disk0: and slavedisk0:. Copy the script into disk0:/eem/ and slavedisk0:/eem/
+
+3. Register the EEM script with event manager 
+	conf t
+	event manager directory user policy disk0:/eem
+	event manager policy 7600_DiagCheck.tcl
+	exit
+	
+4. For the email function to work, configure the following EEM environment variables:
+	conf t
+	event manager environment _email_to <Email recipients>
+	event manager environment _domainname <domain>
+	event manager environment _email_from <Single email address>
+	event manager environment _email_server <IP address of SMTP server>
+
+5. Verify the EEM registration using the command below:
+	7600S-2#show event manager statistics policy | in Diag
+	12   script    314         0           0.914          180.600        7600_DiagCheck.tcl
+	7600S-2#
+
+6. The script will be executed every 1 minute. If the script detects the Diag failure, 7600_DiagCheck_run_flag file will be created under disk0:/eem/. 
+This is to ensure that there is no switch-over loop between slot 5 & 6 RSP modules, if the diag failure condition persist on both slots.
+The logs will be collected and saved as disk0:/eem/7600_DiagCheck.<timestamp>
+Once the logs are collected and switched over, customer needs to manually delete the file disk0:/eem/7600_DiagCheck_run_flag.
+
+Following syslog will be printed until the 7600_DiagCheck_run_flag file is deleted.
+"%HA_EM-6-LOG: 7600_DiagCheck.tcl: EEM policy 7600_DiagCheck.tcl detected possible previous RSP switchover due to previous 7600_DiagCheck_run_flag exists!"
+  

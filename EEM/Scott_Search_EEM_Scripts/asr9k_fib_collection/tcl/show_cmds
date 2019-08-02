@@ -1,0 +1,40 @@
+#!/usr/bin/tclsh
+
+set show_cmds ""
+lappend show_cmds "show run"
+lappend show_cmds "show ver"
+lappend show_cmds "show brief"
+lappend show_cmds "show descr"
+lappend show_cmds "show inter"
+
+lappend show_cmds "show plat"
+lappend show_cmds "show diag"
+
+puts ""
+puts "show_cmds:\n$show_cmds\n"
+
+
+puts ""
+puts ""
+
+foreach cmd $show_cmds {
+  puts "CMD: $cmd"
+}
+
+puts ""
+
+exit
+
+
+foreach cmd [split $show_cmds "|"] {
+  # Trim up the cmd remove extra space/tabs etc:
+  regsub -all {[ \r\t\n]+} $cmd " " cmd
+  # Remove any leading white space:
+  regsub -all {^[ ]} $cmd "" cmd
+
+  puts "Run CMD: $cmd"
+}
+
+
+
+

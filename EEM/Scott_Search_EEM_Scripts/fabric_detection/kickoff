@@ -1,0 +1,58 @@
+
+
+
+
+
+
+#!/usr/bin/perl
+
+1. SP/F0/SM18/SP:Feb 26 20:39:58.462 : sfe_drvr[108]:%FABRIC-FABRIC_SRVR-3-ERR_DRV_INIT : Initialization of fabric driverfailed: Waiting for fabric mother board to be powered up ;  exiting...
+
+2. SP/F0/SM18/SP:Feb 26 20:38:33.113 : i2c_server[60]:%PLATFORM-I2C-2-VOLTAGE_SUPPLY_FAILED : S2CC voltage volt3.3V_POD_B1 = 0not within thresholds
+
+
+
+# "DIAG-HFRDIAG-3-ERROR\|Failure\([MU]:L\) detected in node1_SM6_SP \
+# (Plane .*\)"
+#
+# Even this seems a little long though.  If there are no similar
+# messages that get printed you might be able to get away with something
+# like:
+#
+# > DIAG-HFRDIAG-3-ERROR|Failure(M:L) detected in node1_SM6_SP (Plane 6)
+# > DIAG-HFRDIAG-3-ERROR|Failure(U:L) detected in node1_SM6_SP (Plane 6)
+# 
+# "DIAG-HFRDIAG-3-ERROR\|Failure.*detected in .*"
+#
+# > FABRIC-FABRIC_SRVR-3-ERR_DRV_INIT|Initialization of fabric driver
+# > failed: Waiting for fabric mother board to be powered up ; exiting...
+# >
+# 
+# A regular expression for this might be:
+# 
+# "FABRIC-FABRIC_SRVR-3-ERR_DRV_INIT\|Initialization of fabric driver failed.*"
+
+
+::cisco::eem::event_register_syslog tag event1 pattern ".*sfe_drvr.*FABRIC-FABRIC_SRVR-3-ERR_DRV_INIT : Initialization of fabric driver failed: Waiting for fabric mother board to be powered up"
+
+::cisco::eem::event_register_syslog tag event2 pattern ".*PLATFORM-I2C-2-VOLTAGE_SUPPLY_FAILED : S2CC voltage volt.* not within thresholds"
+
+::cisco::eem::trigger {
+  ::cisco::eem::correlate event event 1 and event event2
+    ::cisco::eem::attribute tag event1 occurs 1
+    ::cisco::eem::attribute tag event2 occurs 1
+}
+
+
+
+
+::cisco::eem::event_register_syslog tag event1 pattern "sfe_drvr.*FABRIC-FABRIC_SRVR-3-ERR_DRV_INIT.*Init.*fabric.*failed:  Waiting.*fabric mother.*powered up"
+::cisco::eem::event_register_syslog tag event2 pattern "PLATFORM-I2C-2-VOLTAGE_SUPPLY_FAILED.*S2CC voltage.*not within thres"
+::cisco::eem::trigger {
+  ::cisco::eem::correlate event event1 and event event2
+    ::cisco::eem::attribute tag event1 occurs 1
+    ::cisco::eem::attribute tag event2 occurs 1
+}
+
+
+

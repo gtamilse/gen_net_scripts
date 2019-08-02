@@ -1,0 +1,18 @@
+#!/usr/bin/tclsh
+
+puts ""
+
+set syslogs "0/6/CPU0"
+
+foreach line [split $syslogs "\n"] {
+  regsub -all {[ \r\t\n]+} $line " " line
+  regsub -all {^[ ]} $line "" line
+  regsub -all {[ ]$} $line "" line
+
+  if {[regexp {^0\/\d+\/CPU0$} $line]} {
+    regexp {^0\/(\d+)\/CPU0$} $line - slot
+  }
+}
+
+puts "slot: $slot"
+puts ""

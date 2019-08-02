@@ -1,0 +1,8 @@
+run echo "L2-SPA-3-PLIM_HEARTBEAT_ERR : SPA-4XT3/E3: bay 0 heartbeat missed, expected seq# 4981185 received seq# 4981184, Time since last message 38s" > /dev/syslog
+
+
+
+
+g_spa_3[159]: %L2-SPA-3-PLIM_HEARTBEAT_ERR : SPA-4XT3/E3: bay 3 heartbeat missed, expected seq# 4981185 received seq# 4981184, Time since last message 38s
+
+

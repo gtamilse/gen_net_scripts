@@ -1,0 +1,117 @@
+::cisco::eem::event_register_syslog pattern "%MGBL-SYS-5-CONFIG_I" maxrun 120
+#  ::cisco::eem::event_register_syslog pattern "%MGBL-IFSTATS-6-CLEAR_COUNTERS" maxrun 120
+
+namespace import ::cisco::eem::*
+namespace import ::cisco::lib::*
+
+###########################################
+# These vars below should be set via the
+# event environment:
+set _email_server 9.3.3.249
+set _email_from "ssearch@cisco.com"
+set _email_to "ssearch@cisco.com"
+set _storage_location "harddisk:/eem"
+set _output_log "eem_fabric_detect.log"
+
+
+
+###########################################
+# MAIN/main
+###########################################
+   
+###########################################
+# Globals:
+global FH flags
+# Arrays:
+array set if_needed {}
+
+set flags                    ""
+set retval                   ""
+
+
+# Open the output file (for write):
+if [catch {open $_storage_location/$_output_log w} result] {
+    error $result
+}
+set FH $result
+
+set date [clock format [clock sec] -format "%T %Z %a %b %d %Y"]
+puts $FH "*Timestamp = $date"
+puts $FH "Cisco Fabric Error Detection Script"
+puts $FH "Designed for: Embedded Event Manager (EEM)"
+puts $FH "by: Scott Search (ssearch@cisco.com)\n\n"
+ 
+###########################################
+# Open Node Connection
+if [catch {cli_open} result] {
+  error $result $errorInfo
+} else {
+  array set cli $result
+}
+
+# Set node hostname:
+set node [info hostname]
+
+# Enter Admin mode:
+if [catch {cli_exec $cli(fd) "admin"} result] {
+  error $result $errorInfo
+}
+
+# Gather the 'admin show controllers fabric plane all' info
+if [catch {cli_exec $cli(fd) "show controllers fabric plane all"} result] {
+  error $result $errorInfo
+}
+# Remove trailing router prompt
+regexp {\n*(.*\n)([^\n]*)$} $result junk fab_plane_all
+
+
+
+# Configure an alias command for testing purposes:
+if [catch {cli_exec $cli(fd) "config t"} result] {
+  error $result $errorInfo
+}
+if [catch {cli_exec $cli(fd) "alias plat show platform"} result] {
+  error $result $errorInfo
+}
+if [catch {cli_exec $cli(fd) "commit"} result] {
+  error $result $errorInfo
+}
+if [catch {cli_exec $cli(fd) "end"} result] {
+  error $result $errorInfo
+}
+
+
+
+# Exit Admin mode:
+if [catch {cli_exec $cli(fd) "exit"} result] {
+  error $result $errorInfo
+}
+
+###########################################
+# Close Node Connection
+cli_close $cli(fd) $cli(tty_id)
+
+
+###########################################
+# Craft up the email message:
+#action_syslog msg "Sending Fabric Error Detection to $_email_to"
+set email [format "Mailservername: %s" "$_email_server"]
+set email [format "%s\nFrom: %s" "$email" "$_email_from"]
+set email [format "%s\nTo: %s" "$email" "$_email_to"]
+set email [format "%s\nCc: %s" "$email" ""]
+set email [format "%s\nSubject: %s\n" "$email" "Node $node Fabric Error Detection"]
+set email [format "%s\n\n%s" "$email" "Fabric Plane All Output:"]
+set email [format "%s\n%s" "$email" "$fab_plane_all"]
+
+
+if [catch {smtp_send_email $email} result] {
+  puts "smtp_send_email: $result"
+}
+
+puts $FH "EMAIL DATA BELOW SENT TO: $_email_to\n"
+puts $FH $email
+
+set date [clock format [clock sec] -format "%T %Z %a %b %d %Y"]
+puts $FH "*Timestamp = $date"
+ 
+close $FH

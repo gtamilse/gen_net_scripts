@@ -1,0 +1,4 @@
+GigabitEthernet0/0/0/0 tunnel-te1000
+GigabitEthernet0/0/0/1 tunnel-te1001
+GigabitEthernet0/0/0/2 tunnel-te1002
+GigabitEthernet0/0/0/3 tunnel-te1003

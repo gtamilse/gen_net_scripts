@@ -1,0 +1,156 @@
+Configure the EEM environment vars:
+
+RP/0/RP1/CPU0:PSL-CRS2(config)#event manager environment _email_server 9.3.3.249
+RP/0/RP1/CPU0:PSL-CRS2(config)#event manager environment _email_from ssearch@cisco.com
+RP/0/RP1/CPU0:PSL-CRS2(config)#event manager environment _email_to ssearch@cisco.com
+RP/0/RP1/CPU0:PSL-CRS2(config)#event manager environment _storage_location harddisk:/eem
+RP/0/RP1/CPU0:PSL-CRS2(config)#event manager environment _output_log eem_fabric_detect.log
+RP/0/RP1/CPU0:PSL-CRS2(config)#event manager environment _domainname cisco.com
+RP/0/RP1/CPU0:PSL-CRS2(config)#commit
+
+
+
+Register the EEM policy script fab_detect.tcl:
+
+RP/0/RP1/CPU0:PSL-CRS2#conf t
+RP/0/RP1/CPU0:PSL-CRS2(config)#event manager policy fab_detect.tcl username cisco type user
+RP/0/RP1/CPU0:PSL-CRS2(config)#commit
+
+
+You should see the following "Policy fab_detect.tcl registered successfully":
+
+RP/0/RP1/CPU0:Apr  9 18:36:35.488 UTC0: eem_script_dir[174]: %HA-HA_EEM-6-EEMSD_POLICY_REG_SUCC : Policy 'fab_detect.tcl' registered successfully, by user cisco, with persist time 3600 and type 1
+
+
+Verify the EEM policy is registered:
+
+RP/0/RP1/CPU0:PSL-CRS2#sh event mana pol regis
+No.  Type    Event Type          Time Registered           Name
+1    user    syslog              Fri Apr  9 18:36:35 2010  fab_detect.tcl
+ pattern {sysmgr.*sfe_drvr.*abnormally terminated.*restart scheduled}
+ nice 0 priority normal maxrun_sec 20 maxrun_nsec 0
+persist_time: 3600 seconds,  username: cisco
+
+
+Next generate the triggered EEM syslog message:
+
+run echo "test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled End of test" > /dev/syslog
+
+Following syslog is displayed to the terminal:
+
+RP/0/RP1/CPU0:PSL-CRS2#RP/0/RP1/CPU0:Apr  9 18:37:59.720 UTC0: syslog_dev[83]: syslog_dev: test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled End of test
+ 
+
+Below is the syslog message the EEM fab_detect.tcl script policy generates at the end of the script:
+
+RP/0/RP1/CPU0:PSL-CRS2#RP/0/RP1/CPU0:Apr  9 18:38:06.668 UTC0: fab_detect.tcl[65807]: EEM policy fab_detect detected a Fabric Error and has SHUTDOWN CARD: 0/RP1/CPU0
+ 
+
+Below is the EEM fab_detect.tcl script output log details:
+
+RP/0/RP1/CPU0:PSL-CRS2#dir harddisk:/eem
+Directory of harddisk:/eem
+ 
+63570048    -rwx  6011        Fri Apr  9 18:23:02 2010  fab_detect.tcl
+63570144    -rwx  1912        Fri Apr  9 18:38:06 2010  eem_fabric_detect.log
+ 
+59894611968 bytes total (59890253824 bytes free)
+RP/0/RP1/CPU0:PSL-CRS2#
+RP/0/RP1/CPU0:PSL-CRS2#more harddisk:/eem/eem_fabric_detect.log
+*Timestamp = 18:38:01 UTC Fri Apr 09 2010
+Cisco Fabric Error Detection Script
+Designed for: IOX Embedded Event Manager (EEM)
+by: Scott Search (ssearch@cisco.com)
+ 
+Node: PSL-CRS2
+SYSLOG MSG:
+RP/0/RP1/CPU0: syslog_dev[83]: syslog_dev: test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled End of test
+ 
+nodename: 0/RP1/CPU0
+ 
+Show controllers fabric plane all CHECK:
+Id: 0 - Admin: UP - Oper: UP
+Id: 1 - Admin: UP - Oper: UP
+Id: 2 - Admin: UP - Oper: UP
+Id: 3 - Admin: UP - Oper: UP
+ 
+Down Fabric Plane:
+ 
+EMAIL DATA BELOW SENT TO: ssearch@cisco.com
+ 
+Mailservername: 9.3.3.249
+From: ssearch@cisco.com
+To: ssearch@cisco.com
+Cc:
+Subject: **Node PSL-CRS2 Fabric Error Detection**
+ 
+The PSL-CRS2 node experienced the following syslog:
+RP/0/RP1/CPU0: syslog_dev[83]: syslog_dev: test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled End of test
+ 
+ 
+The fab_detect eem policy script has shutdown the following card:
+0/RP1/CPU0
+ 
+Fabric Plane All Output (before card shutdown):
+  Flags: P - plane admin down,       p - plane oper down
+         C - card admin down,        c - card  oper down
+         L - link port admin down,   l - linkport oper down
+         A - asic admin down,        a - asic oper down
+         B - bundle port admin Down, b - bundle port oper down
+         I - bundle admin down,      i - bundle oper down
+         N - node admin down,        n - node down
+         o - other end of link down  d - data down
+         f - failed component downstream
+         m - plane multicast down,   s - link port permanently shutdown
+         t - no barrier input
+ 
+ Plane  Admin   Oper
+ Id     State   State
+ --------------------
+ 0      UP      UP
+ 1      UP      UP
+ 2      UP      UP
+ 3      UP      UP
+RP/0/RP1/CPU0:PSL-CRS2(admin)#
+ 
+*Timestamp = 18:38:06 UTC Fri Apr 09 2010
+RP/0/RP1/CPU0:PSL-CRS2#
+
+
+
+Below is the email sent out:
+
+Date: 09 Apr 2010 18:38:06 UTC
+From: ssearch@cisco.com
+To: ssearch@cisco.com
+Cc:
+Subject: **Node PSL-CRS2 Fabric Error Detection**
+ 
+The PSL-CRS2 node experienced the following syslog:
+RP/0/RP1/CPU0: syslog_dev[83]: syslog_dev: test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled End of test
+ 
+ 
+The fab_detect eem policy script has shutdown the following card:
+0/RP1/CPU0
+ 
+Fabric Plane All Output (before card shutdown):
+  Flags: P - plane admin down,       p - plane oper down
+         C - card admin down,        c - card  oper down
+         L - link port admin down,   l - linkport oper down
+         A - asic admin down,        a - asic oper down
+         B - bundle port admin Down, b - bundle port oper down
+         I - bundle admin down,      i - bundle oper down
+         N - node admin down,        n - node down
+         o - other end of link down  d - data down
+         f - failed component downstream
+         m - plane multicast down,   s - link port permanently shutdown
+         t - no barrier input
+ 
+ Plane  Admin   Oper
+ Id     State   State
+ --------------------
+ 0      UP      UP
+ 1      UP      UP
+ 2      UP      UP
+ 3      UP      UP
+RP/0/RP1/CPU0:PSL-CRS2(admin)#

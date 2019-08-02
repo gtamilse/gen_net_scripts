@@ -1,0 +1,77 @@
+::cisco::eem::event_register_syslog pattern "MGBL-CONFIG-6-DB_COMMIT.*Configuration committed.*show configuration commit changes" maxrun 300
+
+###############################################################################################################
+# NAME: ConfigCommitArchive.tcl
+# AUTH: Scott Search (ssearch@cisco.com)
+# DATE: 1/30/13
+# VERS: v0.1
+#
+# Example pattern:
+#
+# MGBL-CONFIG-6-DB_COMMIT : Configuration committed by user 'cisco'. Use 'show configuration commit changes 
+#    1000000827' to view the changes
+#
+###############################################################################################################
+ 
+# Import namespace libraries:
+namespace import ::cisco::eem::*
+namespace import ::cisco::lib::*
+
+##################################
+# MAIN/main
+##################################
+global FH
+set disk_directory "disk0:/CommitArchive"
+set msg ""
+
+
+set date [clock format [clock sec] -format "%T %Z %a %b %d %Y"]
+set stamp [clock format [clock sec] -format "%T_%b_%d_%Y"]
+regsub -all {:} $stamp "." stamp
+;# set _LogFile "${_down_40G_output_log}_$stamp"
+set _LogFile "CommitChanges_$stamp"
+
+# Set the array arr_einfo to the eem event_reqinfo
+array set arr_einfo [event_reqinfo]
+# Extract the syslog message the finally kicked off the EEM script:
+set syslog_msg $arr_einfo(msg)
+
+regsub -all {[ \r\t\n]+} $syslog_msg " " syslog_msg
+regsub -all {^[ ]} $syslog_msg "" syslog_msg
+regsub -all {[ ]$} $syslog_msg "" syslog_msg
+
+# Extract the user id:
+regexp {Configuration committed by user '(\w+)'.*} $syslog_msg - UserID
+# Extract the configuration id:
+regexp {show configuration commit changes (\d+).*} $syslog_msg - ChangeID
+
+
+action_syslog msg "date: $date"
+action_syslog msg "UserID: $UserID"
+action_syslog msg "ChangeID: $ChangeID"
+
+;# RP/0/7/CPU0:Jan 30 22:13:19.040 : tclsh[65848]: %HA_EM-6-LOG: ConfigCommitArchive.tcl: date: 22:13:19 GMT Wed Jan 30 2013 
+;# RP/0/7/CPU0:Jan 30 22:13:19.041 : tclsh[65848]: %HA_EM-6-LOG: ConfigCommitArchive.tcl: UserID: ssearch 
+;# RP/0/7/CPU0:Jan 30 22:13:19.042 : tclsh[65848]: %HA_EM-6-LOG: ConfigCommitArchive.tcl: ChangeID: 1000000838
+;# CommitChanges_22.18.53_Jan_30_2013
+
+
+if {$ChangeID} {
+  # Open router (vty) connection
+  if [catch {cli_open} result] {
+    error $result $errorInfo
+  } else {
+    array set cli $result
+  }
+
+  if [catch {cli_exec $cli(fd) "show configuration commit changes $ChangeID | file $disk_directory/$_LogFile"} result] {
+    error $result $errorInfo
+  }
+
+  # Close CLI
+  cli_close $cli(fd) $cli(tty_id)
+}
+
+
+
+

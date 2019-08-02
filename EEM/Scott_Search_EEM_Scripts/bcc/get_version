@@ -1,0 +1,35 @@
+proc get_xr_version {retval} {
+  set version ""
+
+  foreach line [split $retval "\n"] {
+    # Trim up the line remove extra space/tabs etc:
+    regsub -all {[ \r\t\n]+} $line " " line
+    # Remove any leading white space:
+    regsub -all {^[ ]} $line "" line
+
+    if {[regexp "^Cisco IOS XR" $line]} {
+      regexp {.* (\d+.\d+.\d+)} $line - version
+    }
+  }
+  return $version
+}
+
+
+
+# Get the XR version
+if [catch {cli_exec $cli(fd) "show version | i Version"} result] {
+  error $result $errorInfo
+}
+set retval $result
+set xr_version [get_xr_version $retval]
+puts $FH "XR version detected: $xr_version"
+
+# Determine the hfrpm/pm command to run
+if {$xr_version != ""} {
+  regexp {(\d+).(\d+)} $xr_version - vers_first vers_second
+  if {$vers_first <= 3 && $vers_second <= 6} {
+    set platform_mgr "hfrpm"
+  } else {
+    set platform_mgr "pm"
+  }
+}

@@ -1,0 +1,53 @@
+#!/usr/bin/tclsh
+
+#set threshold 5.29
+set threshold 3.00
+
+puts ""
+
+proc get_Tx_values {syslogs} {
+  global threshold
+  set iface ""
+  set TxPower ""
+
+  foreach line [split $syslogs "\n"] {
+    regsub -all {[ \r\t\n]+} $line " " line
+    regsub -all {^[ ]} $line "" line
+    regsub -all {[ ]$} $line "" line
+
+    if {[regexp {^\w+.*\d+\/\d+$} $line]} {
+      regexp {^(\w+.*\d+\/\d+)} $line - iface
+    }
+
+    if {$iface != ""} {
+      if {[regexp {^Tx Power .* dBm$} $line]} {
+        if {[regexp {\-\-} $line]} {
+          regexp {dBm \-\- (\d+\.\d+) dBm .* dBm$} $line - TxPower
+        } else {
+          regexp {dBm (\d+\.\d+) dBm .* dBm$} $line - TxPower
+        }
+
+        if {$TxPower >= $threshold} {
+          puts "Interface: $iface TxPower: $TxPower is greater than or equal to threshold ($threshold)"
+        }
+        set iface ""
+        set TxPower ""
+      }
+    }
+  }
+} ;# get_Tx_values
+
+
+set file [lindex $argv 0]
+puts "file: $file\n"
+
+
+if {[file exists $file]} {
+  set fh [open $file "r"]
+  set data [read $fh]
+  close $fh
+
+  get_Tx_values $data
+}
+
+puts ""

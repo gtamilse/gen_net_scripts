@@ -1,0 +1,89 @@
+#!/usr/bin/tclsh
+
+puts ""
+
+proc clean_string {line} {
+  # Trim up the line remove extra space/tabs:
+  regsub -all {[ \r\t\n]+} $line " " line
+  # Remove any leading white space:
+  regsub -all {^[ ]} $line "" line
+  # Remove any ending white space:
+  regsub -all {[ ]$} $line "" line
+  
+  return $line
+}
+# clean_string
+
+
+# Below regexp will grab each IPv4 address octet
+#; regexp {([0-9]+\.)([0-9]+\.)([0-9]+\.)([0-9]+)} $ip match a b c d
+
+
+proc verify_registered_prefixes {output} {
+
+  foreach line [split $output "\n"] {
+    set line [clean_string $line]
+  
+    if {$line ne ""} {
+      # Looking for lines that end in a prefix and mask
+      if {[regexp {[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+\/[0-9]+$} $line]} {
+
+#        puts "Found LINE: $line"
+
+        set fields [split $line " "]
+        lassign $fields site_name last_reg UP who_last_reg InstanceID EID_prefix
+   
+        if {[regexp {^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$} $who_last_reg]} {
+          puts "Non-default (0) - Registered RLOC prefix:"
+
+          puts "site_name: $site_name -- last_reg: $last_reg --  UP: $UP"
+          puts "who_last_reg: $who_last_reg -- InstanceID: $InstanceID -- EID_prefix: $EID_prefix"
+          puts "\n"
+        } elseif {$EID_prefix eq "" && $site_name eq "never" || [regexp {[0-9]+\:[0-9]+\:[0-9]+} $site_name]} {
+          set fields [split $line " "]
+          lassign $fields last_reg UP who_last_reg InstanceID EID_prefix
+          if {[regexp {^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$} $who_last_reg]} {
+            puts "Save this so we can define the EID"
+            puts "Non-default (1) - Registered RLOC prefix:"
+
+            puts "last_reg: $last_reg --  UP: $UP"
+            puts "who_last_reg: $who_last_reg -- InstanceID: $InstanceID -- EID_prefix: $EID_prefix"
+            puts "\n"
+          }
+        }
+      }
+    }
+  }
+} 
+# verify_registered_prefixes
+
+
+#set output "MSMR#sh lisp 1 site
+#LISP Site Registration Information
+#
+#Site Name      Last      Up   Who Last             Inst     EID Prefix
+#               Register       Registered           ID
+#0000           never     no   --                   101      0.0.0.0/0
+#               00:00:56  yes  172.16.1.2           101      172.16.100.3/32
+#
+#"
+
+
+set output "MSMR#sh lisp 1 site
+LISP Site Registration Information
+
+Site Name      Last      Up   Who Last             Inst     EID Prefix
+               Register       Registered           ID
+0000           never     no   --                   101      0.0.0.0/0
+0001           00:04:44  yes  172.88.88.88         101      172.88.99.111/32
+               00:00:56  yes  172.16.1.2           101      172.16.100.3/32
+               00:00:56  yes  172.99.99.99         101      172.99.99.222/32
+
+"
+
+
+set retval [verify_registered_prefixes $output]
+
+
+
+

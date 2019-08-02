@@ -1,0 +1,7 @@
+event manager environment _s2FailDetect_ospf_id 2
+event manager environment _s2FailDetect_output_log s2FailDetect.log
+event manager environment _s2FailDetect_second_diff 30
+event manager environment _s2FailDetect_storage_location harddisk:/eem
+event manager environment _s2FailDetect_unique_locations 3 
+
+event manager policy s2FailDetect.tcl username cisco type user

@@ -1,0 +1,20 @@
+#!/usr/bin/tclsh
+
+set syslog "time_sec 1274904163 time_nsec 361000000 msg {RP/0/0/CPU0: syslog_dev\[86\]: syslog_dev: fabricq_mgr\[136\]: %FABRIC-FABRICQ-3-RESET : Reseting Fabricq ASIC Device 0. Reason: UC_PSN_WRAP } location {RP/0/0/CPU0}"
+
+
+# Trim up the line remove extra space/tabs etc:
+regsub -all {[ \r\t\n]+} $syslog " " syslog
+# Remove any leading white space:
+regsub -all {^[ ]} $syslog "" syslog
+# Remove any ending white space:
+regsub -all {[ ]$} $syslog "" syslog
+
+if {[regexp {^time_sec} $syslog]} {
+  regexp "\{(.*): .*" $syslog - msg
+  set location [ lindex [split $msg ":"] 0 ]
+
+  puts "location: $location\n"
+}
+
+

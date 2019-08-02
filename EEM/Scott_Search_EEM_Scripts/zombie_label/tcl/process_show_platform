@@ -1,0 +1,66 @@
+#!/usr/bin/tclsh
+
+##################################
+# Run the command:  show platform 
+##################################
+set show_platform "show platform | inc 0/1/
+0/1/CPU0        L3LC Eng 5+     Jacket Card     IOS XR RUN      PWR,NSHUT,MON
+0/1/0           SPA             SPA-1XCHOC12/DS READY           PWR,NSHUT
+0/1/1           SPA             SPA-1XCHOC12/DS READY           PWR,NSHUT"
+
+
+# 0/1/CPU0        L3LC Eng 5+     Jacket Card     IOS XR RUN      PWR,NSHUT,MON
+# 0/1/0           SPA             SPA-1XCHOC12/DS READY           PWR,NSHUT
+# 0/1/1           SPA             SPA-1XCHOC12/DS READY           PWR,NSHUT
+# 0/9/CPU0        L3LC Eng 5+     Jacket Card     IOS XR RUN      PWR,NSHUT,MON
+# 0/9/0           SPA             SPA-1XCHOC12/DS READY           PWR,NSHUT
+# 0/9/1           SPA             SPA-1XCHOC12/DS READY           PWR,NSHUT
+
+set cmd "show platform | inc 0/1/"
+
+
+foreach line [split $show_platform "\n"] {
+  regsub -all {[ \r\t\n]+} $line " " line
+  regsub -all {^[ ]} $line "" line
+  regsub -all {[ ]$} $line "" line
+
+  set first_column [lindex $line 0]
+
+puts "LINE: $line"
+
+if {[regexp "$cmd" $line]} {
+  puts "CMD: $line"
+} else {
+  puts "NOT CMD"
+}
+
+  if {![regexp {CPU0} $line] && ![regexp "$cmd" $line]} {
+#  if {![regexp {CPU0$} $first_column] && ![regexp {CPU0} $line]} {
+# }
+    puts "first_column: $first_column"
+    lappend node_name $first_column
+
+    regexp {^\d+\/\d+\/(\d+)} $first_column - spa
+
+puts "spa: $spa"
+
+#    regexp {(\d+)\/(\d+)\/CPU0} $first_column - chassis slot
+#
+#    set node_name "node"
+#    append node_name $chassis
+#    append node_name "_"
+#    append node_name $slot
+#    append node_name "_cpu0"
+#
+#    puts "node_name: $node_name"
+  }
+}
+
+puts ""
+foreach line [split $node_name " "] {
+  puts "node_name: $line"
+}
+puts ""
+
+exit
+

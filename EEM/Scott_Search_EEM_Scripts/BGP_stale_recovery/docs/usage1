@@ -1,0 +1,26 @@
+# BGP_stale_recovery EEM Script
+#
+# October 2013 - Scott Search (ssearch@cisco.com)
+#
+# This EEM script will be triggered off a high number of BGP NSR disabled messages.  The script is
+# intended to recover from the BGP stale routes:
+#
+# CSCuh02932    BGP Stale routes seen when a peer runs into TCP Oper-Down back-2-back 
+#
+#
+# EEM Script is dependent on the following event manager environment variables:
+#   _BGP_stale_recovery_storage_location <storage>  -Disk/hardisk storage location "harddisk:/eem"
+#
+# Email Option
+# To activate the email option the following event manager environment variables must be set:
+#   _email_server    _email_from
+#   _email_to        _domainname
+#
+#
+# EEM Script Logic:
+#
+# The script is triggered by the syslog pattern above.  If the pattern occurs 30 times and within
+# a 60 second period this EEM policy will be started.  The script checks the syslogs via the
+# sys_reqinfo_syslog_history for matching events within the 60 second period.  From the syslog
+# pattern match if the same BGP peer reported the BGP NSR disabled more than 30 times in a 60 second
+# period this EEM script will continue and proceed with the workaround for CSCuh02932.

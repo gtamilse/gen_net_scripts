@@ -1,0 +1,54 @@
+RP/0/RP0/CPU0:rmonc401cts#show run | in cgn
+Building configuration...
+hw-module service cgn location 0/1/CPU0
+hw-module service cgn location 0/6/CPU0
+hw-module service cgn location 0/7/CPU0
+hw-module service cgn location 0/14/CPU0
+hw-module service cgn location 0/15/CPU0
+ service cgn cgse1 service-type tunnel v6rd
+ service cgn cgse2 service-type tunnel v6rd
+ service cgn cgse1 service-type tunnel v6rd
+ service cgn cgse2 service-type tunnel v6rd
+service cgn cgse1
+service cgn cgse2
+
+
+RP/0/RP0/CPU0:rmonc401cts#show run service cgn cgse1
+service cgn cgse1
+ service-location preferred-active 0/6/CPU0
+ service-type tunnel v6rd v6RD1
+  tos 0
+  path-mtu 1472
+  br
+   ipv6-prefix 2602:300::/28
+   source-address 12.83.49.81
+   unicast address 2602:300:c533:1510::27
+  !
+  address-family ipv4
+   interface ServiceApp41
+  !
+  address-family ipv6
+   interface ServiceApp61
+  !
+ !
+!
+
+RP/0/RP0/CPU0:rmonc401cts#show run service cgn cgse2
+service cgn cgse2
+ service-location preferred-active 0/14/CPU0
+ service-type tunnel v6rd v6RD2
+  tos 0
+  path-mtu 1472
+  br
+   ipv6-prefix 2602:300::/28
+   source-address 12.83.49.81
+   unicast address 2602:300:c533:1510::29
+  !
+  address-family ipv4
+   interface ServiceApp42
+  !
+  address-family ipv6
+   interface ServiceApp62
+  !
+ !
+!

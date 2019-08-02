@@ -1,0 +1,67 @@
+::cisco::eem::event_register_syslog pattern "MGBL-CONFIG-6-DB_COMMIT.*Configuration committed.*show configuration commit changes" maxrun 300
+
+###############################################################################################################
+# NAME: ConfigCommitArchive.tcl
+# AUTH: Scott Search (ssearch@cisco.com)
+# DATE: 1/30/13
+# VERS: v0.1
+#
+# Example pattern:
+#
+# MGBL-CONFIG-6-DB_COMMIT : Configuration committed by user 'cisco'. Use 'show configuration commit changes 
+#    1000000827' to view the changes
+#
+###############################################################################################################
+ 
+# Import namespace libraries:
+namespace import ::cisco::eem::*
+namespace import ::cisco::lib::*
+ 
+
+
+proc parse_config_changes {ConfigChanges UserID} {
+  set msg ""
+
+  if {$ConfigChanges != ""} {
+    foreach line [split $ConfigChanges "\n"] {
+
+      if {[regexp "router ospf|router bgp" $line]} {
+        set msg "Operator '$UserID' made configuration changes to the Routing Protocol Control Plane"
+      }
+    }
+  }
+  return $msg
+}
+
+
+##################################
+# MAIN/main
+##################################
+global FH
+set msg ""
+
+# Capture the scripts start time:
+set time_now [clock seconds]
+
+# Timestamp the script start time to the output log file:
+set date [clock format $time_now -format "%T %Z %a %b %d %Y"]
+
+# Set the array arr_einfo to the eem event_reqinfo
+array set arr_einfo [event_reqinfo]
+# Extract the syslog message the finally kicked off the EEM script:
+set syslog_msg $arr_einfo(msg)
+
+regsub -all {[ \r\t\n]+} $syslog_msg " " syslog_msg
+regsub -all {^[ ]} $syslog_msg "" syslog_msg
+regsub -all {[ ]$} $syslog_msg "" syslog_msg
+
+# Extract the user id:
+regexp {Configuration committed by user '(\w+)'.*} $syslog_msg - UserID
+# Extract the configuration id:
+regexp {show configuration commit changes (\d+).*} $syslog_msg - ChangeID
+
+
+action_syslog msg "syslog_msg:  $syslog_msg"
+action_syslog msg "UserID: $UserID"
+action_syslog msg "ChangeID: $ChangeID"
+

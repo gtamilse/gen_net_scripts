@@ -1,0 +1,219 @@
+RP/1/RP0/CPU0:PSL-MC-CRS1#! EEM fab_detect test
+RP/1/RP0/CPU0:PSL-MC-CRS1#
+RP/1/RP0/CPU0:PSL-MC-CRS1#sh run | inc eventman
+Thu Apr 22 13:01:42.142 UTC
+Building configuration...
+aaa authorization eventmanager default local
+RP/1/RP0/CPU0:PSL-MC-CRS1#sh run | inc event man
+Thu Apr 22 13:01:51.415 UTC
+Building configuration...
+event manager environment _output_log eem_fabric_detect.log
+event manager environment _storage_location harddisk:/eem
+event manager directory user policy harddisk:/eem
+event manager policy fab_detect.tcl username cisco type user
+RP/1/RP0/CPU0:PSL-MC-CRS1#
+RP/1/RP0/CPU0:PSL-MC-CRS1#dir harddisk:/eem
+Thu Apr 22 13:02:00.328 UTC
+ 
+Directory of harddisk:/eem
+ 
+719716480   -rwx  8967        Thu Apr 22 12:49:08 2010  fab_detect.tcl
+ 
+79870312448 bytes total (79825309696 bytes free)
+RP/1/RP0/CPU0:PSL-MC-CRS1#
+RP/1/RP0/CPU0:PSL-MC-CRS1#! echo the test syslog message to router /dev/syslog:
+RP/1/RP0/CPU0:PSL-MC-CRS1#run echo "test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated$
+Thu Apr 22 13:02:13.246 UTC
+RP/1/RP0/CPU0:Apr 22 13:02:13.282 UTC: syslog_dev[85]: syslog_dev: 
+
+
+test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled End of test
+
+
+
+RP/1/RP0/CPU0:PSL-MC-CRS1#
+RP/1/RP0/CPU0:PSL-MC-CRS1#
+RP/1/RP0/CPU0:PSL-MC-CRS1#RP/1/RP0/CPU0:Apr 22 13:02:18.865 UTC: fab_detect.tcl[65826]: EEM policy fab_detect detected a Fabric Error and has SHUTDOWN CARD: 1/RP0/CPU0
+ 
+RP/1/RP0/CPU0:PSL-MC-CRS1#
+RP/1/RP0/CPU0:PSL-MC-CRS1#dir harddisk:/eem
+Thu Apr 22 13:02:28.333 UTC
+ 
+Directory of harddisk:/eem
+ 
+719716480   -rwx  8967        Thu Apr 22 12:49:08 2010  fab_detect.tcl
+719716576   -rwx  2277        Thu Apr 22 13:02:18 2010  eem_fabric_detect.log
+719716672   -rwx  42          Thu Apr 22 13:02:18 2010  fab_detect_run_flag
+ 
+79870312448 bytes total (79825301504 bytes free)
+RP/1/RP0/CPU0:PSL-MC-CRS1#
+RP/1/RP0/CPU0:PSL-MC-CRS1#more harddisk:/eem/eem_fabric_detect.log
+Thu Apr 22 13:03:04.481 UTC
+*Timestamp = 13:02:13 UTC Thu Apr 22 2010
+Cisco Fabric Error Detection Script
+Designed for: IOX Embedded Event Manager (EEM)
+by: Scott Search (ssearch@cisco.com)
+ 
+Node: PSL-MC-CRS1
+SYSLOG MSG:
+RP/1/RP0/CPU0: syslog_dev[85]: syslog_dev: test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled End of test
+ 
+Suspect location: 1/RP0/CPU0
+ 
+Show controllers fabric plane all CHECK:
+Id: 0 - Admin: UP - Oper: UP
+Id: 1 - Admin: UP - Oper: UP
+Id: 2 - Admin: UP - Oper: UP
+Id: 3 - Admin: UP - Oper: UP
+Id: 4 - Admin: UP - Oper: UP
+Id: 5 - Admin: UP - Oper: UP
+Id: 6 - Admin: UP - Oper: UP
+Id: 7 - Admin: UP - Oper: UP
+ 
+ 
+**Node: PSL-MC-CRS1 Fabric Error Detection**
+The PSL-MC-CRS1 node experienced the following syslog:
+RP/1/RP0/CPU0: syslog_dev[85]: syslog_dev: test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled End of test
+ 
+ 
+The fab_detect eem policy script has shutdown the following card location:
+1/RP0/CPU0
+ 
+Fabric Plane All Output (before card shutdown):
+Thu Apr 22 13:02:17.268 UTC
+  Flags: P - plane admin down,       p - plane oper down
+         C - card admin down,        c - card  oper down
+         L - link port admin down,   l - linkport oper down
+         A - asic admin down,        a - asic oper down
+         B - bundle port admin Down, b - bundle port oper down
+         I - bundle admin down,      i - bundle oper down
+         N - node admin down,        n - node down
+         o - other end of link down  d - data down
+         f - failed component downstream
+         m - plane multicast down,   s - link port permanently shutdown
+         t - no barrier input        O - Out-Of-Service oper down
+         T - topology mismatch down
+ 
+ Plane  Admin   Oper   up->dn
+ Id     State   State  counter
+ -----------------------------
+ 0      UP      UP       0
+ 1      UP      UP       0
+ 2      UP      UP       0
+ 3      UP      UP       0
+ 4      UP      UP       0
+ 5      UP      UP       0
+ 6      UP      UP       0
+ 7      UP      UP       0
+RP/1/RP0/CPU0:PSL-MC-CRS1(admin)#
+ 
+ 
+ 
+The harddisk:/eem/fab_detect_run_flag file exists. Be sure to delete the file in order to
+Activate the EEM fab_detect script.
+ 
+ 
+*Timestamp = 13:02:18 UTC Thu Apr 22 2010
+RP/1/RP0/CPU0:PSL-MC-CRS1#
+RP/1/RP0/CPU0:PSL-MC-CRS1#
+RP/1/RP0/CPU0:PSL-MC-CRS1#dir harddisk:/eem
+Thu Apr 22 13:04:17.272 UTC
+ 
+Directory of harddisk:/eem
+ 
+719716480   -rwx  8967        Thu Apr 22 12:49:08 2010  fab_detect.tcl
+719716576   -rwx  2277        Thu Apr 22 13:02:18 2010  eem_fabric_detect.log
+719716672   -rwx  42          Thu Apr 22 13:02:18 2010  fab_detect_run_flag
+ 
+79870312448 bytes total (79825301504 bytes free)
+RP/1/RP0/CPU0:PSL-MC-CRS1#
+RP/1/RP0/CPU0:PSL-MC-CRS1#
+RP/1/RP0/CPU0:PSL-MC-CRS1#more harddisk:/eem/fab_detect_run_flag
+Thu Apr 22 13:04:33.489 UTC
+*Timestamp = 13:02:17 UTC Thu Apr 22 2010
+RP/1/RP0/CPU0:PSL-MC-CRS1#
+RP/1/RP0/CPU0:PSL-MC-CRS1#
+RP/1/RP0/CPU0:PSL-MC-CRS1#
+RP/1/RP0/CPU0:PSL-MC-CRS1#! Rerun the echo syslog message:
+RP/1/RP0/CPU0:PSL-MC-CRS1#
+RP/1/RP0/CPU0:PSL-MC-CRS1#run echo "test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated$
+Thu Apr 22 13:04:58.757 UTC
+RP/1/RP0/CPU0:Apr 22 13:04:58.793 UTC: syslog_dev[85]: syslog_dev: test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled End of test
+RP/1/RP0/CPU0:PSL-MC-CRS1#
+RP/1/RP0/CPU0:PSL-MC-CRS1#
+RP/1/RP0/CPU0:PSL-MC-CRS1#RP/1/RP0/CPU0:Apr 22 13:05:04.150 UTC: fab_detect.tcl[65827]: EEM policy fab_detect detected Fabric Error on card 1/RP0/CPU0 yet harddisk:/eem/fab_detect_run_flag exists No Action Taken!
+ 
+RP/1/RP0/CPU0:PSL-MC-CRS1#
+RP/1/RP0/CPU0:PSL-MC-CRS1#dir harddisk:/eem
+Thu Apr 22 13:05:14.528 UTC
+ 
+Directory of harddisk:/eem
+ 
+719716480   -rwx  8967        Thu Apr 22 12:49:08 2010  fab_detect.tcl
+719716576   -rwx  2208        Thu Apr 22 13:05:04 2010  eem_fabric_detect.log
+719716672   -rwx  42          Thu Apr 22 13:02:18 2010  fab_detect_run_flag
+ 
+79870312448 bytes total (79825301504 bytes free)
+RP/1/RP0/CPU0:PSL-MC-CRS1#
+RP/1/RP0/CPU0:PSL-MC-CRS1#
+RP/1/RP0/CPU0:PSL-MC-CRS1#more harddisk:/eem/eem_fabric_detect.log
+Thu Apr 22 13:05:41.974 UTC
+*Timestamp = 13:04:59 UTC Thu Apr 22 2010
+Cisco Fabric Error Detection Script
+Designed for: IOX Embedded Event Manager (EEM)
+by: Scott Search (ssearch@cisco.com)
+ 
+Node: PSL-MC-CRS1
+SYSLOG MSG:
+RP/1/RP0/CPU0: syslog_dev[85]: syslog_dev: test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled End of test
+ 
+Suspect location: 1/RP0/CPU0
+ 
+Show controllers fabric plane all CHECK:
+Id: 0 - Admin: UP - Oper: UP
+Id: 1 - Admin: UP - Oper: UP
+Id: 2 - Admin: UP - Oper: UP
+Id: 3 - Admin: UP - Oper: UP
+Id: 4 - Admin: UP - Oper: UP
+Id: 5 - Admin: UP - Oper: UP
+Id: 6 - Admin: UP - Oper: UP
+Id: 7 - Admin: UP - Oper: UP
+ 
+*Timestamp = 13:05:04 UTC Thu Apr 22 2010
+EEM policy fab_detect detected Fabric Error on card 1/RP0/CPU0 yet harddisk:/eem/fab_detect_run_flag exists No Action Taken!
+Delete harddisk:/eem/fab_detect_run_flag in order to activate the EEM fab_detect script.
+ 
+The PSL-MC-CRS1 node experienced the following syslog:
+RP/1/RP0/CPU0: syslog_dev[85]: syslog_dev: test9 sysmgr[76]: sfe_drvr(1) (jid 108) (pid 36912) (fail_count 1) abnormally terminated, restart scheduled End of test
+ 
+ 
+Fabric Plane All Output:
+Thu Apr 22 13:05:02.431 UTC
+  Flags: P - plane admin down,       p - plane oper down
+         C - card admin down,        c - card  oper down
+         L - link port admin down,   l - linkport oper down
+         A - asic admin down,        a - asic oper down
+         B - bundle port admin Down, b - bundle port oper down
+         I - bundle admin down,      i - bundle oper down
+         N - node admin down,        n - node down
+         o - other end of link down  d - data down
+         f - failed component downstream
+         m - plane multicast down,   s - link port permanently shutdown
+         t - no barrier input        O - Out-Of-Service oper down
+         T - topology mismatch down
+ 
+ Plane  Admin   Oper   up->dn
+ Id     State   State  counter
+ -----------------------------
+ 0      UP      UP       0
+ 1      UP      UP       0
+ 2      UP      UP       0
+ 3      UP      UP       0
+ 4      UP      UP       0
+ 5      UP      UP       0
+ 6      UP      UP       0
+ 7      UP      UP       0
+RP/1/RP0/CPU0:PSL-MC-CRS1(admin)#
+ 
+ 
+RP/1/RP0/CPU0:PSL-MC-CRS1#

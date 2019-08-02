@@ -1,0 +1,21 @@
+Configuration Necessary:
+----------------------------
+
+event manager environment _PLIM_heartbeat_collection_storage_location disk0:/eem
+event manager directory user policy disk0:/eem
+event manager policy plim1.tcl username eem-user persist-time 3600 type user
+!
+!
+username eem-user
+ group root-system
+ group cisco-support
+!
+!
+aaa authorization exec eem-user local
+aaa authorization commands eem-user none
+aaa authorization eventmanager default local
+aaa authorization eventmanager eem-user local
+aaa authentication login eem-user local
+
+
+

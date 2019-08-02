@@ -1,0 +1,45 @@
+::cisco::eem::event_register_timer cron name te-show cron_entry "0,5,10,15,20,25,30,35,40,45,50,55 * * * *" maxrun_sec 240
+
+namespace import ::cisco::eem::*
+namespace import ::cisco::lib::*
+
+action_syslog msg "%ROUTER-DOWN:  Router shutdown, due to SmartAssASIC"
+puts "%ROUTER-DOWN:  Router shutdown, due to SmartAssASIC"
+
+
+
+  if [catch {cli_open} result] {
+    error $result $errorInfo
+  } else {
+    array set cli $result
+  }
+
+  if [catch {cli_exec $cli(fd) "show log last 30 | inc PKT_INFRA-LINEPROTO-5-UPDOWN"} result] {
+    error $result $errorInfo
+  }
+  # Remove trailing router prompt
+  regexp {\n*(.*\n)([^\n]*)$} $result junk ShowLog
+  set continue [parse_log_history $ShowLog $Interface]
+  if {!$continue} {
+    set result "**INFO: EEM policy Down_40G_bw_update Found the $Interface maybe back up. Check router and EEM policy log file"
+    puts $FH "\n$result\n"
+    action_syslog msg $result
+    close $FH
+    exit 1
+  }
+
+  if [catch {cli_exec $cli(fd) "config"} result] {
+    error $result $errorInfo
+  }
+  if [catch {cli_exec $cli(fd) "interface $dummy_interface"} result] {
+    error $result $errorInfo
+  }
+  if [catch {cli_exec $cli(fd) "shutdown"} result] {
+    error $result $errorInfo
+  }
+  if [catch {cli_exec $cli(fd) "commit"} result] {
+    error $result $errorInfo
+  }
+  if [catch {cli_exec $cli(fd) "end"} result] {
+    error $result $errorInfo
+  }

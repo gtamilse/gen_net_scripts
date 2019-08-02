@@ -1,0 +1,137 @@
+RP/0/0/CPU0:XR_ROUTER#dir disk0:/eem
+
+Directory of disk0:/eem
+ 
+506134656   -rwx  1098        Fri Feb 12 22:57:02 2010  show_clock.tcl
+506134752   -rwx  247         Tue Apr 27 23:50:52 2010  show_clock.out
+506134848   -rwx  1947        Thu Mar  4 17:09:08 2010  FileSizeCheck.tcl
+506134944   -rwx  1655        Wed Feb 17 23:40:34 2010  FileSizeCheck_stop.tcl
+506135008   -rwx  3373        Thu Mar  4 22:00:45 2010  att1.tcl
+506135072   -rwx  1325        Thu Mar  4 22:34:29 2010  sh_ver.tcl
+506135168   -rwx  7636        Thu Apr 29 14:00:57 2010  e3_fail_detect.tcl
+ 
+1024507904 bytes total (341229568 bytes free)
+RP/0/0/CPU0:XR_ROUTER#
+RP/0/0/CPU0:XR_ROUTER#
+RP/0/0/CPU0:XR_ROUTER#admin
+RP/0/0/CPU0:XR_ROUTER(admin)#atta loc 0/2/cpu0
+ 
+attach: Starting session 0 to nodeid 0/2/CPU0
+ 
+attach: Type "exit<CR>" to quit.
+ 
+ 
+ksh-LC>
+ksh-LC>echo "test4 rx_xbma[77]: %L2-E3INGRESSQ-4-INTERRUPT :  PLIM error: reg 0x2000 End of Test" > /dev/syslog
+ksh-LC>LC/0/2/CPU0:Apr 29 14:09:44.920 : syslog_dev[79]: syslog_dev: test4 rx_xbma[77]: %L2-E3INGRESSQ-4-INTERRUPT :  PLIM error: reg 0x2000 End of Test
+exi
+Terminating attach to slot 2..
+RP/0/0/CPU0:XR_ROUTER(admin)#
+RP/0/0/CPU0:XR_ROUTER(admin)#RP/0/0/CPU0:Apr 29 14:09:50.514 : config[65778]: %MGBL-CONFIG-6-DB_COMMIT_ADMIN : Configuration committed by user 'cisco'. Use 'show configuration commit changes 2000000001' to view the changes.
+RP/0/0/CPU0:Apr 29 14:09:51.079 : pim[324]: %ROUTING-IPV4_PIM-5-NBRCHG : PIM neighbor 10.94.163.200 DOWN on Gi0/2/0/2 - interface state changed
+RP/0/0/CPU0:Apr 29 14:09:51.180 : alphadisplay[103]: %PLATFORM-ALPHA_DISPLAY-6-CHANGE : Alpha display on node 0/2/CPU0 changed to     BRDN in state default
+RP/0/0/CPU0:Apr 29 14:09:51.207 : invmgr[209]: %PLATFORM-INVMGR-6-NODE_STATE_CHANGE : Node: 0/2/CPU0, state: BRINGDOWN
+RP/0/0/CPU0:Apr 29 14:09:52.011 : config[65778]: %MGBL-SYS-5-CONFIG_I : Configured from console by console on vty100 (0.0.0.0)
+RP/0/0/CPU0:Apr 29 14:09:53.519 : sysldr[382]: %PLATFORM-SYSLDR-3-SHUTDOWN : Shutting down card in slot 2, shutdown configured.
+RP/0/0/CPU0:Apr 29 14:09:53.732 : e3_fail_detect.tcl[65772]: EEM policy e3_fail_detect detected a Engine 3 LC failure and has SHUTDOWN LC CARD: 0/2/CPU0
+ 
+RP/0/0/CPU0:XR_ROUTER(admin)#RP/0/0/CPU0:Apr 29 14:09:55.036 : invmgr[209]: %PLATFORM-INVMGR-6-NODE_STATE_CHANGE : Node: 0/2/CPU0, state: ADMIN DOWN
+ 
+RP/0/0/CPU0:XR_ROUTER(admin)#
+RP/0/0/CPU0:XR_ROUTER(admin)#
+RP/0/0/CPU0:XR_ROUTER(admin)#sh platform
+Node            Type            PLIM            State           Config State
+-----------------------------------------------------------------------------
+0/0/CPU0        PRP(Active)     N/A             IOS XR RUN      PWR,NSHUT,MON
+0/1/CPU0        PRP             N/A             Card Present    PWR,NSHUT,MON
+0/2/CPU0        L3LC Eng 3      GE-4            Admin Down      PWR,SHUT,MON
+0/3/CPU0        L3LC Eng 2      GE-3            In Reset        PWR,NSHUT,MON
+0/4/CPU0        L3LC Eng 0      OC12-POS        In Reset        PWR,NSHUT,MON
+0/16/CPU0       CSC(P)          N/A             PWD             PWR,NSHUT,MON
+0/18/CPU0       GSR8-SFC        N/A             PWD             PWR,NSHUT,MON
+0/19/CPU0       GSR8-SFC        N/A             PWD             PWR,NSHUT,MON
+0/20/CPU0       GSR8-SFC        N/A             PWD             PWR,NSHUT,MON
+0/24/CPU0       PSAC8           N/A             PWD             PWR,NSHUT,MON
+RP/0/0/CPU0:XR_ROUTER(admin)#
+RP/0/0/CPU0:XR_ROUTER(admin)#
+RP/0/0/CPU0:XR_ROUTER(admin)#exit
+RP/0/0/CPU0:XR_ROUTER#dir disk0:/eem
+
+Directory of disk0:/eem
+ 
+506134656   -rwx  1098        Fri Feb 12 22:57:02 2010  show_clock.tcl
+506134752   -rwx  247         Tue Apr 27 23:50:52 2010  show_clock.out
+506134848   -rwx  1947        Thu Mar  4 17:09:08 2010  FileSizeCheck.tcl
+506134944   -rwx  1655        Wed Feb 17 23:40:34 2010  FileSizeCheck_stop.tcl
+506135008   -rwx  3373        Thu Mar  4 22:00:45 2010  att1.tcl
+506135072   -rwx  1325        Thu Mar  4 22:34:29 2010  sh_ver.tcl
+506135168   -rwx  7636        Thu Apr 29 14:00:57 2010  e3_fail_detect.tcl
+506135264   -rwx  2780        Thu Apr 29 14:09:53 2010  e3_fail_detect.log
+506135360   -rwx  42          Thu Apr 29 14:09:48 2010  e3_fail_detect_run_flag
+ 
+1024507904 bytes total (341164032 bytes free)
+RP/0/0/CPU0:XR_ROUTER#
+RP/0/0/CPU0:XR_ROUTER#more disk0:/eem/e3_fail_detect.log
+*Timestamp = 14:09:45 UTC Thu Apr 29 2010
+Cisco Engine 3 LC Failure Detection Script
+Designed for: IOX Embedded Event Manager (EEM)
+by: Scott Search (ssearch@cisco.com)
+ 
+Node: XR_ROUTER
+SYSLOG MSG:
+LC/0/2/CPU0: syslog_dev[79]: syslog_dev: test4 rx_xbma[77]: %L2-E3INGRESSQ-4-INTERRUPT :  PLIM error: reg 0x2000 End of Test
+ 
+Suspect location: 0/2/CPU0
+ 
+ 
+ 
+**Node: XR_ROUTER Engine 3 LC Failure Detection**
+The XR_ROUTER node experienced the following syslog:
+LC/0/2/CPU0: syslog_dev[79]: syslog_dev: test4 rx_xbma[77]: %L2-E3INGRESSQ-4-INTERRUPT :  PLIM error: reg 0x2000 End of Test
+ 
+ 
+The e3_fail_detect eem policy script has shutdown the following LC card location:
+0/2/CPU0
+ 
+BEFORE admin show platform output:
+Node            Type            PLIM            State           Config State
+-----------------------------------------------------------------------------
+0/0/CPU0        PRP(Active)     N/A             IOS XR RUN      PWR,NSHUT,MON
+0/1/CPU0        PRP             N/A             Card Present    PWR,NSHUT,MON
+0/2/CPU0        L3LC Eng 3      GE-4            IOS XR RUN      PWR,NSHUT,MON
+0/3/CPU0        L3LC Eng 2      GE-3            In Reset        PWR,NSHUT,MON
+0/4/CPU0        L3LC Eng 0      OC12-POS        In Reset        PWR,NSHUT,MON
+0/16/CPU0       CSC(P)          N/A             PWD             PWR,NSHUT,MON
+0/18/CPU0       GSR8-SFC        N/A             PWD             PWR,NSHUT,MON
+0/19/CPU0       GSR8-SFC        N/A             PWD             PWR,NSHUT,MON
+0/20/CPU0       GSR8-SFC        N/A             PWD             PWR,NSHUT,MON
+0/24/CPU0       PSAC8           N/A             PWD             PWR,NSHUT,MON
+RP/0/0/CPU0:XR_ROUTER(admin)#
+ 
+ 
+ 
+ 
+AFTER admin show platform output:
+Node            Type            PLIM            State           Config State
+-----------------------------------------------------------------------------
+0/0/CPU0        PRP(Active)     N/A             IOS XR RUN      PWR,NSHUT,MON
+0/1/CPU0        PRP             N/A             Card Present    PWR,NSHUT,MON
+0/2/CPU0        L3LC Eng 3      GE-4            Bringdown       PWR,SHUT,MON
+0/3/CPU0        L3LC Eng 2      GE-3            In Reset        PWR,NSHUT,MON
+0/4/CPU0        L3LC Eng 0      OC12-POS        In Reset        PWR,NSHUT,MON
+0/16/CPU0       CSC(P)          N/A             PWD             PWR,NSHUT,MON
+0/18/CPU0       GSR8-SFC        N/A             PWD             PWR,NSHUT,MON
+0/19/CPU0       GSR8-SFC        N/A             PWD             PWR,NSHUT,MON
+0/20/CPU0       GSR8-SFC        N/A             PWD             PWR,NSHUT,MON
+0/24/CPU0       PSAC8           N/A             PWD             PWR,NSHUT,MON
+RP/0/0/CPU0:XR_ROUTER(admin)#
+ 
+ 
+ 
+ 
+The disk0:/eem/e3_fail_detect_run_flag file exists. Be sure to delete the file in order to
+Activate the EEM e3_fail_detect script.
+ 
+ 
+*Timestamp = 14:09:53 UTC Thu Apr 29 2010
+RP/0/0/CPU0:XR_ROUTER#
