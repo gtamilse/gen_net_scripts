@@ -1,0 +1,93 @@
+#!/usr/bin/expect --
+#
+# Capture command output from a list of routers
+#
+# First argument is filename of list of routers. (See t10.lst)
+# Second argument is case number (or path) to put output logs
+# 
+# runcmds_jf US_nodes.tx <dir>
+#
+# IOS commands are found in file cmd-jf.lst
+#
+#-------------------------------------------------------------------------------
+
+if {[llength $argv] == 0} {
+        send_user "\n\nusage : $argv0  <nodelist_filename> <case_number>\n\n" 
+        exit
+} 
+set node_list   [lindex $argv 0]
+set case_number [lindex $argv 1]
+
+#
+# Calc number of nodes in file...using unix 'wc' 
+#
+catch "exec wc -l $node_list" out
+set TOTAL_NODES [lindex $out 0]
+
+#
+# Open node list file...
+#
+set Node_List_Fh [open $node_list] 
+
+#
+# Login to gateway
+#
+
+# Insert server ip address
+spawn ssh ciscotac@<ip address>
+expect "assword:"
+send "IOX3.8.4\r"
+expect "ThinkPad-T43"
+
+exp_internal 0
+set node_count 0
+
+#
+# Walk nodes in file, applying IOS commands from file 'cmd-jf.lst'
+#
+# Format of node list file...
+#
+# altx401node    TX   USA   192.168.1.1   Cisco
+# a1ltx402node   TX   USA   192.168.1.1   Cisco
+# alsga401node   GA   USA   192.168.1.1    Cisco
+# alsga402node   GA   USA   192.168.1.1.    Cisco 
+# ... 
+#
+while { [ gets $Node_List_Fh  line] != -1 } {
+        set node_name [lindex $line 0]
+        set ipaddrs   [lindex $line 3]
+        log_file "$case_number$node_name" 
+        incr     node_count
+        send_user "\n################################################################\n"
+        send_user   "#\n"
+        send_user   "# Logging into node $node_name ($ipaddrs) (#$node_count of $TOTAL_NODES)\n"
+        send_user   "#\n"
+        send_user   "################################################################\n"
+        log_user 0
+        send   "telnet $ipaddrs\r"
+        expect "BRIDGETON NOC:"
+        send   "<username>\r"
+        expect "word"
+        send "<password>\r"
+	expect "#"
+        send   "term len 0\r"
+        expect "#"
+        set cmd_Fh [open "cmd-jf.lst"]
+        log_user 1
+        while { [ gets $cmd_Fh cmd_line ] != -1 } {
+                send_user "\n_________________ Processing file line: $cmd_line ___________________________\n"
+                send  "$cmd_line\r"
+                expect { 
+                         "\r" {exp_continue}
+                         "#"
+                        }
+        }
+        close $cmd_Fh
+        # send_user "\n\nSending exit to close telnet session to $ipaddrs then looking for ThinkPad-T43 prompt...\n\n"
+        send   " exit\r"
+        expect "ThinkPad-T43" { }
+
+        log_file
+}
+close $Node_List_Fh
+exit
