@@ -1,0 +1,177 @@
+#!/usr/bin/expect --
+
+## ./goto.exp
+##
+## Author: Jason Froehlich (jafroehl@cisco.com)
+## Updated December 2, 2019
+## Based in part on prior work by Jon Rawinski (jrawnsk@cisco.com) and 
+##    Gowtham Tamilselvan (gtamilse@cisco.com)
+##
+## Connects to CBB Production Nodes via the bgtmohoho02 SSH Jumpserver
+#-------------------------------------------------------------------------------
+
+### User-Defined Variables
+
+## User Credential file
+#  - First line MUST be User ID/ATTUID
+#  - Second line MUST be User Password
+#  - Third line MUST be SSH Key Passphrase
+set User_PW_File "~/pw.txt"
+
+## Log Directory
+set Log_Dir "~/logs"
+
+#-------------------------------------------------------------------------------
+### Variables (Not User Defined, do not change)
+set nodename ""
+set username ""
+set password ""
+set ssh_passphrase ""
+set secondhoho ""
+set finalhoho "bgtmohoho02"
+set logging 0
+set usage "usage : $argv0 \[option\] <Node Name or IP Address> \n Options: -a (bgtmohoho102a), -b (bgtmohoho102b), -h (help)\n"
+
+### Functions
+
+## Get_PW
+#  Reads ATTUID, password, and SSH key phrase from file
+proc Get_PW { pw_file } {
+	global username
+	global password
+    global ssh_passphrase
+	set PW_File_Fh [ open $pw_file "r" ]
+	gets $PW_File_Fh username_line
+	set username $username_line
+	gets $PW_File_Fh pw_line
+	set password $pw_line
+    gets $PW_File_Fh ssh_phrase_line
+	set ssh_passphrase $ssh_phrase_line
+}
+
+## Parse_Args
+# Reads and parses command line arguments
+proc Parse_Args { } {
+    global argv
+    global usage
+    global nodename
+    global secondhoho
+    set argcount [llength $argv]
+    set x 0
+    while { $x < $argcount } {
+        set argvalue [lindex $argv $x]
+        if { $argvalue == "-a" || $argvalue == "-A" || $argvalue == "bgtmohoho102a" } {
+            set secondhoho "bgtmohoho102a"
+        } elseif { $argvalue == "-b" || $argvalue == "-B" || $argvalue == "bgtmohoho102b" } {
+            set secondhoho "bgtmohoho102b"
+        } elseif { $argvalue == "-h" || $argvalue == "-h" || $argvalue == "help" || $argvalue == "HELP" } {
+            puts $usage
+            exit 0
+        } else {
+            set nodename $argvalue
+        }
+        incr x
+    }
+}
+
+### Main
+
+# Process command line arguments
+Parse_Args
+
+# Read credential information
+Get_PW $User_PW_File
+
+# Connect to Hoho
+spawn ssh -X -l $username 199.37.180.146
+
+expect {
+    ".ssh/id_rsa':" {
+        send "$ssh_passphrase\n"
+        expect "assword:"
+        send $password\n
+    }
+    "assword:" {
+        send "$password\n"
+    }
+}
+
+expect "\$ "
+
+# Second Hoho specified, connect to that hoho
+if {$secondhoho != ""} {
+    send "ssh $secondhoho\n"
+    expect "assword:"
+    send $password\n
+    expect "\$ "
+}
+
+set now [clock seconds]
+set date [clock format $now -format {%Y%m%d_%H%M%S}]
+
+# No node specified, interact with Hoho
+if {$nodename eq ""} {
+    set log_name $Log_Dir/$date.bgtmohoho02.logfile.txt 
+    log_file -a $log_name
+    send "PS1='\${USER}@\${HOSTNAME}\$ '\n\n"
+    interact
+    puts "\nLog saved as $log_name\n\n"
+    exit 0  
+}
+
+# Second Hoho specified, connect to that hoho
+if {$secondhoho != ""} {
+    set finalhoho $secondhoho
+}
+
+# Node specified, attempt connection to Hoho
+set log_name $Log_Dir/$date.$nodename.logfile.txt
+log_file -a $log_name
+
+send "PS1='\${USER}@\${HOSTNAME}\$ '\n\n"
+send "ssh $nodename\n"
+expect {
+    "Name or service not known"
+    	{ puts "\nInvalid host, exiting $argv0\n" ; exit }
+    "assword: "
+        {send "$password\n"}
+    "connecting (yes/no)" {
+        send "yes\n"
+        expect "password"
+        send "$password\n"
+    }
+    "port 22: Connection refused" {
+        send "telnet $nodename\n"
+        expect {
+            "sername:" {
+                send "$username\n"
+                expect "assword"
+                send "$password\n"
+                expect ">"
+                send "en\n"
+                expect "assword:"
+                send "$password\n"
+            }
+            "NOC" {
+                send "$username\n"
+                expect "assword"
+                send "$password\n"
+                expect ">"
+                send "en\n"
+                expect "assword"
+                send "$password\n"
+            }
+        }
+    }
+    timeout
+    	{ puts "\nHost not responding, exiting $argv0\n" ; exit }
+}
+interact {
+	-o "$username@$finalhoho\$" {
+		# Detect telnet session close, exit script
+		puts "\nSession closed, Exiting $argv0\n"
+        puts "\nLog saved as $log_name\n"
+		exit 0
+	}
+}
+puts "\nLog saved as $log_name\n"
