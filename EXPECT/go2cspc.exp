@@ -1,0 +1,39 @@
+#!/usr/bin/expect --
+
+# grab the username for clubhouse server using stty command
+stty -echo
+send_user -- "Provide cec username for clubhouse: "
+expect_user -re "(.*)\n"
+send_user "\n"
+stty echo
+set user $expect_out(1,string)
+
+# grab the password for clubhouse server using stty command
+stty -echo
+send_user -- "Provide cec password for clubhouse: "
+expect_user -re "(.*)\n"
+send_user "\n"
+stty echo
+set pass $expect_out(1,string)
+
+# Change server IP address "spawn ssh $user@server"
+spawn ssh $user@<insert server IP address>
+expect "*assword: "
+send -- "$pass\r"
+expect "*lubhouse-lnx-2"
+
+# Change server IP address
+send "ssh collectorlogin@<insert server IP address>\r"
+expect "*assword: "
+send "TD23g\$aew8\*Aiok3\r"
+expect "*att8-cspc"
+while 1 {
+   interact "exit" {
+		# Detect telnet session close, exit script
+		puts "\nSession closed, Exiting \n"
+                exit
+                exit
+                }
+
+   }
+}
