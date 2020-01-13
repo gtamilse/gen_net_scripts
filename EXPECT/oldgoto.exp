@@ -1,24 +1,3 @@
-Skip to content
-Search or jump to…
-
-Pull requests
-Issues
-Marketplace
-Explore
- 
-@gowthamt90 
-gowthamt90
-/
-Net_Scripts
-Private
-1
-00
- Code Issues 0 Pull requests 0 Actions Projects 0 Security Insights Settings
-Net_Scripts/BASH/gtgoto.exp
-@gtamilse gtamilse Bash scripts added
-fe83ede on Aug 2, 2019
-49 lines (39 sloc)  1.05 KB
-  
 #!/usr/bin/expect --
 
 global Node_List_Fh
