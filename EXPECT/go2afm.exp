@@ -1,0 +1,48 @@
+#!/usr/bin/expect --
+
+# grab the username for clubhouse server using stty command
+stty -echo
+send_user -- "Provide cec username for clubhouse: "
+expect_user -re "(.*)\n"
+send_user "\n"
+stty echo
+set user $expect_out(1,string)
+
+# grab the password for clubhouse server using stty command
+stty -echo
+send_user -- "Provide cec password for clubhouse: "
+expect_user -re "(.*)\n"
+send_user "\n"
+stty echo
+set pass $expect_out(1,string)
+
+
+# Port forwarding to server
+spawn ssh -L8008:localhost:8008 $user@<insert server ip>
+expect "*assword: "
+send -- "$pass\r"
+expect "*lubhouse-lnx-2"
+send "ssh -L8008:localhost:8008 collectorlogin@<insert server ip>\r"
+expect "*assword: "
+
+# Change pwd
+send "TDko9\$almk\*Aew3\r"
+expect "*att8-cspc"
+
+# Modify server IP
+send "ssh -L8008:localhost:8445 afmuser@192.168.1.1 -p 6502\r"
+expect "*assword: "
+send "almdkl\$lgn\*J1\r"
+expect "afmuser"
+
+puts "\n Login to AFM GUI - https://localhost:8008/ciscoafm/#/login \n"
+while 1 {
+   interact "exit" {
+		# Detect telnet session close, exit script
+		puts "\nSession closed, Exiting \n"
+                exit
+                exit
+                }
+
+   }
+}
