@@ -1,0 +1,183 @@
+#!/usr/bin/expect --
+
+## ./runcmds.exp
+##
+## Author: Jason Froehlich (jafroehl@cisco.com)
+## Updated December 3, 2019
+## Based in part on prior work by Jon Rawinski (jrawnsk@cisco.com) and 
+##    Gowtham Tamilselvan (gtamilse@cisco.com)
+##
+## Collects commands from CBB Production Nodes via the bgtmohoho02 SSH Jumpserver
+#-------------------------------------------------------------------------------
+
+### User-Defined Variables
+
+## User Credential file
+#  - First line MUST be User ID/ATTUID
+#  - Second line MUST be User Password
+#  - Third line MUST be SSH Key Passphrase
+set User_PW_File "~/pw.txt"
+
+## Log Directory
+set Log_Dir "~/logs"
+
+#-------------------------------------------------------------------------------
+### Variables (Not User Defined, do not change)
+set username ""
+set password ""
+set ssh_passphrase ""
+set usage "usage : $argv0 <node_list_file> <cmd_list_file> <output_file_prefix> \n"
+set invalid_hosts []
+set node_list ""
+set cmd_list ""
+set out_prefix ""
+
+### Functions
+
+## Get_PW
+#  Reads ATTUID, password, and SSH key phrase from file
+proc Get_PW { pw_file } {
+	global username
+	global password
+    global ssh_passphrase
+	set PW_File_Fh [ open $pw_file "r" ]
+	gets $PW_File_Fh username_line
+	set username $username_line
+	gets $PW_File_Fh pw_line
+	set password $pw_line
+    gets $PW_File_Fh ssh_phrase_line
+	set ssh_passphrase $ssh_phrase_line
+}
+
+## Parse_Args
+# Reads and parses command line arguments
+proc Parse_Args { } {
+    global argv
+    global usage
+    global node_list
+    global cmd_list
+    global out_prefix
+    if {[llength $argv] != 3} {
+        send_user $usage
+        exit
+    } 
+    set node_list   [lindex $argv 0]
+    set cmd_list	[lindex $argv 1]
+    set out_prefix	[lindex $argv 2]
+}
+
+### Main
+
+# Read credential information
+Get_PW $User_PW_File
+
+# Process command line arguments
+Parse_Args
+
+# Calc number of nodes in file using unix 'wc' 
+catch "exec wc -l $node_list" out
+set TOTAL_NODES [lindex $out 0]
+
+# Open list files...
+set Node_List_Fh [open $node_list] 
+
+
+# Connect to Hoho
+spawn ssh -X -l $username 199.37.180.146
+expect ".ssh/id_rsa':"
+send "$ssh_passphrase\n"
+
+expect "password:"
+send $password\n
+expect "\$ "
+
+set now [clock seconds]
+set date [clock format $now -format {%Y%m%d_%H%M%S}]
+exp_internal 0
+set node_count 0
+set invalid_host_count 0
+set success_host_count 0
+
+
+# Walk nodes in node file, applying IOS commands from cmd file
+while { [ gets $Node_List_Fh  line] != -1 } {
+        set node_name [lindex $line 0]
+        incr     node_count
+        send_user "\n################################################################\n"
+        send_user   "#\n"
+        send_user   "# Logging into node $node_name (#$node_count of $TOTAL_NODES)\n"
+        send_user   "#\n"
+        send_user   "################################################################\n"
+        #log_user 0
+
+        send   "ssh $node_name\n"
+        expect {
+            "Name or service not known"
+                { send_user "Invalid host, skipping\n"
+                    log_file
+                    append invalid_hosts "$node_name\t"
+                    incr invalid_host_count
+                    continue 
+                }
+            "assword: "
+                {send "$password\n"}
+            "connecting (yes/no)" {
+                send "yes\n"
+                expect "password"
+                send "$password\n"
+            }
+            "port 22: Connection refused" {
+                send "telnet $node_name\n"
+                expect {
+                    "sername:" {
+                        send "$username\n"
+                        expect "assword"
+                        send "$password\n"
+                    }
+                    "NOC" {
+                        send "$username\n"
+                        expect "assword"
+                        send "$password\n"
+                    }
+                }
+            }
+        }
+        expect {
+            ">" {
+                send "enable\r"
+                expect "assword"
+                send "$password\r"
+                expect "#"
+            }
+            "#" {
+            }
+        }
+        send   "term len 0\r"
+        expect "#"
+        log_file "$out_prefix$node_name" 
+        set cmd_Fh [open "$cmd_list"]
+        #log_user 1
+        while { [ gets $cmd_Fh cmd_line ] != -1 } {
+                send_user "\n_________________ Processing file line: $cmd_line ___________________________\n"
+                send  "\n$cmd_line\n"
+                expect { 
+                         "\r" {exp_continue}
+                         "#"
+                        }
+        }
+        close $cmd_Fh
+        log_file
+        send   " exit\r\r\r"
+        expect "$ " { }
+        incr success_host_count
+}
+close $Node_List_Fh
+
+send_user "\nCommand collection complete.\n"
+send_user "Total: $TOTAL_NODES, Success: $success_host_count, Fail: $invalid_host_count\n"
+send_user "Output saved to: $out_prefix<nodename>\n\n"
+if { $invalid_hosts != "" } {
+    log_file "$out_prefix-FAILED" 
+	send_user "Unknown hosts found! Commands not collected for these nodes:\n"
+	send_user "$invalid_hosts\n"
+}
