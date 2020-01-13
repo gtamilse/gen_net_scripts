@@ -12,6 +12,8 @@
 ##  Created:  12/20/2019
 ##  Updated:  12/20/2019
 
+## Requires YAML file to import node list! See example_node_file.yaml
+
 from datetime import datetime
 from yaml import Loader as Loader, Dumper as Dumper
 import os
