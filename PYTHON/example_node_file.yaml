@@ -1,0 +1,491 @@
+# yaml file required for psl-config-backup.py and other scripts that are used for login
+
+CBB Nodes:
+  A9Kv-Sat-1:
+    Console: '-'
+    Location: SS.37
+    OS: IOS-XR
+    Platform: ASR9000
+    Primary IP: '-'
+    Resource Group: MPP
+    State: In Service
+  AIC-C2960-1:
+    Ansible Group: CE
+    Authentication: TACACS
+    Console: 10.122.126.53  2012
+    Location: T.41
+    Loopback0 IP: 12.122.126.42
+    Model: C2960-X
+    OS: IOS
+    OS Version: IOS 15.2(2)E3
+    Platform: Catalyst
+    Primary IP: 9.3.250.201
+    Resource Group: AIC
+    State: In Service
+  CE166-C1921:
+    Alt Names: CE166
+    Ansible Group: CE
+    Authentication: TACACS
+    Console: 10.122.126.48  2015
+    Location: SS.39
+    Loopback0 IP: 12.122.255.166
+    Model: C1921
+    OS: IOS
+    OS Version: IOS 15.4.(2)T1
+    Platform: ISR
+    Primary IP: 9.3.255.166
+    Resource Group: MPP
+    State: In Service
+ CE70-C12K:
+    Alt Names: CE70
+    Ansible Group: CE
+    Authentication: TACACS
+    Console: 10.122.126.49  2005
+    Location: SS.42
+    Loopback0 IP: 12.122.255.70
+    Model: '12406.0'
+    OS: IOS
+    OS Version: IOS 12.0(32)S11r
+    Platform: GSR-IOS
+    Primary IP: 9.3.255.70
+    Resource Group: AVPN
+    State: In Service
+  CR1-CRS:
+    Alt Names: CR1, CR1-CRSMC
+    Ansible Group: Core
+    Authentication: TACACS
+    Console: '-'
+    Location: T.30-32, TT.33
+    Loopback0 IP: 12.122.0.1
+    Model: CRS-16
+    OS: IOS-XR
+    OS Version: XR 5.3.3
+    Platform: CRS
+    Primary IP: 9.3.1.1
+    Resource Group: Core
+    Secondary IP: 9.3.1.2, 9.3.1.3, 9.3.1.4, 9.3.1.5, 9.3.1.6, 9.3.1.7
+    State: Unpowered
+  CR19-A9K:
+    Alt Names: CR19
+    Ansible Group: Core
+    Authentication: TACACS
+    Console: 10.122.126.45  2003
+    Location: S.46
+    Loopback0 IP: 12.122.0.19
+    Model: ASR 9001
+    OS: IOS-XR
+    Platform: ASR9000
+    Primary IP: 9.3.19.1
+    Resource Group: Core
+    Secondary IP: '-'
+    State: In Service
+  CR2-CRSX:
+    Alt Names: CR2
+    Ansible Group: Core
+    Authentication: TACACS
+    Console: 10.122.126.47  2007, 10.122.126.47  2008
+    Location: SS.36
+    Loopback0 IP: 12.122.0.2
+    Model: CRSX-8
+    OS: IOS-XR
+    Platform: CRS
+    Primary IP: 9.3.2.1
+    Resource Group: Core
+    Secondary IP: 9.3.2.2, 9.3.2.3
+    State: In Service
+  LISP-PE1-C2911:
+    Ansible Group: LISP
+    Authentication: TACACS
+    Console: 10.122.126.46  2009
+    Location: SS.32
+    Loopback0 IP: 12.122.252.3
+    Model: C2911
+    OS: IOS
+    OS Version: IOS 15.1(4)M4
+    Platform: ISR
+    Primary IP: 9.3.252.3
+    Resource Group: LISP
+    State: In Service
+    Wiki Comments: Data license
+  NCS-5501-11:
+    Ansible Group: AIC
+    Authentication: TACACS
+    Console: 10.122.126.53  2004
+    Location: T.41
+    Loopback0 IP: 8.0.0.11
+    Model: NCS-5501-SE
+    OS: IOS-XR-64
+    Platform: NCS5500
+    Primary IP: 9.3.250.11
+    Resource Group: AIC
+    Serial Number: FOC2024R1SU
+    State: In Service
+    Wiki Comments: AIC lab, 022F73E/FOC2024R1SU
+  NCS-5501-12:
+    Ansible Group: AIC
+    Authentication: TACACS
+    Console: 10.122.126.53  2005
+    Location: T.41
+    Loopback0 IP: 8.0.0.12
+    Model: NCS-5501-SE
+    OS: IOS-XR-64
+    Platform: NCS5500
+    Primary IP: 9.3.250.12
+    Resource Group: AIC
+    Serial Number: FOC2024R1UR
+    State: In Service
+    Wiki Comments: AIC lab, 022F758/FOC2024R1UR
+  PE51-WB:
+    Alt Names: WB-1
+    Ansible Group: ADI-G
+    Authentication: TACACS
+    Console: 10.122.126.43 2015
+    Location: S.41
+    Loopback0 IP: 12.122.0.51
+    Model: Edgecore 5916-54XKS-O-AC-F
+    OS: IOS-XR-64
+    Platform: Whitebox
+    Primary IP: 9.3.51.1
+    Resource Group: General
+    Serial Number: AAC1918AAAV
+    State: In Service
+    Wiki Comments: WB-1
+  PE52-WB:
+    Alt Names: WB-2
+    Ansible Group: ADI-G
+    Authentication: TACACS
+    Console: 10.122.126.43 2014
+    Location: S.41
+    Loopback0 IP: 12.122.0.52
+    Model: Edgecore 5916-54XKS-O-AC-F
+    OS: IOS-XR-64
+    Platform: Whitebox
+    Primary IP: 9.3.52.1
+    Resource Group: General
+    Serial Number: AAC1913AABD
+    State: In Service
+    Wiki Comments: WB-2
+  PE66-CRS3:
+    Alt Names: PE66
+    Ansible Group: MPP
+    Authentication: TACACS
+    Console: 10.122.126.48  2013, 10.122.126.48  2014
+    Location: SS.39
+    Loopback0 IP: 12.122.0.66
+    Model: CRS3-8
+    OS: IOS-XR
+    Platform: CRS
+    Primary IP: 9.3.66.1
+    Resource Group: MPP
+    Secondary IP: 9.3.66.2, 9.3.66.3
+    State: In Service
+  PE67-CRS:
+    Alt Names: PE67
+    Ansible Group: MPP
+    Authentication: TACACS
+    Console: 10.122.126.52 2023, 10.122.126.52 2024, 10.122.126.52 2025, 10.122.126.52
+      2026
+    Location: T.33
+    Loopback0 IP: 12.122.0.67
+    Model: CRS-16
+    OS: IOS-XR
+    Platform: CRS
+    Primary IP: 9.3.67.1
+    Resource Group: MPP
+    Secondary IP: 9.3.67.2, 9.3.67.3
+    State: In Service
+  RG221-C7200:
+    Alt Names: RG221
+    Ansible Group: Pagent
+    Authentication: TACACS
+    Console: 10.122.126.50  2013
+    Location: SS.43
+    Loopback0 IP: 12.122.0.100
+    Model: C7200 VXR
+    OS: IOS
+    Platform: C7200
+    Primary IP: 9.3.248.221
+    Resource Group: RR
+    State: In Service
+    Wiki Comments: NPE-G2
+  RR201-XR12K:
+    Alt Names: RR201
+    Ansible Group: RR
+    Authentication: TACACS
+    Console: 10.122.126.47  2003
+    Location: SS.37
+    Loopback0 IP: 12.122.0.105
+    Model: '12404.0'
+    OS: IOS-XR
+    Platform: XR12000
+    Primary IP: 9.3.249.201
+    Resource Group: RR
+    State: In Service
+    Wiki Comments: MLR, Formerly RR105-1
+DMZ:
+  ASA5510-1:
+    Location: RR.13
+    Model: ASA5510
+  ATT-PSL-C220-1:
+    Alt Names: C220-1
+    Console: 172.31.56.221
+    Location: RR.13
+    OS: Linux
+    Platform: UCSC
+    Primary IP: 172.31.56.211
+    Resource Group: DMZ
+    State: Unprovisioned
+  ATT-PSL-C220-2:
+    Alt Names: C220-2
+    Console: 172.31.56.222
+    Location: RR.13
+    OS: Linux
+    Platform: UCSC
+    Primary IP: 172.31.56.212
+    Resource Group: DMZ
+    State: In Service
+  DMZ-Linux-Jumpserver:
+    Console: '-'
+    Location: C240-1
+    OS: Linux
+    Platform: VM
+    Primary IP: 172.31.56.134
+    Resource Group: DMZ
+    State: In Service
+  DMZ-Win-Jumpserver:
+    Console: '-'
+    Location: C240-1
+    OS: Windows
+    Platform: VM
+    Primary IP: 172.31.56.135
+    Resource Group: DMZ
+    State: In Service
+  PSL-DMZ-Console:
+    Alt Names: ATT-PSL-DMZ-Console
+    Location: RR.13
+    OS: IOS
+    Platform: C2900
+    Primary IP: 172.31.56.5
+    Resource Group: DMZ
+    State: In Service
+  PSL-DMZ-SW1:
+    Alt Names: ATT-PSL-DMZ-SW1
+    Console: 172.31.56.5 2003
+    Location: RR.13
+    OS: NXOS
+    Platform: N6000
+    Primary IP: 172.31.56.8
+    Resource Group: DMZ
+    Secondary IP: 172.31.56.10
+    State: In Service
+  PSL-DMZ-SW2:
+    Alt Names: ATT-PSL-DMZ-SW2
+    Console: 172.31.56.5 2004
+    Location: RR.13
+    OS: NXOS
+    Platform: N6000
+    Primary IP: 172.31.56.9
+    Resource Group: DMZ
+    Secondary IP: 172.31.56.10
+    State: In Service
+  UCS-Blade 1/1:
+    Alt Names: Blade 1/1
+    Console: 172.31.56.241
+    Location: RR.13
+    OS: VIRL
+    Platform: UCSB
+    Primary IP: 172.31.56.200
+    Resource Group: DMZ
+    State: In Service
+  UCS-Blade 1/2:
+    Alt Names: Blade 1/2
+    Console: 172.31.56.242
+    Location: RR.13
+    OS: VIRL
+    Platform: UCSB
+    Primary IP: 172.31.56.201
+    Resource Group: DMZ
+    State: In Service
+  UCS-Blade 1/7:
+    Alt Names: Blade 1/7
+    Console: 172.31.56.247
+    Location: RR.13
+    OS: Linux
+    Platform: UCSB
+    Primary IP: 172.31.56.237
+    Resource Group: DMZ
+    State: In Service
+  UCS-Blade 1/8:
+    Alt Names: Blade 1/8
+    Console: 172.31.56.248
+    Location: RR.13
+    OS: Linux
+    Platform: UCSB
+    Primary IP: 172.31.56.238
+    Resource Group: DMZ
+    State: In Service
+  UCS-FI-A:
+    Alt Names: ATT-PSL-FI-A
+    Console: 172.31.56.5 2005
+    Location: RR.13
+    OS: UCSM
+    Platform: UCS-FI
+    Primary IP: 172.31.56.252
+    Resource Group: DMZ
+    Secondary IP: 172.31.56.251
+    State: In Service
+  UCS-FI-B:
+    Alt Names: ATT-PSL-FI-B
+    Console: 172.31.56.5 2006
+    Location: RR.13
+    OS: UCSM
+    Platform: UCS-FI
+    Primary IP: 172.31.56.253
+    Resource Group: DMZ
+    Secondary IP: 172.31.56.251
+    State: In Service
+Infrastructure VMs:
+  Inband-Ubuntu:
+    Ansible Group: Linux
+    Console: '-'
+    Location: Kraken-psl
+    Model: vSphere VM
+    OS: Linux
+    Platform: VM
+    Primary IP: 10.122.126.171
+    Resource Group: VMs
+    State: In Service
+  PSL-IXIA-SERVER:
+    Console: '-'
+    Location: Kraken-psl
+    Model: vSphere VM
+    OS: Windows
+    Platform: VM
+    Primary IP: 10.122.126.67
+    Resource Group: VMs
+    State: In Service
+  PSL-UCS-CIMC-2:
+    Console: '-'
+    Location: Kraken-psl
+    Model: vSphere VM
+    OS: Other
+    Platform: VM
+    Primary IP: 10.122.126.68
+    Resource Group: VMs
+    State: In Service
+  Yeti-Test-Debian:
+    Ansible Group: Linux
+    Console: '-'
+    Location: Kraken-psl
+    Model: vSphere VM
+    OS: Linux
+    Platform: VM
+    Primary IP: 10.122.126.197
+    Resource Group: VMs
+    State: In Service
+Lab Infrastructure:
+  PSL-Access-S33:
+    Ansible Group: Access-IOS
+    Authentication: admin-upper
+    Console: 10.122.126.41  2012
+    Location: S.33
+    OS: IOS
+    Platform: Catalyst 4848E
+    Primary IP: 10.122.126.29
+    Resource Group: Infrastructure
+    State: In Service
+  PSL-Console-S43:
+    Ansible Group: TermServ
+    Authentication: admin-upper
+    Location: S.43
+    OS: IOS
+    Platform: C2911
+    Primary IP: 10.122.126.44
+    Resource Group: Infrastructure
+    State: In Service
+  PSL-DIST-1:
+    Ansible Group: Dist
+    Authentication: admin-upper
+    Console: 10.122.126.43  2017
+    Location: S.39
+    OS: NXOS
+    Platform: N3K-C3064PQ-10GE
+    Primary IP: 10.122.126.20
+    Resource Group: Infrastructure
+    State: In Service
+  PSL-FCSW1:
+    Alt Names: PSL-FCSW-1
+    Ansible Group: Infra
+    Authentication: admin-upper
+    Console: 10.122.126.43  2010
+    Location: S.39
+    OS: NXOS
+    Platform: Nexus 5010
+    Primary IP: 10.122.126.6
+    Resource Group: Infrastructure
+    State: In Service
+  PSL-GW1:
+    Ansible Group: Infra
+    Authentication: TACACS
+    Console: 10.122.126.50  2012
+    Location: SS.43
+    Model: C2911
+    OS: IOS
+    OS Version: IOS 15.1(4)M4
+    Platform: C2911
+    Primary IP: 10.122.126.5
+    Resource Group: Infrastructure
+    Secondary IP: 9.3.0.10
+    State: In Service
+    Wiki Comments: NAT GW for hosts on 9.3.0.0/16 net
+  PSL-UCS2-A:
+    Ansible Group: Infra
+    Authentication: TACACS
+    Console: 10.122.126.43  2003
+    Location: S.39
+    OS: UCSM
+    Platform: UCS FI
+    Primary IP: 10.122.126.101
+    Resource Group: Infrastructure
+    State: In Service
+  PSL-UCS2-B:
+    Ansible Group: Infra
+    Authentication: TACACS
+    Console: 10.122.126.43  2004
+    Location: S.39
+    OS: UCSM
+    Platform: UCS FI
+    Primary IP: 10.122.126.102
+    Resource Group: Infrastructure
+    State: In Service
+Lab Servers:
+  Kappa-PSL:
+    Ansible Group: Linux
+    Console: 10.122.126.136
+    Location: T.44
+    Model: UCS C240 M4
+    OS: Linux
+    Platform: UCSC
+    Primary IP: 10.122.126.150
+    Resource Group: Physical-Servers
+    State: In Service
+  Kraken2-PSL:
+    Console: 10.122.126.112
+    Location: S.39 1/7
+    Model: UCS B200-M3
+    OS: vSphere
+    Platform: UCSB
+    Primary IP: 10.122.126.146
+    Resource Group: Physical-Servers
+    State: In Service
+  Kraken3-PSL:
+    Console: 10.122.126.128
+    Location: S.39 1/8
+    Model: UCS B200-M4
+    OS: vSphere
+    Platform: UCSB
+    Primary IP: 10.122.126.159
+    Resource Group: Physical-Servers
+    State: In Service
+
+
