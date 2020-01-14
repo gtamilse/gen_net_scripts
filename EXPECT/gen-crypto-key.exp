@@ -1,0 +1,91 @@
+#!/usr/bin/expect --
+#
+# Generate crypto key on XR routers via Telnet
+#
+# ./gen-crypto-key.exp
+#
+# Updated Jan 10, 2019
+# 
+# Requires xr-nodes.txt file, like below
+#
+# virl@virl:~/Ansible-Lab-Management$ cat xr-nodes.txt
+# Pod1-XR 172.16.101.196
+# Pod2-XR 172.16.101.163
+# Pod3-XR 172.16.101.16
+#-------------------------------------------------------------------------------
+
+set node_list   "./xr-nodes.txt"
+
+set username "cisco"
+set password "cisco"
+set ipaddrs ""
+set invalid_hosts ""
+
+# Calc number of nodes in file using unix 'wc' 
+catch "exec wc -l $node_list" out
+set TOTAL_NODES [lindex $out 0]
+
+# Open list files...
+set Node_List_Fh [open $node_list] 
+
+exp_internal 0
+set node_count 0
+
+log_file "gen-crypto-key.log"
+
+# Walk nodes in node file, applying crypto key gen commands
+while { [ gets $Node_List_Fh  line] != -1 } {
+        set node_name [lindex $line 0]
+        set ipaddrs   [lindex $line 1]
+        incr     node_count
+        send_user "\n################################################################\n"
+        send_user   "#\n"
+        send_user   "# Logging into node $node_name (#$node_count of $TOTAL_NODES)\n"
+        send_user   "#\n"
+        send_user   "################################################################\n"
+
+        send_user "Node:\'"
+        send_user $ipaddrs
+        send_user "\'\n"
+
+        spawn telnet $ipaddrs
+        set timeout 30
+        send_user "Telnet spawned...\n"
+        expect {
+                "Unknown host" { send_user "Invalid host, skipping" ; log_file ; append invalid_hosts "\t$node_name\r" ; continue }
+                "No route to host" { send_user "Invalid host, skipping" ; log_file ; append invalid_hosts "\t$node_name\r" ; continue }
+                "Username:" { send_user "connection starting" }
+                timeout { send_user "timeout" ; continue }
+        }       
+        send   "cisco\r"
+        expect "assword:"
+        send "cisco\r"
+        expect {
+                "#" { send_user "logged in \n" }
+                "Username:" { send_user "Auth Failed, continuing\n" ; continue }
+                timeout { send_user "timeout 2\n" ; continue }
+        }
+        send_user "Telnet established\n"
+        send   "term len 0\r"
+        expect "#"
+        send   "crypto key generate rsa\r"
+        expect {
+                "modulus \\\[2048\\\]:" { send   "2048\r" }
+                "\\\[yes/no\\\]:" { send "no\r" }
+        }
+        expect {
+                "\\\[OK\\\]" {}
+                "XRv#" {}
+        }
+        send   " exit\r\r\r"
+        expect "$ " { }
+
+}
+close $Node_List_Fh
+
+send_user "Command collection complete.\n\n"
+if { $invalid_hosts != "" } {
+        send_user "Unknown hosts found! Commands not collected for these nodes:\n"
+        send_user "$invalid_hosts\n"
+}
+exit
