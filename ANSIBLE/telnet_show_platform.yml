@@ -1,0 +1,21 @@
+---
+- name: telnet test
+  hosts: all
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: run show commands
+      telnet:
+        user: ansible
+        password: cisco123
+        login_prompt: "Username: "
+        prompts:
+          - "[>|#]"
+        command:
+          - terminal length 0
+          - show environment all
+          - admin show platform
+      register: ios_output
+
+    - debug: var=ios_output
