@@ -1,0 +1,136 @@
+---
+
+#  Title: rr201-bgp-monitoring.yml
+
+#  Purpose: Check BGP VPNv6 table for updates and capture commands if Version is not incrementing.
+
+#  Created by: Gowtham Tamilselvan (gtamilse@cisco.com)
+#  Date: April 5, 2018
+
+
+- name: Collect BGP information
+  hosts: RR201
+  gather_facts: false
+  connection: local
+  tags: collect_play
+
+  tasks:
+    - name: First Collect Router Version and Config
+      iosxr_command:   
+         commands:
+            - show bgp vpnv6 uni sum nsr | in 12.122.0 | in "71|80"
+
+      register: bgp1
+
+    - debug: var=bgp1.stdout_lines
+
+    - name: First save of output to a file
+      copy: content="{{ bgp1.stdout_lines }}" dest="./RR201_bgp1.txt"
+
+    - pause: seconds=5
+
+    - name: Second Collect Router Version and Config
+      iosxr_command:   
+         commands:
+            - show bgp vpnv6 uni sum nsr | in 12.122.0 | in "71|80"
+
+      register: bgp2
+
+    - debug: var=bgp2.stdout_lines
+
+    - name: Second save of output to a file
+      copy: content="{{ bgp2.stdout_lines }}" dest="./RR201_bgp2.txt"
+
+    - name: Merge file for email attachement
+      copy:
+       content="\n\n ===First collection of show bgp vpnv6 uni sum nsr=== \n\n {{ bgp1.stdout }} \n\n ===Second collection of show bgp vpnv6 uni sum nsr=== \n\n {{ bgp2.stdout }}" 
+       dest="./RR201_bgp_combined.txt"
+
+- name: Read and compare variable values
+  hosts: localhost
+  gather_facts: false
+  tags: read_play
+
+  tasks:
+    - name: First Read RR201_bgp1.txt
+      shell: cat ./RR201_bgp1.txt | awk '{print $6}'
+      register: bgp71_t0
+
+    - set_fact: vbgp71_t0={{ bgp71_t0.stdout }}
+
+    - name: Second Read RR201_bgp1.txt
+      shell: cat ./RR201_bgp1.txt | awk '{print $15}'
+      register: bgp80_t0
+
+    - set_fact: vbgp80_t0={{ bgp80_t0.stdout }}
+
+    - name: First Read RR201_bgp2.txt
+      shell: cat ./RR201_bgp2.txt | awk '{print $6}'
+      register: bgp71_t1
+
+    - set_fact: vbgp71_t1={{ bgp71_t1.stdout }}
+
+    - name: Second Read RR201_bgp2.txt
+      shell: cat ./RR201_bgp2.txt | awk '{print $6}'
+      register: bgp80_t1
+
+    - set_fact: vbgp80_t1={{ bgp80_t1.stdout }}
+
+    - name: VPNv6 counter check 
+      debug:
+        msg: " RR201 BGP VPNv6 is working normally and sending updates."
+      when: vbgp71_t1|int + vbgp80_t1|int > vbgp71_t0|int + vbgp80_t0|int
+
+    - name: Sending Email when Failure condition is detected
+      mail:
+        host: email.cisco.com
+        port: 25
+        from: yeti-psl@cisco.com
+        to:
+          - gtamilse@cisco.com
+        subject: Ansible-RR201-BGP-Report
+        body: RR201 BGP VPNv6 not sending updates, script will collect BGP data.
+        attach:
+          - ./RR201_bgp_combined.txt
+      delegate_to: localhost
+      when: vbgp71_t1|int + vbgp80_t1|int == vbgp71_t0|int + vbgp80_t0|int
+
+- name: Failure condition command collection
+  hosts: RR201
+  connection: local
+  tags: fail_play
+
+  tasks:
+    - name: VPNv6 counter Failure Condition check
+#      meta: end_play
+      command: echo "Localhost variable import success example {{ hostvars.localhost.vbgp71_t1 }}"
+      when: hostvars.localhost.vbgp71_t1|int + hostvars.localhost.vbgp80_t1|int > hostvars.localhost.vbgp71_t0|int + hostvars.localhost.vbgp80_t0|int
+
+    - name: Command collection
+      iosxr_command:
+         commands:
+#            - sh bgp trace instance all | file compactflash:/SR684102472/sh-bgp-trace-inst-all
+            - show bgp neighbor 12.122.0.75 detail
+            - show bgp vpnv4 unicast summary
+            - show bgp vpnv6 unicast rd 402:1 1202:11:22::/64 detail
+            - show bgp vpnv6 unicast rd 402:1 1202:11:22::/64 path-element
+            - show bgp vpnv4 uni neighbor 12.122.0.75 detail
+            - show bgp update out process
+            - show bgp vpnv4 uni update out detail
+            - show bgp vpnv4 uni update out neighbor 12.122.0.75 detail
+            - show bgp vpnv4 uni update out sub-group detail 
+            - show bgp vpnv4 uni proc perf detail 
+            - show bgp all all proc perf detail
+#            - dumpcore running bgp
+#            - show tech routing bgp file compactflash:/SR684102472/sh-tech-routing-bgp
+
+      register: bgp_fail
+
+    - set_fact: time="{{lookup('pipe','date \"+%Y-%m-%d-%H-%M\"')}}"
+
+    - name: save output to a file
+      copy:
+        content="\n\n ===show bgp neighbor 12.122.0.75 detail=== \n\n {{ bgp_fail.stdout[0] }} \n\n ===show bgp vpnv4 unicast summary=== \n\n {{ bgp_fail.stdout[1] }} \n\n ===show bgp vpnv6 unicast rd 402:1 1202:11:22::/64 detail=== \n\n {{ bgp_fail.stdout[2] }} \n\n ===show bgp vpnv6 unicast rd 402:1 1202:11:22::/64 path-element=== \n\n {{ bgp_fail.stdout[3] }} \n\n ===show bgp vpnv4 uni neighbor 12.122.0.75 detail=== \n\n {{ bgp_fail.stdout[4] }} \n\n ===show bgp update out process=== \n\n {{ bgp_fail.stdout[5] }} \n\n ===show bgp vpnv4 uni update out detail=== \n\n {{ bgp_fail.stdout[6] }} \n\n ===show bgp vpnv4 uni update out neighbor 12.122.0.75 detail=== \n\n {{ bgp_fail.stdout[7] }} \n\n ===show bgp vpnv4 uni update out sub-group detail=== \n\n {{ bgp_fail.stdout[8] }} \n\n ===show bgp vpnv4 uni proc perf detail=== \n\n {{ bgp_fail.stdout[9] }} \n\n ===show bgp all all proc perf detail=== \n\n {{ bgp_fail.stdout[10] }}"
+        dest="./{{ inventory_hostname }}_bgp_collection_{{ time }}.txt"
+
+
