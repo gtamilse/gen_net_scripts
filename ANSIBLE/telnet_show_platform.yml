@@ -7,8 +7,8 @@
   tasks:
     - name: run show commands
       telnet:
-        user: ansible
-        password: cisco123
+        user: abc
+        password: abc
         login_prompt: "Username: "
         prompts:
           - "[>|#]"
