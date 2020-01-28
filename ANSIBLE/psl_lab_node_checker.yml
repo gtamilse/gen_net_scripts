@@ -1,0 +1,143 @@
+---
+############################################################################################
+## PSL LAB CBB NODE STATE CHECK LIST                                                      ##
+##                                                                                        ##
+## This is the master check list playbook to verify the state of all CBB Nodes.           ##
+##                                                                                        ##
+## This playbook will check both SSH and Telnet enabled nodes.                            ##
+## For Telnet nodes, this playbook uses an expect module to connect and collect outputs.  ##
+## CAVEAT: ignore play recap summaries, they are not accurate when using expect module.   ##
+##                                                                                        ##
+## Created by: Gowtham Tamilselvan                                                        ##
+## June 17, 2019                                                                          ##
+##                                                                                        ##
+############################################################################################
+
+- name: SSH Router Check
+  hosts: Core,MPP,AVPN,MIS,RR,vRR,CE,NCS
+  gather_facts: false
+  connection: local
+  tags: xrnodes
+
+  tasks:
+    - name: Collect Router Version and Config
+      iosxr_command:   
+         commands:
+            - admin show platform
+
+      register: xr_output
+
+    - debug: var=xr_output.stdout_lines
+
+
+- name: Telnet using Expect for XR Router Check
+  hosts: TelnetXR
+  gather_facts: false
+  connection: local
+  tags: telnetxr
+
+  tasks:
+  - name: telnet, login, and execute XR command
+    ignore_errors: true
+    expect:
+      command: telnet "{{ ansible_host }}"
+      responses:
+        (?i)username: "abc"
+        (?i)password: "abc"
+        (?i)#: "admin show platform\r\nexit"
+      echo: yes
+    register: telnet_xr_output
+
+  - name: Debug XR Telnet Output
+    debug: var=telnet_xr_output.stdout_lines
+
+
+- name: Telnet using Expect for IOS Router Check
+  hosts: TelnetIOS
+  gather_facts: false
+  connection: local
+  tags: telnetios
+
+  tasks:
+  - name: telnet, login, and execute IOS command
+    ignore_errors: true
+    expect:
+      command: telnet "{{ ansible_host }}"
+      responses:
+        (?i)username: "abc"
+        (?i)password: "abc"
+        (?i)#: "show led\r\nexit"
+      echo: yes
+    register: telnet_ios_output
+
+  - name: Debug IOS Telnet Output
+    debug: var=telnet_ios_output.stdout_lines
+
+
+- name: Telnet using Expect for NXOS Router Check
+  hosts: TelnetNXOS
+  gather_facts: false
+  connection: local
+  tags: telnetxnos
+
+  tasks:
+  - name: telnet, login, and execute NXOS command
+    ignore_errors: true
+    expect:
+      command: telnet "{{ ansible_host }}"
+      responses:
+        (?i)username: "abc"
+        (?i)password: "abc"
+        (?i)#: "admin show platform\r\nexit"
+      echo: yes
+    register: telnet_nxos_output
+
+  - name: Debug NXOS Telnet Output
+    debug: var=telnet_nxos_output.stdout_lines
+
+
+- name: Telnet using Expect for Pagent Router Check
+  hosts: TelnetPagent,LISP
+  gather_facts: false
+  connection: local
+  tags: telnetpagent
+
+  tasks:
+  - name: telnet, login, and execute Pagent IOS command
+    ignore_errors: true
+    expect:
+      command: telnet "{{ ansible_host }}"
+      responses:
+        (?i)username: "abc"
+        (?i)password: "abc"
+        (?i)#: "show environment all\r\nexit"
+      echo: yes
+    register: telnet_pagent_output
+
+
+  - name: Debug Pagen Telnet Output
+    debug: var=telnet_pagent_output.stdout_lines
+
+## Sample play to try with telnet module, problem with output not being in stdout_lines.
+#- name: telnet test
+#  hosts: Pagent
+#  connection: local
+#  gather_facts: false
+#  tags: pagent
+#
+#  tasks:
+#    - name: run show commands
+#      telnet:
+#        user: abc
+#        password: abc
+#        login_prompt: "Username: "
+#        prompts:
+#          - "[>|#]"
+#        command:
+#          - terminal length 0
+#          - show environment all
+#      register: ios_output
+#
+#    - debug: var=ios_output
+
+
