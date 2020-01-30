@@ -1,32 +1,30 @@
 # **<p align="center">SDWAN CLI CAPTURE SCRIPT</p>**
 
- **<p align="center">Created by: Gowtham Tamilselvan </p>**
- **<p align="center">Date: June 10 2020</p>**
-  **<p align="center">Cisco Systems Inc / SDWAN SRE Team </p>**
+**<p align="center">Created by: Gowtham Tamilselvan </p>**
+**<p align="center">Date: June 10 2020</p>**
+**<p align="center">Cisco Systems Inc / SDWAN SRE Team </p>**
 
- 
- # 1. Introduction
- 
- This tool was created to assist in cli data collection from sdwan devices (vcontroller or vedges). 
- 
- This tool provides 3 main functions:
- - Ad-hoc cli data collection
- - Precheck and postcheck data collection (for Maintainence/change windows) 
- - Diff comparison between the precheck and postcheck data
+# 1. Introduction
+
+This tool was created to assist in cli data collection from sdwan devices (vcontroller or vedges). 
+
+This tool provides 3 main functions:
+- Ad-hoc cli data collection
+- Precheck and postcheck data collection (for Maintainence/change windows) 
+- Diff comparison between the precheck and postcheck data
 
 The entire data collection (adhoc/pre/post) functionality is handled by the sdwan_cli_captures.yml ansible playbook file.
 
 The difference comparison functionality is handled by the sdwan_pre_post_diff.yml ansible playbook file.
 
- # 2. Data Collection - sdwan_cli_captures.yml
+# 2. Data Collection - sdwan_cli_captures.yml
 
- 
-SDWAN CLI CAPTURE PLAYBOOK
+## SDWAN CLI CAPTURE PLAYBOOK
 
 - Cisco Product tested 			: vedge cloud, vmanage, vbond, vsmart
 - Cisco IOS XR Software Version tested  : 19.2.099
 
-Playbook Requirements:
+### Playbook Requirements:
 
   * Note: if you clone this git repo, all the required template files will already exist in their appropriate directories, you will only need to create your own inventory file and cli commands file!
 
@@ -50,7 +48,7 @@ Example:
     vEdge1 ansible_host=10.10.10.11 ansible_user=admin ansible_ssh_pass=admin ansible_network_os=ios
 ```
 
-Playbook Summary:
+### Playbook Summary:
 
 1: Playbook can be used for adhoc data collection, by simiply providing a command file and defining the host
 ```
@@ -97,9 +95,9 @@ c: Once the postcheck collection has completed, run the sdwan_pre_post_diff.yaml
 
  # 3. Data comparison - sdwan_pre_post_diff.yml
 
-SDWAN PRECHECK and POSTCHECK DIFF COMPARISON PLAYBOOK
+## SDWAN PRECHECK and POSTCHECK DIFF COMPARISON PLAYBOOK
 
-Playbook Requirements:
+### Playbook Requirements:
 
 1: Requires the precheck captures file and the postcheck captures file. User will be prompted to input the following values:
 ```
@@ -134,7 +132,7 @@ d: User needs to provide a value or name that can be used as part of the output 
 
   * Note: You do not need to make any changes to this python script or call it manually! This script is integrated into the sdwan_pre_post_diff.yaml playbook.
 
-Playbook Summary:
+### Playbook Summary:
 
 1: Playbook does not require input arguments at the time of execution, it will prompt the user for information as mentioned above.
 ```
