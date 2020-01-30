@@ -1,0 +1,181 @@
+---
+###############################################################################
+#
+# SDWAN CLI CAPTURE PLAYBOOK
+#
+# Created by: Gowtham Tamilselvan
+# Revision Number: 1.8
+# Last Updated: Jan 30 2019
+# Cisco Systems, Inc./Sdwan SRE TEAM
+#
+# Cisco Product tested 			: vedge cloud, vmanage, vbond, vsmart
+# Cisco IOS XR Software Version tested  : 19.2.099
+# 
+# Playbook Requirements:
+#   1: Jinja2 template files called 'sdwan_cli_capture_template.j2', 'sdwan_cli_precheck_template.j2', 'sdwan_cli_postcheck_template.j2'
+#        Example: cat sdwan_cli_capture_template.j2
+#             {% for n in n %}
+#             === {{ inventory_hostname }}: {{ clicmds[n] }} ===
+#             {{ captures.results[n].stdout[0] }}
+#             {% endfor %}
+#
+#   2: List of cli commands in txt file (file name does not matter) 
+#        Recommend to use the "| nomore" option with the CLI commands
+#        Example: 
+#             show system status | nomore
+#             show interface | nomore
+#
+#   3: Ansible inventory/hosts file defined with hostnames (not just IPs)
+#        Example: 
+#             [edges]
+#             vEdge1 ansible_host=10.10.10.11 ansible_user=admin ansible_ssh_pass=admin ansible_network_os=ios
+#
+#
+# Playbook Summary:
+#   1: Playbook can be used for adhoc data collection, by simiply providing a command file and defining the host
+#       a: Run script in adhoc mode by specifying the following parameters
+#             --tags collect
+#             -e "variable_host=<inventory_host/group_name>"
+#             -e "cmds_file=<cli_cmds_file.txt>" 
+#  
+#          - Example: ansible-playbook sdwan_cli_capture_v4.yml --tags collect -e "variable_host=vEdge1" -e "cmds_file=sdwan_cli_cmds2.txt"
+#
+#          - All output logs are stored in the /tmp/ansible_logs/ directory
+#
+#   2: Playbook can be used for Pre and Post Capture Analysis during Maintenance windows 
+#       a: Run the precheck option before the window starts by specifying the following parameters
+#             --tags precheck
+#             -e "variable_host=<inventory_host/group_name>"
+#             -e "cmds_file=<cli_cmds_file.txt>" 
+#  
+#          - Example: ansible-playbook sdwan_cli_capture_v4.yml --tags precheck -e "variable_host=vEdge1" -e "cmds_file=sdwan_cli_cmds2.txt"
+#
+#          - All output logs are stored in the /tmp/ansible_logs/ directory
+#
+#       b: Then run the postcheck option after the window by specifying the following parameters
+#             --tags postcheck
+#             -e "variable_host=<inventory_host/group_name>"
+#             -e "cmds_file=<cli_cmds_file.txt>" 
+#  
+#          - Example: ansible-playbook sdwan_cli_capture_v4.yml --tags postcheck -e "variable_host=vEdge1" -e "cmds_file=sdwan_cli_cmds2.txt"
+#
+#          - All output logs are stored in the /tmp/ansible_logs/ directory
+
+#       c: Once the postcheck collection has completed, run the sdwan_pre_post_diff.yaml playbook to perform the diff comparison.
+# 
+#
+########################################################
+
+- name: Cli Capture script for sdwan device (use -e "variable_host=<inventory_host/group_name>" and -e "cmds_file=<cli_cmds_file.txt>" to statically define values)
+  hosts: "{{ variable_host | default('edges')}}"
+  connection: network_cli
+
+  vars:
+
+    cli_file: "{{ cmds_file if cmds_file is defined else 'sdwan_cli_cmds.txt' }}"
+
+    # File sdwan_cli_cmds.txt must exist
+    clicmds: "{{ lookup('file', './commands/{{ cli_file }}').splitlines() }}"
+
+    # Find length of commands file
+    Number_of_elements: "{{ clicmds|length }}"
+
+    # n variable is used in the template file to run through the for loop
+    n: []
+
+  tasks:
+
+    - name: Set facts - time and timestamp
+      set_fact: 
+        time: "{{lookup('pipe','date \"+%Y-%m-%d\"')}}"
+        timestamp: "{{lookup('pipe','date \"+%Y-%m-%d-%H-%M\"')}}"
+      tags: always
+
+    - name: Register variables to dummy host
+      add_host:
+        name: "dumhost" 
+        time: "{{ time }}"
+        timestamp: "{{ timestamp }}"
+      tags: always
+
+    - name: Initial Checks for Logs Directory Structure
+      block:
+      - name: check if /tmp/ansible_logs/ folder exists
+        stat:
+          path: /tmp/ansible_logs
+        register: folder_stats
+      - name: Create /tmp/ansible_logs/ folder if it doesnt exist
+        file:
+          path: /tmp/ansible_logs
+          state: directory
+          mode: 0755
+        when: folder_stats.stat.exists == false
+      - name: check if /tmp/ansible_logs/sdwan_captures_time folder exists
+        stat:
+          path: /tmp/ansible_logs/sdwan_captures_{{ time }}
+        register: secfolder_stats
+      - name: Create /tmp/ansible_logs/sdwan_captures_time folder if it doesnt exist
+        file:
+          path: /tmp/ansible_logs/sdwan_captures_{{ time }}
+          state: directory
+          mode: 0755
+        when: secfolder_stats.stat.exists == false
+      tags: collect, precheck, postcheck
+
+    - name: Collect IOS CLI commands
+      ios_command:
+        commands: "{{ item }}"
+      loop: "{{ clicmds }}"
+      tags: collect, precheck, postcheck
+
+      register: captures
+
+    - name: Create an numerical array n which is equal in size of cli command list
+      set_fact: n="{{ n }} + [ {{ item  }} ]"
+      with_sequence: start=0 end="{{ Number_of_elements|int - 1 }}" 
+      tags: collect, precheck, postcheck
+
+    - name: Save sdwan Cli output to a file
+      template:
+        src=./templates/sdwan_cli_capture_template.j2
+        dest=/tmp/ansible_logs/sdwan_captures_{{ time }}/{{inventory_hostname}}_cli_captures_{{ timestamp }}.txt
+      tags: collect
+
+    - name: Save sdwan precheck cli output to a file
+      template:
+        src=./templates/sdwan_cli_precheck_template.j2
+        dest=/tmp/ansible_logs/sdwan_captures_{{ time }}/{{inventory_hostname}}_Precheck_{{ timestamp }}.txt
+      tags: precheck
+
+    - name: Save sdwan postcheck cli output to a file
+      template:
+        src=./templates/sdwan_cli_postcheck_template.j2
+        dest=/tmp/ansible_logs/sdwan_captures_{{ time }}/{{inventory_hostname}}_Postcheck_{{ timestamp }}.txt
+      tags: postcheck
+
+- name: Consolidating the capture files
+  hosts: localhost
+  connection: local
+
+  tasks:
+    - name: Create a Single Cli Captures File
+      shell: cat *cli_captures_{{ hostvars.dumhost.timestamp }}.txt > Full_cli_captures_{{ hostvars.dumhost.timestamp }}.txt
+      args:
+        chdir: "/tmp/ansible_logs/sdwan_captures_{{ hostvars.dumhost.time }}/"
+      register: cat_collect
+      tags: collect
+
+    - name: Create a Single Precheck Captures File
+      shell: cat *Precheck_{{ hostvars.dumhost.timestamp }}.txt > Full_Precheck_{{ hostvars.dumhost.timestamp }}.txt
+      args:
+        chdir: "/tmp/ansible_logs/sdwan_captures_{{ hostvars.dumhost.time }}/"
+      register: cat_precheck
+      tags: precheck
+
+    - name: Create a Single Postcheck Captures File
+      shell: cat *Postcheck_{{ hostvars.dumhost.timestamp }}.txt > Full_Postcheck_{{ hostvars.dumhost.timestamp }}.txt
+      args:
+        chdir: "/tmp/ansible_logs/sdwan_captures_{{ hostvars.dumhost.time }}/"
+      register: cat_postcheck
+      tags: postcheck
+
