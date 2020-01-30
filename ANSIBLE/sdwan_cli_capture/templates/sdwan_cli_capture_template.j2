@@ -1,0 +1,7 @@
+{% for n in n %}
+
+=== {{ inventory_hostname }}: {{ clicmds[n] }} ===
+
+{{ captures.results[n].stdout[0] }}
+
+{% endfor %}
