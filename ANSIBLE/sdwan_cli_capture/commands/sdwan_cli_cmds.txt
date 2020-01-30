@@ -1,0 +1,17 @@
+show version | nomore
+show system statistics | nomore
+show hardware inventory | nomore
+show hardware environment | nomore
+show interface | nomore
+show interface statistics | tab | nomore
+show control summary | nomore
+show control connections | nomore
+show bfd tloc-summary-list | nomore
+show bfd sessions | nomore
+show omp tlocs | nomore
+show omp tloc-paths | nomore
+show omp peers | nomore
+show bgp sum | nomore
+show bgp neighbor | nomore
+show app cflowd statistics | nomore
+show app cflowd flows | tab | nomore
