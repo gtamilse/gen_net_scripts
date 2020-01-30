@@ -1,0 +1,109 @@
+---
+###############################################################################
+#
+# SDWAN PRECHECK and POSTCHECK DIFF COMPARISON PLAYBOOK
+#
+# Created by: Gowtham Tamilselvan
+# Revision Number: 1.5
+# Last Updated: Jan 30 2019
+# Cisco Systems, Inc./Sdwan SRE TEAM
+#
+# 
+# Playbook Requirements:
+#   1: Requires the precheck captures file and the postcheck captures file. User will be prompted to input the following values:
+#       a: User needs to provide the full Path where both files are located. Both files need to be in the same location! The final / slash is needed!
+#
+#             prompt: Provide path the precheck and postcheck files, both need to be in same dir (ex - /home/cisco/): 
+#
+#          - Example: Provide path the precheck and postcheck files, both need to be in same dir (ex - /home/cisco/): /tmp/ansible_logs/sdwan_captures_2020-01-23/
+#
+#       b: User needs to provide the exact name of the precheck file.
+#
+#             prompt: Provide the exact  name of precheck file (ex - /home/cisco/vedge1_Precheck.txt)
+#
+#          - Example: Provide the exact name of precheck file (ex - /home/cisco/vedge1_Precheck.txt):  vEdge3_Precheck_2020-01-23-15-44.txt
+#
+#      c: User needs to provide the exact name of the postcheck file.
+#
+#             prompt: Provide the exact name of postcheck file (ex - /home/cisco/vedge1_Postcheck.txt)
+#
+#          - Example: Provide the exact name of postcheck file (ex - /home/cisco/vedge1_Postcheck.txt): vEdge3_Postcheck_2020-01-23-15-44.txt
+#
+#      d: User needs to provide a value or name that can be used as part of the output file name. This is just to make it easy to identify the output file.
+#
+#             prompt: Provide a value or name that will be used as part of the output file name, no spaces (ex - Full_collection)
+#
+#          - Example: Provide a value or name that will be used as part of the output file name, no spaces (ex - Full_collection) Full_collection
+#
+#          - All output logs are stored in the /tmp/ansible_logs/ directory
+#
+#   2: Playbook also requires the python script diff_cleanup.py to be located inside the lib dir. 
+#      a: You do not need to make any changes to this python script or call it manually! This script is integrated into the sdwan_pre_post_diff.yaml playbook.
+#
+#
+###############################################################################
+
+# Playbook for Diff Comparison Functionality, play is locally run
+
+- name: Compare sdwan device precheck and postcheck files and create a diff file
+  hosts: localhost
+  connection: local
+
+  vars_prompt:
+
+    - name: file_location
+      prompt: Provide the path for the precheck and postcheck files, both files need to be in same dir (ex - /home/cisco/)
+      private: no
+
+    - name: precheck_file
+      prompt: Provide the exact name of precheck file (ex - /home/cisco/vedge1_Precheck.txt)
+      private: no
+
+    - name: postcheck_file
+      prompt: Provide the exact name of postcheck file (ex - /home/cisco/vedge1_Postcheck.txt)
+      private: no
+
+    - name: hostname
+      prompt: Provide a value or name that will be used as part of the output file name, no spaces (ex - Full_collection)
+      private: no
+
+  tasks:
+    - set_fact: TIMESTAMP="{{lookup('pipe','date \"+%Y-%m-%d-%H-%M\"')}}"
+
+    - name: Set facts - destfile name and path information
+      set_fact: 
+        destfile: "{{ hostname }}_diff_{{ TIMESTAMP }}.txt"
+        path: "{{ file_location }}"
+
+    - name: Diff pre and post IOS files
+      command: diff {{ precheck_file }} {{ postcheck_file }}
+      args:
+        chdir: "{{ file_location }}"
+      register: IOS_DIFF
+      failed_when: "IOS_DIFF.rc > 1"
+
+    - name: Create the raw diff file with hostname and timestamp
+      copy:
+        content: "{{ IOS_DIFF.stdout }}"
+        dest: "{{ path }}{{ destfile }}"
+
+
+- name: Cleaning up the diff file
+  hosts: localhost
+  connection: local
+
+  tasks:
+    - name: Edit the Diff file to remove extra characters
+      shell: cat {{ hostvars.localhost.path }}{{ hostvars.localhost.destfile }} | egrep -v "^[0-9]+c[0-9]+|---|^[0-9]+,[0-9]+c[0-9]+,[0-9]+"
+      register: DIFF_EDIT
+
+    - name: Overwrite the original diff file with the cleaner output
+      copy:
+        content: "{{ DIFF_EDIT.stdout }}"
+        dest: "{{ hostvars.localhost.path }}{{ hostvars.localhost.destfile }}"
+
+    - name: Python Script to cleanup diff file
+      command: python3 ./lib/diff_cleanup.py {{ hostvars.localhost.path }}{{ hostvars.localhost.destfile }}
+      register: PY_DIFF
+      failed_when: "PY_DIFF.rc > 1"
+
