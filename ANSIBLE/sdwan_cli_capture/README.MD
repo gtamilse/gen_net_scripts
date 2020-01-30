@@ -52,7 +52,7 @@ Example:
 
 1: Playbook can be used for adhoc data collection, by simiply providing a command file and defining the host
 ```
-a: Run script in adhoc mode by specifying the following parameters
+Run script in adhoc mode by specifying the following parameters
     --tags collect
     -e "variable_host=<inventory_host/group_name>"
     -e "cmds_file=<cli_cmds_file.txt>" 
@@ -66,7 +66,7 @@ a: Run script in adhoc mode by specifying the following parameters
 2: Playbook can be used for Pre and Post Capture Analysis during Maintenance windows 
 - PRECHECK OPTION
 ```
-a: Run the precheck option before the window starts by specifying the following parameters
+Run the precheck option before the window starts by specifying the following parameters
     --tags precheck
     -e "variable_host=<inventory_host/group_name>"
     -e "cmds_file=<cli_cmds_file.txt>" 
@@ -78,7 +78,7 @@ a: Run the precheck option before the window starts by specifying the following 
 ```
 - POSTCHECK OPTION
 ```
-b: Then run the postcheck option after the window by specifying the following parameters
+Run the postcheck option after the window by specifying the following parameters
     --tags postcheck
     -e "variable_host=<inventory_host/group_name>"
     -e "cmds_file=<cli_cmds_file.txt>" 
@@ -90,7 +90,7 @@ b: Then run the postcheck option after the window by specifying the following pa
 ```
 - READY FOR DIFF COMPARISON
 ```
-c: Once the postcheck collection has completed, run the sdwan_pre_post_diff.yaml playbook to perform the diff comparison.
+Once the postcheck collection has completed, run the sdwan_pre_post_diff.yaml playbook to perform the diff comparison.
  ```
 
  # 3. Data comparison - sdwan_pre_post_diff.yml
@@ -136,7 +136,7 @@ d: User needs to provide a value or name that can be used as part of the output 
 
 1: Playbook does not require input arguments at the time of execution, it will prompt the user for information as mentioned above.
 ```
-a: To run the script simply call it as an ansible-playbook and script will prompt for input.
+To run the script simply call it as an ansible-playbook and script will prompt for input.
 
 - Example: ansible-playbook sdwan_pre_post_diff.yml
 
