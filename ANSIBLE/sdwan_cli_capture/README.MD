@@ -57,7 +57,7 @@ Run script in adhoc mode by specifying the following parameters
     -e "variable_host=<inventory_host/group_name>"
     -e "cmds_file=<cli_cmds_file.txt>" 
 
-- Example: ansible-playbook sdwan_cli_capture_v4.yml --tags collect -e "variable_host=vEdge1" -e "cmds_file=sdwan_cli_cmds.txt"
+- Example: ansible-playbook sdwan_cli_capture.yml --tags collect -e "variable_host=vEdge1" -e "cmds_file=sdwan_cli_cmds.txt"
 
 - All output logs are stored in the /tmp/ansible_logs/ directory on the local host
 
@@ -71,7 +71,7 @@ Run the precheck option before the window starts by specifying the following par
     -e "variable_host=<inventory_host/group_name>"
     -e "cmds_file=<cli_cmds_file.txt>" 
 
-- Example: ansible-playbook sdwan_cli_capture_v4.yml --tags precheck -e "variable_host=vEdge1" -e "cmds_file=sdwan_cli_cmds.txt"
+- Example: ansible-playbook sdwan_cli_capture.yml --tags precheck -e "variable_host=vEdge1" -e "cmds_file=sdwan_cli_cmds.txt"
 
 - All output logs are stored in the /tmp/ansible_logs/ directory on the local host
 
@@ -83,7 +83,7 @@ Run the postcheck option after the window by specifying the following parameters
     -e "variable_host=<inventory_host/group_name>"
     -e "cmds_file=<cli_cmds_file.txt>" 
 
-- Example: ansible-playbook sdwan_cli_capture_v4.yml --tags postcheck -e "variable_host=vEdge1" -e "cmds_file=sdwan_cli_cmds.txt"
+- Example: ansible-playbook sdwan_cli_capture.yml --tags postcheck -e "variable_host=vEdge1" -e "cmds_file=sdwan_cli_cmds.txt"
 
 - All output logs are stored in the /tmp/ansible_logs/ directory on the local host
 
