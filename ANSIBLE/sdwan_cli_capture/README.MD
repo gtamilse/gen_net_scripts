@@ -32,6 +32,9 @@ SDWAN CLI CAPTURE PLAYBOOK
  Cisco IOS XR Software Version tested  : 19.2.099
  
  Playbook Requirements:
+
+ Note: if you clone this git repo, all the required template files will already exist in their appropriate directories, you will only need to create your own inventory file and cli commands file!
+
    1: Jinja2 template files called 'sdwan_cli_capture_template.j2', 'sdwan_cli_precheck_template.j2', 'sdwan_cli_postcheck_template.j2'
         Example: cat sdwan_cli_capture_template.j2
              {% for n in n %}
@@ -39,7 +42,7 @@ SDWAN CLI CAPTURE PLAYBOOK
              {{ captures.results[n].stdout[0] }}
              {% endfor %}
 
-   2: List of cli commands in txt file (file name does not matter) 
+   2: List of cli commands in txt file (file name does not matter), a default file (sdwan_cli_cmds.txt) is provided in commands directory. You can create as many new commands file as needed.
         Recommend to use the "| nomore" option with the CLI commands
         Example: 
              show system status | nomore
@@ -58,7 +61,7 @@ SDWAN CLI CAPTURE PLAYBOOK
              -e "variable_host=<inventory_host/group_name>"
              -e "cmds_file=<cli_cmds_file.txt>" 
   
-          - Example: ansible-playbook sdwan_cli_capture_v4.yml --tags collect -e "variable_host=vEdge1" -e "cmds_file=sdwan_cli_cmds2.txt"
+          - Example: ansible-playbook sdwan_cli_capture_v4.yml --tags collect -e "variable_host=vEdge1" -e "cmds_file=sdwan_cli_cmds.txt"
 
           - All output logs are stored in the /tmp/ansible_logs/ directory on the local host
 
@@ -68,7 +71,7 @@ SDWAN CLI CAPTURE PLAYBOOK
              -e "variable_host=<inventory_host/group_name>"
              -e "cmds_file=<cli_cmds_file.txt>" 
   
-          - Example: ansible-playbook sdwan_cli_capture_v4.yml --tags precheck -e "variable_host=vEdge1" -e "cmds_file=sdwan_cli_cmds2.txt"
+          - Example: ansible-playbook sdwan_cli_capture_v4.yml --tags precheck -e "variable_host=vEdge1" -e "cmds_file=sdwan_cli_cmds.txt"
 
           - All output logs are stored in the /tmp/ansible_logs/ directory on the local host
 
@@ -77,7 +80,7 @@ SDWAN CLI CAPTURE PLAYBOOK
              -e "variable_host=<inventory_host/group_name>"
              -e "cmds_file=<cli_cmds_file.txt>" 
   
-          - Example: ansible-playbook sdwan_cli_capture_v4.yml --tags postcheck -e "variable_host=vEdge1" -e "cmds_file=sdwan_cli_cmds2.txt"
+          - Example: ansible-playbook sdwan_cli_capture_v4.yml --tags postcheck -e "variable_host=vEdge1" -e "cmds_file=sdwan_cli_cmds.txt"
 
           - All output logs are stored in the /tmp/ansible_logs/ directory on the local host
 
@@ -88,7 +91,14 @@ SDWAN CLI CAPTURE PLAYBOOK
  # 3. Data comparison - sdwan_pre_post_diff.yml
 
  ```
-Playbook Requirements:
+SDWAN PRECHECK and POSTCHECK DIFF COMPARISON PLAYBOOK
+
+ Created by: Gowtham Tamilselvan
+ Revision Number: 1.5
+ Last Updated: Jan 30 2019
+ Cisco Systems, Inc./Sdwan SRE TEAM
+
+ Playbook Requirements:
    1: Requires the precheck captures file and the postcheck captures file. User will be prompted to input the following values:
        a: User needs to provide the full Path where both files are located. Both files need to be in the same location! The final / slash is needed!
 
@@ -118,5 +128,13 @@ Playbook Requirements:
 
    2: Playbook also requires the python script diff_cleanup.py to be located inside the lib dir. 
       a: You do not need to make any changes to this python script or call it manually! This script is integrated into the sdwan_pre_post_diff.yaml playbook.
+
+ Playbook Summary:
+   1: Playbook does not require input arguments at the time of execution, it will prompt the user for information as mentioned above.
+       a: To run the script simply call it as an ansible-playbook and script will prompt for input.
+  
+          - Example: ansible-playbook sdwan_pre_post_diff.yml
+
+          - All output logs are stored in the /tmp/ansible_logs/ directory on the local host
 
  ```
