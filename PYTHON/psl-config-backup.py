@@ -30,10 +30,10 @@ REPORT_TIME = datetime.now().strftime("%Y-%m-%d")
 GROUPS_TO_BACKUP = ['CBB Nodes', 'Special Nets Nodes']
 OUTPUT_PATH = 'PSL-Config-Backups-' + REPORT_TIME
 
-USERNAME = 'de'
-PASSWORD = 'cisco123'
-FALLBACK_USERNAME = 'cisco'
-FALLBACK_PASSWORD = 'cisco'
+USERNAME = 'abc'
+PASSWORD = 'abc'
+FALLBACK_USERNAME = 'abc'
+FALLBACK_PASSWORD = 'abc'
 
 BACKUP_COMMANDS = {
     'IOS' : {
