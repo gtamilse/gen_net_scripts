@@ -33,11 +33,11 @@ GROUPS_TO_BACKUP = ['CBB Nodes', 'Special Nets Nodes', 'Lab Infrastructure']
 OUTPUT_PATH = 'PSL-Config-Backups-' + REPORT_TIME + '/'
 
 KNOWN_CREDENTIALS = {
-    'TACACS' : ['de', 'cisco123'],
-    'FALLBACK' : ['cisco', 'cisco'],
-    'admin-upper' : ['admin', 'Ocrmb8291'],
-    'admin-lower' : ['admin', 'ocrmb8291'],
-    'admin/Cisco.123' : ['admin', 'Cisco.123'],
+    'TACACS' : ['admin', 'admin'],
+    'FALLBACK' : ['admin', 'admin'],
+    'admin-upper' : ['admin', 'admin'],
+    'admin-lower' : ['admin', 'admin'],
+    'admin/admin' : ['admin', 'admin'],
     'admn/admn' : ['admn', 'admn']
 }
 
